@@ -25,15 +25,6 @@ def extract_data_html(html_path=URL_MATCH):
 
     return data_json
 
-def save_to_csv(data_list, file_name):
-    if data_list:  # Check if the list is not empty
-        df = pd.DataFrame(data_list)
-        df.to_csv(file_name, index=False)
-        print(f"Saved {file_name}")
-    else:
-        print(f"No data to save for {file_name}")
-
-
 def extract_player_stats_and_events(data, player_name, output_dir="player_data"):
     print("Extraction des données pour le joueur - ", player_name)
 
@@ -52,29 +43,48 @@ def extract_player_stats_and_events(data, player_name, output_dir="player_data")
     
     # Extraction des événements
     events = data["matchCentreData"]["events"]
-    player_events = []
+    player_events = [event for event in events if event.get('playerId') == int(player_id)]
 
-    # Parcourir les événements et ajouter ceux correspondant au joueur
-    for event in events:
-        if event.get('playerId') == int(player_id):
-            player_events.append(event)
-            
-    # Extraire les statistiques du joueur à partir des événements filtrés
-    player_stats = {
+    # Recherche du joueur dans home["players"] et away["players"]
+    player_stats = None
+    team = None
+    
+    for team_type in ["home", "away"]:
+        for player in data["matchCentreData"][team_type]["players"]:
+            if player["playerId"] == int(player_id):
+                player_stats = player
+                team = team_type
+                break
+        if player_stats:
+            break
+    
+    if not player_stats:
+        return f"Player '{player_name}' stats not found in either team."
+    
+    # Combinaison des données
+    player_combined_data = {
         "player_name": player_name,
         "player_id": player_id,
+        "team": team,
+        "position": player_stats.get("position"),
+        "shirtNo": player_stats.get("shirtNo"),
+        "height": player_stats.get("height"),
+        "weight": player_stats.get("weight"),
+        "age": player_stats.get("age"),
+        "isFirstEleven": player_stats.get("isFirstEleven"),
+        "isManOfTheMatch": player_stats.get("isManOfTheMatch"),
+        "stats": player_stats.get("stats"),
         "events": player_events
     }
     
-    # Créer le fichier JSON avec les données extraites
-    output_file = os.path.join(output_dir, f"{player_name.replace(' ', '_')}_stats.json")
+    # Créer le fichier JSON avec les données combinées
+    output_file = os.path.join(output_dir, f"{player_name.replace(' ', '_')}_combined_data.json")
     with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(player_stats, f, ensure_ascii=False, indent=4)
+        json.dump(player_combined_data, f, ensure_ascii=False, indent=4)
     
-    print(f"Les données pour le joueur '{player_name}' ont été enregistrées dans {output_file}")
-
+    print(f"Les données combinées pour le joueur '{player_name}' ont été enregistrées dans {output_file}")
 
 # Utilisation complète du code
 data = extract_data_html(URL_MATCH)  # Extraction des données JSON depuis l'HTML
 player_name = "Amine Harit"  # Nom du joueur à analyser
-extract_player_stats_and_events(data, player_name)  # Extraction des stats et événements détaillés du joueur et sauvegarde en CSV
+extract_player_stats_and_events(data, player_name)  # Extraction des stats et événements détaillés du joueur et sauvegarde en JSON
