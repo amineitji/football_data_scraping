@@ -50,6 +50,7 @@ class PlayerVisualizer:
 
         forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
 
+        fig = plt.figure(figsize=(16, 10))
 
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
@@ -147,8 +148,52 @@ class PlayerVisualizer:
         # Définir la couleur de fond globale
         background_color = '#8549B7'  # Violet foncé
     
-        # Création de la figure avec la couleur de fond
-        fig = plt.figure(figsize=(14, 12), facecolor=background_color)
+        # Choisir les deux couleurs en hexadecimal
+        color1 = "#0c205d"  # Bleu foncé
+        color2 = "#9e59c4"  # Violet
+
+        # Créer un gradient vertical (de haut en bas)
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+
+        # Créer un colormap personnalisé à partir des couleurs hexadécimales
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
+
+        # Définir la couleur de fond globale
+        background_color = '#8549B7'  # Violet foncé
+    
+        # Choisir les deux couleurs en hexadecimal
+        color1 = "#0c205d"  # Bleu foncé
+        color2 = "#9e59c4"  # Violet
+
+        # Créer un gradient vertical (de haut en bas)
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+
+        # Créer un colormap personnalisé à partir des couleurs hexadécimales
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
+
+        # Créer une figure
+        fig = plt.figure(figsize=(16, 10))
+
+        # Ajouter un axe qui occupe toute la figure
+        ax = fig.add_axes([0, 0, 1, 1])
+
+        # Désactiver les axes
+        ax.axis('off')
+
+        # Appliquer le gradient vertical avec les couleurs choisies
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+
+        # Ajouter un axe qui occupe toute la figure
+        ax = fig.add_axes([0, 0, 1, 1])
+
+        # Désactiver les axes
+        ax.axis('off')
+
+        # Appliquer le gradient vertical avec les couleurs choisies
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+        
         gs = GridSpec(2, 1, height_ratios=[1, 1], figure=fig)
     
         # Diagramme à barres verticales pour les statistiques globales
@@ -229,7 +274,7 @@ class PlayerVisualizer:
 
     def plot_defensive_activity(self, save_path):
         events = self.player_data.get('events', [])
-        
+
         # Filtrage des événements défensifs
         defensive_events = [
             event for event in events if event['type']['displayName'] in ['BallRecovery', 'Challenge', 'Tackle', 'Foul']
@@ -244,14 +289,41 @@ class PlayerVisualizer:
             'BallRecovery': 'o',  # Rond
             'Challenge': 's',     # Carré
             'Tackle': '^',        # Triangle
-            'Foul': '*',          # Étoile
+            'Foul': '*'           # Étoile
         }
         color_map = {
             'Successful': 'green',
             'Unsuccessful': 'red'
         }
 
-        fig, ax = plt.subplots(figsize=(16, 10))
+        # Définir la couleur de fond globale
+        background_color = '#8549B7'  # Violet foncé
+    
+        # Choisir les deux couleurs en hexadecimal
+        color1 = "#0c205d"  # Bleu foncé
+        color2 = "#9e59c4"  # Violet
+
+        # Créer un gradient vertical (de haut en bas)
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+
+        # Créer un colormap personnalisé à partir des couleurs hexadécimales
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
+
+        # Créer une figure
+        fig = plt.figure(figsize=(16, 10))
+
+        # Ajouter un axe qui occupe toute la figure
+        ax = fig.add_axes([0, 0, 1, 1])
+
+        # Désactiver les axes
+        ax.axis('off')
+
+        # Appliquer le gradient vertical avec les couleurs choisies
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+
+        # Créer l'axe
+        ax = fig.add_subplot(1, 1, 1)
 
         pitch = VerticalPitch(pitch_type='opta', pitch_color='#4b0082', line_color='white', linewidth=2)
         pitch.draw(ax=ax)
@@ -259,7 +331,7 @@ class PlayerVisualizer:
         # Ajout de la flèche rouge verticale avec un contour noir pour indiquer le sens du jeu
         ax.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
                     arrowprops=dict(facecolor='red', edgecolor='black', width=10, headwidth=25, headlength=25))
-        ax.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='black', rotation=0, transform=ax.transAxes)
+        ax.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='white', rotation=0, transform=ax.transAxes)
 
         # Parcours des événements défensifs
         for event in defensive_events:
@@ -270,7 +342,7 @@ class PlayerVisualizer:
             marker = symbol_map[event_type]
             color = color_map.get(outcome, 'green')  # Default to green if outcome not recognized
 
-            pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='black', linewidth=1.5, ax=ax)
+            pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax)
 
         # Création de la légende
         legend_handles = [
@@ -283,7 +355,7 @@ class PlayerVisualizer:
         ]
         ax.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
 
-        ax.set_title(f"Activité défensive de {self.player_data['player_name']}", fontsize=18, fontweight='bold')
+        ax.set_title(f"Activité défensive de {self.player_data['player_name']}", fontsize=18, color='white', fontweight='bold')
 
         plt.tight_layout()
         plt.savefig(save_path)
@@ -301,7 +373,35 @@ class PlayerVisualizer:
             print(f"Aucune activité offensive trouvée pour {self.player_data['player_name']}. Aucun visuel généré.")
             return
 
-        fig, ax = plt.subplots(figsize=(16, 10))
+        # Définir la couleur de fond globale
+        background_color = '#8549B7'  # Violet foncé
+    
+        # Choisir les deux couleurs en hexadecimal
+        color1 = "#0c205d"  # Bleu foncé
+        color2 = "#9e59c4"  # Violet
+
+        # Créer un gradient vertical (de haut en bas)
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+
+        # Créer un colormap personnalisé à partir des couleurs hexadécimales
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
+
+        # Créer une figure
+        fig = plt.figure(figsize=(16, 10))
+
+        # Ajouter un axe qui occupe toute la figure
+        ax = fig.add_axes([0, 0, 1, 1])
+
+        # Désactiver les axes
+        ax.axis('off')
+
+        # Appliquer le gradient vertical avec les couleurs choisies
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+
+        # Créer l'axe
+        ax = fig.add_subplot(1, 1, 1)
+
         pitch = VerticalPitch(pitch_type='opta', pitch_color='#4b0082', line_color='white', linewidth=2)
         pitch.draw(ax=ax)
 
@@ -311,7 +411,7 @@ class PlayerVisualizer:
         # Ajout de la flèche rouge verticale avec un contour noir pour indiquer le sens du jeu
         ax.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
                     arrowprops=dict(facecolor='red', edgecolor='black', width=10, headwidth=25, headlength=25))
-        ax.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='black', rotation=0, transform=ax.transAxes)
+        ax.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='white', rotation=0, transform=ax.transAxes)
 
         for event in offensive_events:
             x, y = event['x'], event['y']
@@ -320,14 +420,14 @@ class PlayerVisualizer:
             if event_type == 'TakeOn':
                 marker = 'o'  # Rond pour les dribbles
                 color = 'yellow' if event['outcomeType']['displayName'] == 'Successful' else 'red'
-                pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='black', linewidth=1.5, ax=ax)
+                pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax)
 
             elif event_type in ['MissedShots', 'Goal']:
                 outcome = event['outcomeType']['displayName']
                 color = 'green' if event_type == 'Goal' else 'red'
 
                 # Ajouter le point de tir
-                pitch.scatter(x, y, s=200, color=color, edgecolor='black', linewidth=1.5, ax=ax)
+                pitch.scatter(x, y, s=200, color=color, edgecolor='white', linewidth=1.5, ax=ax)
 
                 # Trouver les coordonnées de la cible (la cage)
                 goalmouth_y = next((float(q['value']) for q in event['qualifiers'] if q['type']['displayName'] == 'GoalMouthY'), None)
@@ -348,7 +448,7 @@ class PlayerVisualizer:
         ]
         ax.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
 
-        ax.set_title(f"Activité offensive de {self.player_data['player_name']}", fontsize=18, fontweight='bold')
+        ax.set_title(f"Activité offensive de {self.player_data['player_name']}", fontsize=18, color='white', fontweight='bold')
 
         plt.tight_layout()
         plt.savefig(save_path_pitch)
@@ -356,15 +456,43 @@ class PlayerVisualizer:
 
         # Générer le visuel de la cage
         if shots:
-            fig, ax = plt.subplots(figsize=(7.32, 2.44))  # Adapter la taille du graphique aux dimensions réelles
+            fig = plt.figure(figsize=(7.32, 2.44))  # Adapter la taille du graphique aux dimensions réelles
+
+            # Définir la couleur de fond globale
+            background_color = '#8549B7'  # Violet foncé
+
+            # Choisir les deux couleurs en hexadecimal
+            color1 = "#0c205d"  # Bleu foncé
+            color2 = "#9e59c4"  # Violet
+
+            # Créer un gradient vertical (de haut en bas)
+            gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+            gradient = np.hstack((gradient, gradient))
+
+            # Créer un colormap personnalisé à partir des couleurs hexadécimales
+            cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
+
+            # Créer une figure
+            fig = plt.figure(figsize=(7.32, 2.44))
+
+            # Ajouter un axe qui occupe toute la figure
+            ax = fig.add_axes([0, 0, 1, 1])
+
+            # Désactiver les axes
+            ax.axis('off')
+
+            # Appliquer le gradient vertical avec les couleurs choisies
+            ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+            # Créer l'axe
+            ax = fig.add_subplot(1, 1, 1)
+
             ax.set_xlim(0, 7.32)  # Largeur de la cage en mètres
             ax.set_ylim(0, 2.44)  # Hauteur de la cage en mètres
             ax.set_aspect('equal')
-            ax.set_title("Vue frontale des tirs")
+            ax.set_title("Vue frontale des tirs",color='white')
 
             # Normaliser les coordonnées pour correspondre aux dimensions réelles de la cage
             for y, z, color in shots:
-                # Le y est sur une échelle de 0 à 100, le z aussi, il faut donc normaliser pour les dimensions réelles
                 real_y = (y / 100) * 7.32
                 real_z = (z / 100) * 2.44
                 ax.scatter(real_y, real_z, s=200, color=color, edgecolor='black', linewidth=1.5)
@@ -374,10 +502,10 @@ class PlayerVisualizer:
             ax.set_yticks([])
 
             # Dessiner les lignes de la cage
-            ax.axhline(y=0, color='black')  # Bas de la cage
-            ax.axhline(y=2.44, color='black')  # Haut de la cage
-            ax.axvline(x=0, color='black')  # Côté gauche
-            ax.axvline(x=7.32, color='black')  # Côté droit
+            ax.axhline(y=0, color='grey')  # Bas de la cage
+            ax.axhline(y=2.44, color='grey')  # Haut de la cage
+            ax.axvline(x=0, color='grey')  # Côté gauche
+            ax.axvline(x=7.32, color='grey')  # Côté droit
 
             # Ajouter la légende pour la vue frontale des tirs
             legend_handles = [
@@ -389,6 +517,7 @@ class PlayerVisualizer:
             plt.tight_layout()
             plt.savefig(save_path_goal)
             plt.close()
+
 
     def _process_stats_data(self):
         stats = self.player_data.get('stats', {})
