@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
 from matplotlib.gridspec import GridSpec
+import matplotlib.colors as mcolors
 
 class PlayerVisualizer:
     def __init__(self, player_data_path):
@@ -49,12 +50,41 @@ class PlayerVisualizer:
 
         forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
 
+
+        # Choisir les deux couleurs en hexadecimal
+        color1 = "#0c205d"  # Bleu foncé
+        color2 = "#9e59c4"  # Violet
+
+        # Créer un gradient vertical (de haut en bas)
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+
+        # Créer un colormap personnalisé à partir des couleurs hexadécimales
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
+
+        # Créer une figure
         fig = plt.figure(figsize=(16, 10))
+
+        # Ajouter un axe qui occupe toute la figure
+        ax = fig.add_axes([0, 0, 1, 1])
+
+        # Désactiver les axes
+        ax.axis('off')
+
+        # Appliquer le gradient vertical avec les couleurs choisies
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+
+
         gs = GridSpec(2, 2, width_ratios=[3, 1])
 
-        pitch = VerticalPitch(pitch_type='opta', pitch_color='#4b0082', line_color='white')
+        pitch = VerticalPitch(pitch_type='opta', pitch_color='#4b0082', line_color='white', linewidth=2)
         ax_pitch = fig.add_subplot(gs[:, 0])
         pitch.draw(ax=ax_pitch)
+
+        # Ajout de la flèche rouge verticale avec un contour noir pour indiquer le sens du jeu
+        ax_pitch.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
+                          arrowprops=dict(facecolor='red', edgecolor='white', width=10, headwidth=25, headlength=25))
+        ax_pitch.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='white', rotation=0, transform=ax_pitch.transAxes)
 
         for pas in passes:
             y_start = pas['x']
@@ -67,9 +97,9 @@ class PlayerVisualizer:
 
         success_patch = mpatches.Patch(color='deepskyblue', label='Passe réussie')
         failed_patch = mpatches.Patch(color='red', label='Passe ratée')
-        ax_pitch.legend(handles=[success_patch, failed_patch], loc='upper right', fontsize=12)
+        ax_pitch.legend(handles=[success_patch, failed_patch], loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
 
-        ax_pitch.set_title(f"Passes de {self.player_data['player_name']}", fontsize=18, fontweight='bold')
+        ax_pitch.set_title(f"Passes de {self.player_data['player_name']}", fontsize=18, color='white', fontweight='bold')
 
         ax1 = fig.add_subplot(gs[0, 1])
         total_passes = len(passes)
@@ -80,9 +110,14 @@ class PlayerVisualizer:
         success_failure_labels = ['Réussies', 'Ratées']
         success_failure_colors = ['#87CEFA', '#FF4500']
 
-        ax1.pie(success_failure_data, labels=success_failure_labels, colors=success_failure_colors, autopct='%1.1f%%', startangle=140,
-                textprops={'fontsize': 14, 'fontweight': 'bold', 'color': 'black'})
-        ax1.set_title("Répartition des passes réussies/ratées", fontsize=16, fontweight='bold')
+        wedges, texts, autotexts = ax1.pie(success_failure_data, labels=success_failure_labels, colors=success_failure_colors, autopct='%1.1f%%',
+                                           startangle=140, textprops={'fontsize': 14, 'fontweight': 'bold', 'color': 'white'})
+
+        # Ajouter un contour noir aux diagrammes circulaires
+        for wedge in wedges:
+            wedge.set_edgecolor('white')
+
+        ax1.set_title("Répartition des passes réussies/ratées", fontsize=16, color='white', fontweight='bold')
 
         ax2 = fig.add_subplot(gs[1, 1])
         orientation_data = [
@@ -93,9 +128,14 @@ class PlayerVisualizer:
         orientation_labels = ['Vers l\'avant', 'Latérales', 'Vers l\'arrière']
         orientation_colors = ['#98FB98', '#FFD700', '#9370DB']
 
-        ax2.pie(orientation_data, labels=orientation_labels, colors=orientation_colors, autopct='%1.1f%%', startangle=140,
-                textprops={'fontsize': 14, 'fontweight': 'bold', 'color': 'black'})
-        ax2.set_title("Orientation des passes", fontsize=16, fontweight='bold')
+        wedges, texts, autotexts = ax2.pie(orientation_data, labels=orientation_labels, colors=orientation_colors, autopct='%1.1f%%',
+                                           startangle=140, textprops={'fontsize': 14, 'fontweight': 'bold', 'color': 'white'})
+
+        # Ajouter un contour noir aux diagrammes circulaires
+        for wedge in wedges:
+            wedge.set_edgecolor('white')
+
+        ax2.set_title("Orientation des passes", fontsize=16, color='white', fontweight='bold')
 
         plt.tight_layout()
         plt.savefig(save_path)
@@ -104,7 +144,11 @@ class PlayerVisualizer:
     def plot_stats_visualizations(self, save_path):
         stats = self._process_stats_data()
     
-        fig = plt.figure(figsize=(14, 12))
+        # Définir la couleur de fond globale
+        background_color = '#8549B7'  # Violet foncé
+    
+        # Création de la figure avec la couleur de fond
+        fig = plt.figure(figsize=(14, 12), facecolor=background_color)
         gs = GridSpec(2, 1, height_ratios=[1, 1], figure=fig)
     
         # Diagramme à barres verticales pour les statistiques globales
@@ -125,15 +169,18 @@ class PlayerVisualizer:
         # Ajouter les valeurs au-dessus de chaque barre
         for bar in bars:
             yval = bar.get_height()
-            ax1.text(bar.get_x() + bar.get_width()/2, yval + 1, int(yval), ha='center', fontsize=12)
+            ax1.text(bar.get_x() + bar.get_width() / 2, yval + 1, int(yval), ha='center', fontsize=10, )
     
-        ax1.set_ylabel('Total', fontsize=12, fontweight='bold')
-        ax1.set_title(f"Les stats globales de {self.player_data['player_name']}", fontsize=16, fontweight='bold')
-        ax1.set_xticklabels(categories, rotation=45, ha='right', fontsize=12)
+        ax1.set_ylabel('Total', fontsize=12, fontweight='bold', color='white')
+        ax1.set_title(f"Les stats globales de {self.player_data['player_name']}", fontsize=16, fontweight='bold', color='white')
+        ax1.set_xticklabels(categories, rotation=45, ha='right', fontsize=12, color='white')
+        ax1.tick_params(axis='y', colors='white')  # Changer la couleur des graduations sur l'axe Y
+        ax1.spines['bottom'].set_color('white')
+        ax1.spines['left'].set_color('white')
     
         # Diagramme de l'évolution des notes (rating)
         ax2 = fig.add_subplot(gs[1, 0])
-        
+    
         # Données pour le graphique
         minutes = stats['minutes']
         ratings_over_time = stats['ratings_over_time']
@@ -143,7 +190,7 @@ class PlayerVisualizer:
         ratings_over_time = np.array(ratings_over_time)
     
         # Tracer la ligne horizontale à 6
-        ax2.axhline(y=threshold, color='black', linewidth=2, linestyle='--')
+        ax2.axhline(y=threshold, color='white', linewidth=2, linestyle='--')
     
         # Remplissage des zones
         ax2.fill_between(minutes, ratings_over_time, threshold, where=(ratings_over_time >= threshold), 
@@ -154,11 +201,27 @@ class PlayerVisualizer:
         # Tracer la courbe fluide sans marqueurs
         ax2.plot(minutes, ratings_over_time, color='dodgerblue', linewidth=2)
     
-        ax2.set_xlabel('Minute', fontsize=12, fontweight='bold')
-        ax2.set_ylabel('Note', fontsize=12, fontweight='bold')
-        ax2.set_title('Évolution des notes au fil du temps', fontsize=16, fontweight='bold')
+        # Ajouter une ligne verticale à la fin pour indiquer la fin du match
+        final_minute = minutes[-1]
+        ax2.axvline(x=final_minute, color='red', linestyle='-', linewidth=2)
+        ax2.text(final_minute + 0.5, 5, f'{final_minute}"', rotation=0, verticalalignment='center',
+                 color='red', fontsize=12, fontweight='bold')
+    
+        # Mettre à jour le titre avec le nombre de minutes jouées
+        num_minutes_played = final_minute
+        ax2.set_title(f"Évolution de la note durant les {num_minutes_played} minutes jouées", fontsize=16, fontweight='bold', color='white')
+    
+        ax2.set_xlabel('Minute', fontsize=12, fontweight='bold', color='white')
+        ax2.set_ylabel('Note', fontsize=12, fontweight='bold', color='white')
         ax2.set_ylim(0, 10)
-        ax2.grid(True)
+        ax2.grid(True, color='gray')
+        ax2.tick_params(axis='x', colors='white')  # Changer la couleur des graduations sur l'axe X
+        ax2.tick_params(axis='y', colors='white')  # Changer la couleur des graduations sur l'axe Y
+        ax2.spines['bottom'].set_color('white')
+        ax2.spines['left'].set_color('white')
+    
+        # Appliquer le fond violet à la figure et aux axes
+        fig.patch.set_facecolor(background_color)
     
         plt.tight_layout()
         plt.savefig(save_path)
@@ -190,8 +253,13 @@ class PlayerVisualizer:
 
         fig, ax = plt.subplots(figsize=(16, 10))
 
-        pitch = VerticalPitch(pitch_type='opta', pitch_color='#4b0082', line_color='white')
+        pitch = VerticalPitch(pitch_type='opta', pitch_color='#4b0082', line_color='white', linewidth=2)
         pitch.draw(ax=ax)
+
+        # Ajout de la flèche rouge verticale avec un contour noir pour indiquer le sens du jeu
+        ax.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
+                    arrowprops=dict(facecolor='red', edgecolor='black', width=10, headwidth=25, headlength=25))
+        ax.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='black', rotation=0, transform=ax.transAxes)
 
         # Parcours des événements défensifs
         for event in defensive_events:
@@ -213,47 +281,13 @@ class PlayerVisualizer:
             plt.Line2D([0], [0], marker='^', color='w', label='Tacle', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], marker='*', color='w', label='Faute', markerfacecolor='black', markersize=15),
         ]
-        ax.legend(handles=legend_handles, loc='upper right', fontsize=12)
+        ax.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
 
         ax.set_title(f"Activité défensive de {self.player_data['player_name']}", fontsize=18, fontweight='bold')
 
         plt.tight_layout()
         plt.savefig(save_path)
         plt.close()
-
-    def _process_stats_data(self):
-        stats = self.player_data.get('stats', {})
-
-        total_possession = sum(stats.get('possession', {}).values())
-        total_touches = sum(stats.get('touches', {}).values())
-        total_interceptions = sum(stats.get('interceptions', {}).values())
-        total_passes = sum(stats.get('passesTotal', {}).values())
-        total_accurate_passes = sum(stats.get('passesAccurate', {}).values())
-        total_key_passes = sum(stats.get('passesKey', {}).values())
-        total_successful_tackles = sum(stats.get('tacklesTotal', {}).values())
-        total_unsuccessful_tackles = sum(stats.get('tackleUnsuccesful', {}).values())
-        total_dispossessed = sum(stats.get('dispossessed', {}).values())
-
-        ratings = stats.get('ratings', {})
-
-        # Convertir les minutes en entiers pour un tri correct
-        minutes = sorted(map(int, ratings.keys()))
-        ratings_over_time = [ratings[str(minute)] for minute in minutes]
-
-        return {
-            'total_possession': total_possession,
-            'total_touches': total_touches,
-            'total_interceptions': total_interceptions,
-            'total_passes': total_passes,
-            'total_accurate_passes': total_accurate_passes,
-            'total_key_passes': total_key_passes,
-            'total_successful_tackles': total_successful_tackles,
-            'total_unsuccessful_tackles': total_unsuccessful_tackles,
-            'total_dispossessed': total_dispossessed,
-            'minutes': minutes,
-            'ratings_over_time': ratings_over_time
-        }
-
 
     def plot_offensive_activity(self, save_path_pitch, save_path_goal):
         events = self.player_data.get('events', [])
@@ -268,11 +302,16 @@ class PlayerVisualizer:
             return
 
         fig, ax = plt.subplots(figsize=(16, 10))
-        pitch = VerticalPitch(pitch_type='opta', pitch_color='#4b0082', line_color='white')
+        pitch = VerticalPitch(pitch_type='opta', pitch_color='#4b0082', line_color='white', linewidth=2)
         pitch.draw(ax=ax)
 
         # Variables pour les tirs
         shots = []
+
+        # Ajout de la flèche rouge verticale avec un contour noir pour indiquer le sens du jeu
+        ax.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
+                    arrowprops=dict(facecolor='red', edgecolor='black', width=10, headwidth=25, headlength=25))
+        ax.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='black', rotation=0, transform=ax.transAxes)
 
         for event in offensive_events:
             x, y = event['x'], event['y']
@@ -307,7 +346,7 @@ class PlayerVisualizer:
             mpatches.Patch(color='green', label='But'),
             mpatches.Patch(color='red', label='Tir manqué')
         ]
-        ax.legend(handles=legend_handles, loc='upper right', fontsize=12)
+        ax.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
 
         ax.set_title(f"Activité offensive de {self.player_data['player_name']}", fontsize=18, fontweight='bold')
 
@@ -350,3 +389,36 @@ class PlayerVisualizer:
             plt.tight_layout()
             plt.savefig(save_path_goal)
             plt.close()
+
+    def _process_stats_data(self):
+        stats = self.player_data.get('stats', {})
+
+        total_possession = sum(stats.get('possession', {}).values())
+        total_touches = sum(stats.get('touches', {}).values())
+        total_interceptions = sum(stats.get('interceptions', {}).values())
+        total_passes = sum(stats.get('passesTotal', {}).values())
+        total_accurate_passes = sum(stats.get('passesAccurate', {}).values())
+        total_key_passes = sum(stats.get('passesKey', {}).values())
+        total_successful_tackles = sum(stats.get('tacklesTotal', {}).values())
+        total_unsuccessful_tackles = sum(stats.get('tackleUnsuccesful', {}).values())
+        total_dispossessed = sum(stats.get('dispossessed', {}).values())
+
+        ratings = stats.get('ratings', {})
+
+        # Convertir les minutes en entiers pour un tri correct
+        minutes = sorted(map(int, ratings.keys()))
+        ratings_over_time = [ratings[str(minute)] for minute in minutes]
+
+        return {
+            'total_possession': total_possession,
+            'total_touches': total_touches,
+            'total_interceptions': total_interceptions,
+            'total_passes': total_passes,
+            'total_accurate_passes': total_accurate_passes,
+            'total_key_passes': total_key_passes,
+            'total_successful_tackles': total_successful_tackles,
+            'total_unsuccessful_tackles': total_unsuccessful_tackles,
+            'total_dispossessed': total_dispossessed,
+            'minutes': minutes,
+            'ratings_over_time': ratings_over_time
+        }
