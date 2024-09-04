@@ -55,7 +55,7 @@ class PlayerVisualizer:
 
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
-        color2 = "#9e59c4"  # Violet
+        color2 = "#8a62d4"  # Violet
 
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
@@ -82,7 +82,8 @@ class PlayerVisualizer:
 
         gs = GridSpec(2, 2, width_ratios=[3, 1])
 
-        pitch = VerticalPitch(pitch_type='opta', pitch_color='#4b0082', line_color='white', linewidth=2)
+        # Créer un objet pitch avec un fond transparent (alpha=0)
+        pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
         ax_pitch = fig.add_subplot(gs[:, 0])
         pitch.draw(ax=ax_pitch)
 
@@ -168,7 +169,7 @@ class PlayerVisualizer:
 
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
-        color2 = "#9e59c4"  # Violet
+        color2 = "#4955c1"  # Violet
 
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
@@ -357,7 +358,7 @@ class PlayerVisualizer:
     
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
-        color2 = "#9e59c4"  # Violet
+        color2 = "#4955c1"  # Violet
 
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
@@ -434,7 +435,7 @@ class PlayerVisualizer:
     
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
-        color2 = "#9e59c4"  # Violet
+        color2 = "#4955c1"  # Violet
 
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
@@ -519,7 +520,7 @@ class PlayerVisualizer:
 
             # Choisir les deux couleurs en hexadecimal
             color1 = "#0c205d"  # Bleu foncé
-            color2 = "#9e59c4"  # Violet
+            color2 = "#4955c1"  # Violet
 
             # Créer un gradient vertical (de haut en bas)
             gradient = np.linspace(0, 1, 256).reshape(-1, 1)
