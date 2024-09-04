@@ -6,6 +6,7 @@ import matplotlib.patches as mpatches
 import numpy as np
 from matplotlib.gridspec import GridSpec
 import matplotlib.colors as mcolors
+import matplotlib.image as mpimg
 
 class PlayerVisualizer:
     def __init__(self, player_data_path):
@@ -75,6 +76,9 @@ class PlayerVisualizer:
         # Appliquer le gradient vertical avec les couleurs choisies
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
 
+        # Couleurs plus sombres pour les diagrammes circulaires
+        success_failure_colors = ['#3d85c6', '#cc0000']  # Bleu foncé et Rouge foncé
+        orientation_colors = ['#6aa84f', '#f1c232', '#a64d79']  # Vert foncé, Marron, Bleu ardoise foncé
 
         gs = GridSpec(2, 2, width_ratios=[3, 1])
 
@@ -82,7 +86,6 @@ class PlayerVisualizer:
         ax_pitch = fig.add_subplot(gs[:, 0])
         pitch.draw(ax=ax_pitch)
 
-        # Ajout de la flèche rouge verticale avec un contour noir pour indiquer le sens du jeu
         ax_pitch.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
                           arrowprops=dict(facecolor='red', edgecolor='white', width=10, headwidth=25, headlength=25))
         ax_pitch.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='white', rotation=0, transform=ax_pitch.transAxes)
@@ -109,12 +112,10 @@ class PlayerVisualizer:
             len(failed_passes) / total_passes,
         ]
         success_failure_labels = ['Réussies', 'Ratées']
-        success_failure_colors = ['#87CEFA', '#FF4500']
 
         wedges, texts, autotexts = ax1.pie(success_failure_data, labels=success_failure_labels, colors=success_failure_colors, autopct='%1.1f%%',
                                            startangle=140, textprops={'fontsize': 14, 'fontweight': 'bold', 'color': 'white'})
 
-        # Ajouter un contour noir aux diagrammes circulaires
         for wedge in wedges:
             wedge.set_edgecolor('white')
 
@@ -127,12 +128,10 @@ class PlayerVisualizer:
             len(backward_passes) / total_passes,
         ]
         orientation_labels = ['Vers l\'avant', 'Latérales', 'Vers l\'arrière']
-        orientation_colors = ['#98FB98', '#FFD700', '#9370DB']
 
         wedges, texts, autotexts = ax2.pie(orientation_data, labels=orientation_labels, colors=orientation_colors, autopct='%1.1f%%',
                                            startangle=140, textprops={'fontsize': 14, 'fontweight': 'bold', 'color': 'white'})
 
-        # Ajouter un contour noir aux diagrammes circulaires
         for wedge in wedges:
             wedge.set_edgecolor('white')
 
@@ -141,27 +140,30 @@ class PlayerVisualizer:
         plt.tight_layout()
         plt.savefig(save_path)
         plt.close()
-
+        
     def plot_stats_visualizations(self, save_path):
         stats = self._process_stats_data()
-    
+
+        # Récupérer les événements du joueur
+        events = self.player_data.get('events', [])
+
+        # Récupérer les minutes des buts à partir des événements
+        goal_minutes = [event['minute'] for event in events if event['type']['displayName'] == 'Goal']
+
+        # Récupérer les passes décisives (IntentionalGoalAssist uniquement)
+        assist_minutes = [
+            event['minute'] for event in events 
+            if event['type']['displayName'] == 'Pass' and any(
+                qualifier['type']['displayName'] == 'IntentionalGoalAssist' for qualifier in event.get('qualifiers', [])
+            )
+        ]
+
+        # Définir la minute d'entrée en jeu du joueur (ici, nous prenons la première minute où il a une action)
+        first_minute_played = stats['minutes'][0] if stats['minutes'] else None
+
         # Définir la couleur de fond globale
         background_color = '#8549B7'  # Violet foncé
-    
-        # Choisir les deux couleurs en hexadecimal
-        color1 = "#0c205d"  # Bleu foncé
-        color2 = "#9e59c4"  # Violet
 
-        # Créer un gradient vertical (de haut en bas)
-        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
-        gradient = np.hstack((gradient, gradient))
-
-        # Créer un colormap personnalisé à partir des couleurs hexadécimales
-        cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
-
-        # Définir la couleur de fond globale
-        background_color = '#8549B7'  # Violet foncé
-    
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
         color2 = "#9e59c4"  # Violet
@@ -185,77 +187,104 @@ class PlayerVisualizer:
         # Appliquer le gradient vertical avec les couleurs choisies
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
 
-        # Ajouter un axe qui occupe toute la figure
-        ax = fig.add_axes([0, 0, 1, 1])
-
-        # Désactiver les axes
-        ax.axis('off')
-
-        # Appliquer le gradient vertical avec les couleurs choisies
-        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
-        
         gs = GridSpec(2, 1, height_ratios=[1, 1], figure=fig)
-    
+
         # Diagramme à barres verticales pour les statistiques globales
         ax1 = fig.add_subplot(gs[0, 0])
         categories = [
-            'Possession', 'Touches', 'Interceptions', 'Passes', 
-            'Passes précises', 'Passes clés', 'Tacles réussis', 
-            'Tacles ratés', 'Possession perdue'
+            'Possession', 'Possession perdue', 'Touches', 'Passes', 
+            'Passes précises', 'Passes clés', 'Interceptions', 
+            'Tacles réussis', 'Tacles ratés'
         ]
         values = [
-            stats['total_possession'], stats['total_touches'], stats['total_interceptions'], 
+            stats['total_possession'], stats['total_dispossessed'], stats['total_touches'], 
             stats['total_passes'], stats['total_accurate_passes'], stats['total_key_passes'], 
-            stats['total_successful_tackles'], stats['total_unsuccessful_tackles'], stats['total_dispossessed']
+            stats['total_interceptions'], stats['total_successful_tackles'], stats['total_unsuccessful_tackles']
         ]
-        
+
         bars = ax1.bar(categories, values, color='mediumseagreen')
-    
+
         # Ajouter les valeurs au-dessus de chaque barre
         for bar in bars:
             yval = bar.get_height()
-            ax1.text(bar.get_x() + bar.get_width() / 2, yval + 1, int(yval), ha='center', fontsize=10, )
-    
+            ax1.text(bar.get_x() + bar.get_width() / 2, yval + 1, int(yval), ha='center', fontsize=10)
+
         ax1.set_ylabel('Total', fontsize=12, fontweight='bold', color='white')
         ax1.set_title(f"Les stats globales de {self.player_data['player_name']}", fontsize=16, fontweight='bold', color='white')
         ax1.set_xticklabels(categories, rotation=45, ha='right', fontsize=12, color='white')
         ax1.tick_params(axis='y', colors='white')  # Changer la couleur des graduations sur l'axe Y
         ax1.spines['bottom'].set_color('white')
         ax1.spines['left'].set_color('white')
-    
+
         # Diagramme de l'évolution des notes (rating)
         ax2 = fig.add_subplot(gs[1, 0])
-    
+
         # Données pour le graphique
         minutes = stats['minutes']
         ratings_over_time = stats['ratings_over_time']
         threshold = 6
-    
+
         # Convertir les données en tableaux numpy
         ratings_over_time = np.array(ratings_over_time)
-    
+
         # Tracer la ligne horizontale à 6
         ax2.axhline(y=threshold, color='white', linewidth=2, linestyle='--')
-    
+
         # Remplissage des zones
         ax2.fill_between(minutes, ratings_over_time, threshold, where=(ratings_over_time >= threshold), 
                          interpolate=True, color='green', alpha=0.3)
         ax2.fill_between(minutes, ratings_over_time, threshold, where=(ratings_over_time < threshold), 
                          interpolate=True, color='red', alpha=0.3)
-    
+
         # Tracer la courbe fluide sans marqueurs
         ax2.plot(minutes, ratings_over_time, color='dodgerblue', linewidth=2)
-    
+
         # Ajouter une ligne verticale à la fin pour indiquer la fin du match
         final_minute = minutes[-1]
         ax2.axvline(x=final_minute, color='red', linestyle='-', linewidth=2)
         ax2.text(final_minute + 0.5, 5, f'{final_minute}"', rotation=0, verticalalignment='center',
                  color='red', fontsize=12, fontweight='bold')
-    
+
+        # Ajouter un trait rouge vertical pour l'entrée en jeu et annoter avec "Entré en jeu"
+        if first_minute_played is not None:
+            ax2.axvline(x=first_minute_played, color='red', linestyle='-', linewidth=2)
+            ax2.text(first_minute_played + 0.5, 1, f'Entré en jeu {first_minute_played}"', rotation=0, verticalalignment='center',
+                     color='red', fontsize=12, fontweight='bold')
+
+        # Tracer les points rouges pour les buts et les croix rouges pour les passes décisives
+        for minute in set(goal_minutes + assist_minutes):
+            if minute not in minutes:
+                # Ajouter la minute si elle n'existe pas
+                closest_minute_idx = np.searchsorted(minutes, minute)
+                if closest_minute_idx == 0:
+                    minutes.insert(0, minute)
+                    ratings_over_time = np.insert(ratings_over_time, 0, ratings_over_time[0])
+                elif closest_minute_idx == len(minutes):
+                    minutes.append(minute)
+                    ratings_over_time = np.append(ratings_over_time, ratings_over_time[-1])
+                else:
+                    prev_minute = minutes[closest_minute_idx - 1]
+                    next_minute = minutes[closest_minute_idx]
+                    prev_rating = ratings_over_time[closest_minute_idx - 1]
+                    next_rating = ratings_over_time[closest_minute_idx]
+                    interpolated_rating = prev_rating + (next_rating - prev_rating) * (minute - prev_minute) / (next_minute - prev_minute)
+                    minutes.insert(closest_minute_idx, minute)
+                    ratings_over_time = np.insert(ratings_over_time, closest_minute_idx, interpolated_rating)
+
+            # Tracer le point rouge pour les buts
+            if minute in goal_minutes:
+                goal_rating = ratings_over_time[minutes.index(minute)]
+                ax2.scatter(minute, goal_rating, color='red', s=100, zorder=5)
+
+            # Tracer la croix rouge en gras pour les passes décisives
+            if minute in assist_minutes:
+                assist_rating = ratings_over_time[minutes.index(minute)]
+                ax2.scatter(minute, assist_rating, color='red', s=150, zorder=5, marker='x', linewidths=3)
+
         # Mettre à jour le titre avec le nombre de minutes jouées
         num_minutes_played = final_minute
-        ax2.set_title(f"Évolution de la note durant les {num_minutes_played} minutes jouées", fontsize=16, fontweight='bold', color='white')
-    
+        ax2.set_title(f"Évolution de la note durant les {num_minutes_played - first_minute_played} minutes jouées", fontsize=16, fontweight='bold', color='white')
+
         ax2.set_xlabel('Minute', fontsize=12, fontweight='bold', color='white')
         ax2.set_ylabel('Note', fontsize=12, fontweight='bold', color='white')
         ax2.set_ylim(0, 10)
@@ -264,13 +293,22 @@ class PlayerVisualizer:
         ax2.tick_params(axis='y', colors='white')  # Changer la couleur des graduations sur l'axe Y
         ax2.spines['bottom'].set_color('white')
         ax2.spines['left'].set_color('white')
-    
+
+        # Ajouter la légende avec une croix rouge pour passe décisive
+        legend_handles = [
+            plt.Line2D([0], [0], marker='o', color='w', label='But', markerfacecolor='red', markersize=10),
+            plt.Line2D([0], [0], marker='x', color='red', label='Passe décisive', markersize=10, markeredgewidth=3)
+        ]
+        ax2.legend(handles=legend_handles, loc='upper left', fontsize=12)
+
         # Appliquer le fond violet à la figure et aux axes
         fig.patch.set_facecolor(background_color)
-    
+
         plt.tight_layout()
         plt.savefig(save_path)
         plt.close()
+
+
 
     def plot_defensive_activity(self, save_path):
         events = self.player_data.get('events', [])
