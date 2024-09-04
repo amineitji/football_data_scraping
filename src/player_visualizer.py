@@ -141,6 +141,7 @@ class PlayerVisualizer:
         plt.savefig(save_path)
         plt.close()
         
+
     def plot_stats_visualizations(self, save_path):
         stats = self._process_stats_data()
 
@@ -163,6 +164,7 @@ class PlayerVisualizer:
 
         # Définir la couleur de fond globale
         background_color = '#8549B7'  # Violet foncé
+        orange_background = '#D4CAE1'  # Orange
 
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
@@ -175,8 +177,8 @@ class PlayerVisualizer:
         # Créer un colormap personnalisé à partir des couleurs hexadécimales
         cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
 
-        # Créer une figure
-        fig = plt.figure(figsize=(16, 10))
+        # Créer une figure adaptée pour téléphone
+        fig = plt.figure(figsize=(9, 16))  # Largeur 9, hauteur 16 pour un meilleur ajustement mobile
 
         # Ajouter un axe qui occupe toute la figure
         ax = fig.add_axes([0, 0, 1, 1])
@@ -187,19 +189,24 @@ class PlayerVisualizer:
         # Appliquer le gradient vertical avec les couleurs choisies
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
 
-        gs = GridSpec(2, 1, height_ratios=[1, 1], figure=fig)
+        # Ajouter présentation du joueur
+        gs = GridSpec(3, 1, height_ratios=[0.5, 1, 1], figure=fig)  # Présentation en haut, stats et notes en bas
+        ax0 = fig.add_subplot(gs[0, 0])
+        ax0.text(0.5, 0.5, f"Présentation du joueur : {self.player_data['player_name']}", fontsize=18, color='white', ha='center', va='center', fontweight='bold')
+        ax0.axis('off')  # On désactive les axes pour cette section
 
         # Diagramme à barres verticales pour les statistiques globales
-        ax1 = fig.add_subplot(gs[0, 0])
+        ax1 = fig.add_subplot(gs[1, 0])
+        ax1.set_facecolor(orange_background)  # Changer la couleur de fond à orange
         categories = [
-            'Possession', 'Possession perdue', 'Touches', 'Passes', 
+            'Possession', 'Touches', 'Passes', 
             'Passes précises', 'Passes clés', 'Interceptions', 
-            'Tacles réussis', 'Tacles ratés'
+            'Tacles réussis'
         ]
         values = [
-            stats['total_possession'], stats['total_dispossessed'], stats['total_touches'], 
-            stats['total_passes'], stats['total_accurate_passes'], stats['total_key_passes'], 
-            stats['total_interceptions'], stats['total_successful_tackles'], stats['total_unsuccessful_tackles']
+            stats['total_possession'], stats['total_touches'], stats['total_passes'], 
+            stats['total_accurate_passes'], stats['total_key_passes'], 
+            stats['total_interceptions'], stats['total_successful_tackles']
         ]
 
         bars = ax1.bar(categories, values, color='mediumseagreen')
@@ -207,17 +214,18 @@ class PlayerVisualizer:
         # Ajouter les valeurs au-dessus de chaque barre
         for bar in bars:
             yval = bar.get_height()
-            ax1.text(bar.get_x() + bar.get_width() / 2, yval + 1, int(yval), ha='center', fontsize=10)
+            ax1.text(bar.get_x() + bar.get_width() / 2, yval + 0.1, int(yval), ha='center', fontsize=10)
 
         ax1.set_ylabel('Total', fontsize=12, fontweight='bold', color='white')
-        ax1.set_title(f"Les stats globales de {self.player_data['player_name']}", fontsize=16, fontweight='bold', color='white')
+        ax1.set_title(f"Stats globales de {self.player_data['player_name']}", fontsize=16, fontweight='bold', color='white')
         ax1.set_xticklabels(categories, rotation=45, ha='right', fontsize=12, color='white')
         ax1.tick_params(axis='y', colors='white')  # Changer la couleur des graduations sur l'axe Y
         ax1.spines['bottom'].set_color('white')
         ax1.spines['left'].set_color('white')
 
         # Diagramme de l'évolution des notes (rating)
-        ax2 = fig.add_subplot(gs[1, 0])
+        ax2 = fig.add_subplot(gs[2, 0])
+        ax2.set_facecolor(orange_background)  # Changer la couleur de fond à orange
 
         # Données pour le graphique
         minutes = stats['minutes']
@@ -229,6 +237,14 @@ class PlayerVisualizer:
 
         # Tracer la ligne horizontale à 6
         ax2.axhline(y=threshold, color='white', linewidth=2, linestyle='--')
+
+        # Déterminer les bornes Y pour centrer autour de la note actuelle
+        if ratings_over_time.size > 0:
+            current_rating = ratings_over_time[-1]
+            lower_bound = max(0, current_rating - 2)  # Min value
+            upper_bound = min(10, np.ceil(current_rating))  # Max value rounded up
+        else:
+            lower_bound, upper_bound = 0, 10  # Valeurs par défaut si pas de notes
 
         # Remplissage des zones
         ax2.fill_between(minutes, ratings_over_time, threshold, where=(ratings_over_time >= threshold), 
@@ -242,13 +258,13 @@ class PlayerVisualizer:
         # Ajouter une ligne verticale à la fin pour indiquer la fin du match
         final_minute = minutes[-1]
         ax2.axvline(x=final_minute, color='red', linestyle='-', linewidth=2)
-        ax2.text(final_minute + 0.5, 5, f'{final_minute}"', rotation=0, verticalalignment='center',
+        ax2.text(final_minute + 0.5, lower_bound + 0.5, f'{final_minute}"', rotation=0, verticalalignment='center',
                  color='red', fontsize=12, fontweight='bold')
 
         # Ajouter un trait rouge vertical pour l'entrée en jeu et annoter avec "Entré en jeu"
         if first_minute_played is not None:
             ax2.axvline(x=first_minute_played, color='red', linestyle='-', linewidth=2)
-            ax2.text(first_minute_played + 0.5, 1, f'Entré en jeu {first_minute_played}"', rotation=0, verticalalignment='center',
+            ax2.text(first_minute_played + 0.5, lower_bound + 0.5, f'Entré en jeu {first_minute_played}"', rotation=0, verticalalignment='center',
                      color='red', fontsize=12, fontweight='bold')
 
         # Tracer les points rouges pour les buts et les croix rouges pour les passes décisives
@@ -283,16 +299,18 @@ class PlayerVisualizer:
 
         # Mettre à jour le titre avec le nombre de minutes jouées
         num_minutes_played = final_minute
-        ax2.set_title(f"Évolution de la note durant les {num_minutes_played - first_minute_played} minutes jouées", fontsize=16, fontweight='bold', color='white')
+        ax2.set_title(f"Évolution de la note durant {num_minutes_played - first_minute_played} minutes", fontsize=16, fontweight='bold', color='white')
 
         ax2.set_xlabel('Minute', fontsize=12, fontweight='bold', color='white')
         ax2.set_ylabel('Note', fontsize=12, fontweight='bold', color='white')
-        ax2.set_ylim(0, 10)
-        ax2.grid(True, color='gray')
+        ax2.set_ylim(lower_bound, upper_bound)  # Ajustement dynamique
         ax2.tick_params(axis='x', colors='white')  # Changer la couleur des graduations sur l'axe X
         ax2.tick_params(axis='y', colors='white')  # Changer la couleur des graduations sur l'axe Y
         ax2.spines['bottom'].set_color('white')
         ax2.spines['left'].set_color('white')
+
+        # Supprimer la grille
+        ax2.grid(False)
 
         # Ajouter la légende avec une croix rouge pour passe décisive
         legend_handles = [
