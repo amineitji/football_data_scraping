@@ -41,7 +41,7 @@ class PlayerVisualizer:
 
         return forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes
 
-    def plot_passes_and_pie_charts(self, save_path):
+    def plot_passes_and_bar_charts(self, save_path):
         events = self.player_data.get('events', [])
         passes = [event for event in events if event['type']['displayName'] == 'Pass']
 
@@ -50,12 +50,11 @@ class PlayerVisualizer:
             return
 
         forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
-
-        fig = plt.figure(figsize=(16, 10))
+        total_passes = len(passes)
 
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
-        color2 = "#8a62d4"  # Violet
+        color2 = "#4955c1"  # Violet
 
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
@@ -65,7 +64,7 @@ class PlayerVisualizer:
         cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
 
         # Créer une figure
-        fig = plt.figure(figsize=(16, 10))
+        fig = plt.figure(figsize=(12, 9))
 
         # Ajouter un axe qui occupe toute la figure
         ax = fig.add_axes([0, 0, 1, 1])
@@ -76,13 +75,10 @@ class PlayerVisualizer:
         # Appliquer le gradient vertical avec les couleurs choisies
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
 
-        # Couleurs plus sombres pour les diagrammes circulaires
-        success_failure_colors = ['#3d85c6', '#cc0000']  # Bleu foncé et Rouge foncé
-        orientation_colors = ['#6aa84f', '#f1c232', '#a64d79']  # Vert foncé, Marron, Bleu ardoise foncé
+        # Creating a grid to place the pitch on the left and visualizations on the right
+        gs = GridSpec(6, 2, width_ratios=[3, 1])  # 6 rows, 2 columns (3:1 ratio)
 
-        gs = GridSpec(2, 2, width_ratios=[3, 1])
-
-        # Créer un objet pitch avec un fond transparent (alpha=0)
+        # 1. Plotting the pitch on the left side
         pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
         ax_pitch = fig.add_subplot(gs[:, 0])
         pitch.draw(ax=ax_pitch)
@@ -103,44 +99,86 @@ class PlayerVisualizer:
         success_patch = mpatches.Patch(color='deepskyblue', label='Passe réussie')
         failed_patch = mpatches.Patch(color='red', label='Passe ratée')
         ax_pitch.legend(handles=[success_patch, failed_patch], loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
-
         ax_pitch.set_title(f"Passes de {self.player_data['player_name']}", fontsize=18, color='white', fontweight='bold')
 
-        ax1 = fig.add_subplot(gs[0, 1])
-        total_passes = len(passes)
-        success_failure_data = [
-            len(successful_passes) / total_passes,
-            len(failed_passes) / total_passes,
-        ]
-        success_failure_labels = ['Réussies', 'Ratées']
+        # 2. Plotting data visualizations on the right side
 
-        wedges, texts, autotexts = ax1.pie(success_failure_data, labels=success_failure_labels, colors=success_failure_colors, autopct='%1.1f%%',
-                                           startangle=140, textprops={'fontsize': 14, 'fontweight': 'bold', 'color': 'white'})
+        # Semi-circular gauge for pass success
+        ax_gauge = fig.add_subplot(gs[0:3, 1], polar=True)
+        self._plot_semi_circular_gauge(ax_gauge,"Taux de passes réussies", len(successful_passes), total_passes)
 
-        for wedge in wedges:
-            wedge.set_edgecolor('white')
+        # Horizontal bars for forward, lateral, and backward passes
+        ax_bar1 = fig.add_subplot(gs[3, 1])
+        ax_bar2 = fig.add_subplot(gs[4, 1])
+        ax_bar3 = fig.add_subplot(gs[5, 1])
 
-        ax1.set_title("Répartition des passes réussies/ratées", fontsize=16, color='white', fontweight='bold')
-
-        ax2 = fig.add_subplot(gs[1, 1])
-        orientation_data = [
-            len(forward_passes) / total_passes,
-            len(lateral_passes) / total_passes,
-            len(backward_passes) / total_passes,
-        ]
-        orientation_labels = ['Vers l\'avant', 'Latérales', 'Vers l\'arrière']
-
-        wedges, texts, autotexts = ax2.pie(orientation_data, labels=orientation_labels, colors=orientation_colors, autopct='%1.1f%%',
-                                           startangle=140, textprops={'fontsize': 14, 'fontweight': 'bold', 'color': 'white'})
-
-        for wedge in wedges:
-            wedge.set_edgecolor('white')
-
-        ax2.set_title("Orientation des passes", fontsize=16, color='white', fontweight='bold')
+        self._add_horizontal_bar(ax_bar1, 'Passes vers l\'avant', len(forward_passes), total_passes)
+        self._add_horizontal_bar(ax_bar2, 'Passes latérales', len(lateral_passes), total_passes)
+        self._add_horizontal_bar(ax_bar3, 'Passes vers l\'arrière', len(backward_passes), total_passes)
 
         plt.tight_layout()
-        plt.savefig(save_path)
-        plt.close()
+        plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
+        plt.show()
+
+    def _plot_semi_circular_gauge(self, ax, label, successful_passes, total_passes):
+        ax.set_facecolor('none')  # Background color for the gauge
+        percentage = successful_passes / total_passes
+
+        # Create the angle for the semi-circle (from pi to 0 for right-to-left)
+        theta = np.linspace(np.pi, 0, 100)
+
+        # Create a color map from red to custom green (#6DF176)
+        cmap = mcolors.LinearSegmentedColormap.from_list('red_green', ['red', 'orange', '#6DF176'])
+
+        # Get the interpolated color based on the percentage (0 is red, 1 is #6DF176)
+        color = cmap(percentage)
+
+        # Plot the full background arc (gray, representing 100%)
+        ax.plot(theta, np.ones_like(theta) * 10, lw=30, color='#505050', solid_capstyle='butt')
+
+        # Plot only the arc showing successful passes with interpolated color
+        end_theta_index = int(percentage * len(theta))
+        ax.plot(theta[:end_theta_index], np.ones_like(theta)[:end_theta_index] * 10, 
+                lw=30, color=color, solid_capstyle='butt')
+
+        # Add the percentage value in the center of the gauge
+        ax.text(0, 0, f'{int(percentage * 100)}%', ha='center', va='center', fontsize=32, 
+                color=color, fontweight='bold')
+
+        # Remove any axis labels, ticks, or spines
+        ax.set_ylim(0, 10)
+        ax.set_yticks([])  # Remove y-ticks
+        ax.set_xticks([])  # Remove x-ticks
+        ax.spines['polar'].set_visible(False)  # Hide the polar spines (borders)
+
+        # Add a title above the gauge
+        ax.set_title(label, fontsize=14, color="white", fontweight='bold', pad=20)
+
+
+    def _add_horizontal_bar(self, ax, label, value, max_value):
+        bar_height = 0.2
+        filled_length = value / max_value
+
+        # Create a color map from red to gray (#505050)
+        cmap = mcolors.LinearSegmentedColormap.from_list('red_gray', ['red', 'orange', '#6DF176'])
+
+        # Interpolated color based on the filled length
+        bar_color = cmap(filled_length)
+
+        # Background bar (gray)
+        ax.barh(0, 1, height=bar_height, color='#505050')
+
+        # Filled bar with interpolated color
+        ax.barh(0, filled_length, height=bar_height, color=bar_color)
+
+        # Add the label and value ABOVE the bar
+        ax.text(0.5, 0.3, label, va='bottom', ha='center', fontsize=10, color='white', fontweight='bold')  # Positioning label above
+        ax.text(0.5, -0.6, f'{value}', va='top', ha='center', fontsize=10, color='white', fontweight='bold')  # Value also above the bar
+
+        # Remove axes
+        ax.set_xlim(0, 1)
+        ax.set_ylim(-0.5, 1.0)  # Adjust vertical limits to fit text above the bar
+        ax.axis('off')
         
 
     def plot_stats_visualizations(self, save_path):

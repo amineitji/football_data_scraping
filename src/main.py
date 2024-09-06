@@ -19,7 +19,7 @@ def main(url, player_name):
     save_path_offensive_pitch = os.path.join(save_dir, f'{player_name.replace(" ", "_")}_offensive_activity_pitch.png')
     save_path_offensive_goal = os.path.join(save_dir, f'{player_name.replace(" ", "_")}_offensive_activity_goal.png')
 
-    visualizer.plot_passes_and_pie_charts(save_path_passes)
+    visualizer.plot_passes_and_bar_charts(save_path_passes)
     visualizer.plot_stats_visualizations(save_path_stats)
     visualizer.plot_defensive_activity(save_path_defensive)
     visualizer.plot_offensive_activity(save_path_offensive_pitch, save_path_offensive_goal)
