@@ -562,7 +562,7 @@ class PlayerVisualizer:
 
             if event_type == 'TakeOn':
                 # Étoiles pour les dribbles
-                marker = '*'  
+                marker = 's'  
                 color = 'green' if outcome == 'Successful' else 'red'
                 pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
 

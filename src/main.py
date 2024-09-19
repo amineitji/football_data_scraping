@@ -39,3 +39,4 @@ if __name__ == "__main__":
 ### pour lancer le code : python src/main.py "data/Toulouse 1-3 Marseille - Ligue 1 2024_2025 Direct.html" "Amine Harit"
 ### python src/main.py "data/Morocco 3-0 Tanzania - Africa Cup of Nations 2023 Direct.html" "Sofyan Amrabat"
 ### python src/main.py "data/Morocco 3-0 Tanzania - Africa Cup of Nations 2023 Direct.html" "Abde Ezzalzouli"
+### python src/main.py "data/Bayern Munich 9-2 Dinamo Zagreb - Champions League 2024_2025 Live.html" "Harry Kane"
