@@ -44,81 +44,82 @@ class PlayerVisualizer:
     def plot_passes_and_bar_charts(self, save_path):
         events = self.player_data.get('events', [])
         passes = [event for event in events if event['type']['displayName'] == 'Pass']
-
+    
         if not passes:
             print(f"Pas de passes trouvées pour {self.player_data['player_name']}. Aucun visuel généré.")
             return
-
+    
         forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
         total_passes = len(passes)
-
+    
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
         color2 = "#4955c1"  # Violet
-
+    
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
         gradient = np.hstack((gradient, gradient))
-
+    
         # Créer un colormap personnalisé à partir des couleurs hexadécimales
         cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
-
+    
         # Créer une figure
         fig = plt.figure(figsize=(12, 9))
-
+    
         # Ajouter un axe qui occupe toute la figure
         ax = fig.add_axes([0, 0, 1, 1])
-
+    
         # Désactiver les axes
         ax.axis('off')
-
+    
         # Appliquer le gradient vertical avec les couleurs choisies
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
-
+    
         # Creating a grid to place the pitch on the left and visualizations on the right
         gs = GridSpec(6, 2, width_ratios=[3, 1])  # 6 rows, 2 columns (3:1 ratio)
-
+    
         # 1. Plotting the pitch on the left side
         pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
         ax_pitch = fig.add_subplot(gs[:, 0])
         pitch.draw(ax=ax_pitch)
-
+    
         ax_pitch.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
                           arrowprops=dict(facecolor='red', edgecolor='white', width=10, headwidth=25, headlength=25))
         ax_pitch.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='white', rotation=0, transform=ax_pitch.transAxes)
-
+    
         for pas in passes:
             y_start = pas['x']
             x_start = pas['y']
             y_end = pas['endX']
             x_end = pas['endY']
-
+    
             color = 'deepskyblue' if pas['outcomeType']['displayName'] == 'Successful' else 'red'
             pitch.arrows(y_start, x_start, y_end, x_end, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch)
-
+    
         success_patch = mpatches.Patch(color='deepskyblue', label='Passe réussie')
         failed_patch = mpatches.Patch(color='red', label='Passe ratée')
         ax_pitch.legend(handles=[success_patch, failed_patch], loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
         ax_pitch.set_title(f"Passes de {self.player_data['player_name']}", fontsize=18, color='white', fontweight='bold')
-
+    
         # 2. Plotting data visualizations on the right side
-
-        # Semi-circular gauge for pass success
-        ax_gauge = fig.add_subplot(gs[0:3, 1], polar=True)
-        self._plot_semi_circular_gauge(ax_gauge,"Taux de passes réussies", len(successful_passes), total_passes)
-
+    
+        # Move the semi-circular gauge lower (closer to the first bar plot)
+        ax_gauge = fig.add_subplot(gs[2:4, 1], polar=True)  # Now taking up only the third row, right above the bar chart
+        self._plot_semi_circular_gauge(ax_gauge, "Taux de passes réussies", len(successful_passes), total_passes)
+    
         # Horizontal bars for forward, lateral, and backward passes
         ax_bar1 = fig.add_subplot(gs[3, 1])
         ax_bar2 = fig.add_subplot(gs[4, 1])
         ax_bar3 = fig.add_subplot(gs[5, 1])
-
+    
         self._add_horizontal_bar(ax_bar1, 'Passes vers l\'avant', len(forward_passes), total_passes)
         self._add_horizontal_bar(ax_bar2, 'Passes latérales', len(lateral_passes), total_passes)
         self._add_horizontal_bar(ax_bar3, 'Passes vers l\'arrière', len(backward_passes), total_passes)
-
+    
         plt.tight_layout()
         plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
         plt.show()
+
 
     def _plot_semi_circular_gauge(self, ax, label, successful_passes, total_passes):
         ax.set_facecolor('none')  # Background color for the gauge
@@ -154,32 +155,40 @@ class PlayerVisualizer:
         # Add a title above the gauge
         ax.set_title(label, fontsize=14, color="white", fontweight='bold', pad=20)
 
-
     def _add_horizontal_bar(self, ax, label, value, max_value):
-        bar_height = 0.2
+        bar_height = 0.3
+        if max_value == 0:
+            max_value = max_value+1
+            
         filled_length = value / max_value
 
-        # Create a color map from red to gray (#505050)
-        cmap = mcolors.LinearSegmentedColormap.from_list('red_gray', ['red', 'orange', '#6DF176'])
+        # Vérifier si la barre concerne les fautes commises
+        if 'Fautes' in label:
+            # Palette de couleurs pour les fautes (toujours rouge)
+            cmap = mcolors.LinearSegmentedColormap.from_list('red', ['#FF0000', '#FF0000'])  # Palette entièrement rouge
+        else:
+            # Palette de couleurs pour les autres événements (du rouge à vert)
+            cmap = mcolors.LinearSegmentedColormap.from_list('red_gray', ['red', 'orange', '#6DF176'])  # Rouge -> Vert
 
-        # Interpolated color based on the filled length
+        # Couleur interpolée en fonction de la longueur remplie
         bar_color = cmap(filled_length)
 
-        # Background bar (gray)
-        ax.barh(0, 1, height=bar_height, color='#505050')
+        # Barre de fond (gris) sans coins arrondis
+        ax.barh(0, 1, height=bar_height, color='#505050', edgecolor='none')
 
-        # Filled bar with interpolated color
-        ax.barh(0, filled_length, height=bar_height, color=bar_color)
+        # Barre remplie avec la couleur interpolée sans coins arrondis
+        ax.barh(0, filled_length, height=bar_height, color=bar_color, edgecolor='none')
 
-        # Add the label and value ABOVE the bar
-        ax.text(0.5, 0.3, label, va='bottom', ha='center', fontsize=10, color='white', fontweight='bold')  # Positioning label above
-        ax.text(0.5, -0.6, f'{value}', va='top', ha='center', fontsize=10, color='white', fontweight='bold')  # Value also above the bar
+        # Ajouter l'étiquette à gauche de la barre (très proche de la barre)
+        ax.text(-0.005, 0.6, label, va='center', ha='left', fontsize=10, color='white', fontweight='bold', transform=ax.transAxes)  # Position de l'étiquette à gauche
 
-        # Remove axes
+        # Ajouter la valeur à droite de la barre (très proche de la barre)
+        ax.text(1.005, 0.6, f'{value}', va='center', ha='right', fontsize=10, color='white', fontweight='bold', transform=ax.transAxes)  # Position de la valeur à droite
+
+        # Supprimer les axes
         ax.set_xlim(0, 1)
-        ax.set_ylim(-0.5, 1.0)  # Adjust vertical limits to fit text above the bar
+        ax.set_ylim(-0.5, 1.0)  # Ajuster les limites verticales pour bien aligner le texte au-dessus de la barre
         ax.axis('off')
-        
 
     def plot_stats_visualizations(self, save_path):
         stats = self._process_stats_data()
@@ -379,6 +388,21 @@ class PlayerVisualizer:
             print(f"Aucune activité défensive trouvée pour {self.player_data['player_name']}. Aucun visuel généré.")
             return
 
+        # Compter les événements défensifs par type
+        ball_recoveries = [event for event in defensive_events if event['type']['displayName'] == 'BallRecovery']
+        successful_ball_recoveries = [event for event in ball_recoveries if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        challenges = [event for event in defensive_events if event['type']['displayName'] == 'Challenge']
+        successful_challenges = [event for event in challenges if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        tackles = [event for event in defensive_events if event['type']['displayName'] == 'Tackle']
+        successful_tackles = [event for event in tackles if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        fouls = [event for event in defensive_events if event['type']['displayName'] == 'Foul']
+        committed_fouls = len(fouls)  # Assume all fouls are "committed"
+
+        total_events = len(defensive_events)
+
         # Définir les symboles et couleurs
         symbol_map = {
             'BallRecovery': 'o',  # Rond
@@ -391,9 +415,6 @@ class PlayerVisualizer:
             'Unsuccessful': 'red'
         }
 
-        # Définir la couleur de fond globale
-        background_color = '#8549B7'  # Violet foncé
-    
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
         color2 = "#4955c1"  # Violet
@@ -406,7 +427,7 @@ class PlayerVisualizer:
         cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
 
         # Créer une figure
-        fig = plt.figure(figsize=(16, 10))
+        fig = plt.figure(figsize=(12, 9))
 
         # Ajouter un axe qui occupe toute la figure
         ax = fig.add_axes([0, 0, 1, 1])
@@ -417,16 +438,18 @@ class PlayerVisualizer:
         # Appliquer le gradient vertical avec les couleurs choisies
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
 
-        # Créer l'axe
-        ax = fig.add_subplot(1, 1, 1)
+        # Création d'une grille pour placer le terrain à gauche et les visualisations à droite
+        gs = GridSpec(6, 2, width_ratios=[3, 1])  # 6 rangées, 2 colonnes (rapport 3:1)
 
-        pitch = VerticalPitch(pitch_type='opta', pitch_color='#4b0082', line_color='white', linewidth=2)
-        pitch.draw(ax=ax)
+        # 1. Tracé du terrain à gauche
+        pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
+        ax_pitch = fig.add_subplot(gs[:, 0])
+        pitch.draw(ax=ax_pitch)
 
-        # Ajout de la flèche rouge verticale avec un contour noir pour indiquer le sens du jeu
-        ax.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
-                    arrowprops=dict(facecolor='red', edgecolor='black', width=10, headwidth=25, headlength=25))
-        ax.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='white', rotation=0, transform=ax.transAxes)
+        # Ajouter une flèche pour le sens du jeu
+        ax_pitch.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
+                          arrowprops=dict(facecolor='red', edgecolor='white', width=10, headwidth=25, headlength=25))
+        ax_pitch.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='white', rotation=0, transform=ax_pitch.transAxes)
 
         # Parcours des événements défensifs
         for event in defensive_events:
@@ -435,26 +458,44 @@ class PlayerVisualizer:
             outcome = event['outcomeType']['displayName'] if 'outcomeType' in event else 'Successful'  # Assume success if not stated
 
             marker = symbol_map[event_type]
-            color = color_map.get(outcome, 'green')  # Default to green if outcome not recognized
 
-            pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax)
+            # Si l'événement est une faute, la couleur doit toujours être rouge
+            if event_type == 'Foul':
+                color = 'red'
+            else:
+                color = color_map.get(outcome, 'green')  # Default to green if outcome not recognized
+
+            pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
 
         # Création de la légende
         legend_handles = [
-            mpatches.Patch(color='green', label='Succès'),
-            mpatches.Patch(color='red', label='Échec'),
             plt.Line2D([0], [0], marker='o', color='w', label='Récupération de balle', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], marker='s', color='w', label='Duel', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], marker='^', color='w', label='Tacle', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], marker='*', color='w', label='Faute', markerfacecolor='black', markersize=15),
         ]
-        ax.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
+        ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
+        ax_pitch.set_title(f"Activité défensive de {self.player_data['player_name']}", fontsize=18, color='white', fontweight='bold')
 
-        ax.set_title(f"Activité défensive de {self.player_data['player_name']}", fontsize=18, color='white', fontweight='bold')
+        # 2. Visualisation des données sur le côté droit
+
+        # Jauge semi-circulaire pour les récupérations de balle réussies
+        ax_gauge = fig.add_subplot(gs[2:4, 1], polar=True)  # Prend la troisième rangée à droite
+        self._plot_semi_circular_gauge(ax_gauge, "Récupérations réussies", len(successful_ball_recoveries), len(ball_recoveries))
+
+        # Barres horizontales pour les autres événements défensifs
+        ax_bar1 = fig.add_subplot(gs[3, 1])
+        ax_bar2 = fig.add_subplot(gs[4, 1])
+        ax_bar3 = fig.add_subplot(gs[5, 1])
+
+        # Ajout des barres avec des pourcentages spécifiques à chaque type d'événement
+        self._add_horizontal_bar(ax_bar1, 'Duels réussis', len(successful_challenges), len(challenges))
+        self._add_horizontal_bar(ax_bar2, 'Tacles réussis', len(successful_tackles), len(tackles))
+        self._add_horizontal_bar(ax_bar3, 'Fautes commises', committed_fouls, len(events))
 
         plt.tight_layout()
-        plt.savefig(save_path)
-        plt.close()
+        plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
+        plt.show()
 
     def plot_offensive_activity(self, save_path_pitch, save_path_goal):
         events = self.player_data.get('events', [])
@@ -468,9 +509,15 @@ class PlayerVisualizer:
             print(f"Aucune activité offensive trouvée pour {self.player_data['player_name']}. Aucun visuel généré.")
             return
 
-        # Définir la couleur de fond globale
-        background_color = '#8549B7'  # Violet foncé
-    
+        # Compter les événements offensifs par type
+        takeons = [event for event in offensive_events if event['type']['displayName'] == 'TakeOn']
+        successful_takeons = [event for event in takeons if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        missed_shots = [event for event in offensive_events if event['type']['displayName'] == 'MissedShots']
+        goals = [event for event in offensive_events if event['type']['displayName'] == 'Goal']
+
+        total_events = len(offensive_events)
+
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
         color2 = "#4955c1"  # Violet
@@ -483,7 +530,7 @@ class PlayerVisualizer:
         cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
 
         # Créer une figure
-        fig = plt.figure(figsize=(16, 10))
+        fig = plt.figure(figsize=(12, 9))
 
         # Ajouter un axe qui occupe toute la figure
         ax = fig.add_axes([0, 0, 1, 1])
@@ -494,124 +541,75 @@ class PlayerVisualizer:
         # Appliquer le gradient vertical avec les couleurs choisies
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
 
-        # Créer l'axe
-        ax = fig.add_subplot(1, 1, 1)
+        # Création d'une grille pour placer le terrain à gauche et les visualisations à droite
+        gs = GridSpec(6, 2, width_ratios=[3, 1])  # 6 rangées, 2 colonnes (rapport 3:1)
 
-        pitch = VerticalPitch(pitch_type='opta', pitch_color='#4b0082', line_color='white', linewidth=2)
-        pitch.draw(ax=ax)
+        # 1. Tracé du terrain à gauche
+        pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
+        ax_pitch = fig.add_subplot(gs[:, 0])
+        pitch.draw(ax=ax_pitch)
 
-        # Variables pour les tirs
-        shots = []
+        # Ajouter une flèche pour le sens du jeu
+        ax_pitch.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
+                          arrowprops=dict(facecolor='red', edgecolor='white', width=10, headwidth=25, headlength=25))
+        ax_pitch.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='white', rotation=0, transform=ax_pitch.transAxes)
 
-        # Ajout de la flèche rouge verticale avec un contour noir pour indiquer le sens du jeu
-        ax.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
-                    arrowprops=dict(facecolor='red', edgecolor='black', width=10, headwidth=25, headlength=25))
-        ax.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='white', rotation=0, transform=ax.transAxes)
-
+        # Parcours des événements offensifs
         for event in offensive_events:
             x, y = event['x'], event['y']
             event_type = event['type']['displayName']
+            outcome = event['outcomeType']['displayName']
 
             if event_type == 'TakeOn':
-                marker = 'o'  # Rond pour les dribbles
-                color = 'yellow' if event['outcomeType']['displayName'] == 'Successful' else 'red'
-                pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax)
+                # Étoiles pour les dribbles
+                marker = '*'  
+                color = 'green' if outcome == 'Successful' else 'red'
+                pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
 
             elif event_type in ['MissedShots', 'Goal']:
-                outcome = event['outcomeType']['displayName']
+                # Ronds pour les tirs et les buts
+                marker = 'o'
                 color = 'green' if event_type == 'Goal' else 'red'
 
                 # Ajouter le point de tir
-                pitch.scatter(x, y, s=200, color=color, edgecolor='white', linewidth=1.5, ax=ax)
+                pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
 
-                # Trouver les coordonnées de la cible (la cage)
+                # Trajectoire du tir avec une flèche
                 goalmouth_y = next((float(q['value']) for q in event['qualifiers'] if q['type']['displayName'] == 'GoalMouthY'), None)
                 goalmouth_z = next((float(q['value']) for q in event['qualifiers'] if q['type']['displayName'] == 'GoalMouthZ'), None)
 
                 if goalmouth_y is not None and goalmouth_z is not None:
                     end_x = 100  # Les tirs se terminent à la ligne de but
                     end_y = (goalmouth_y / 100) * pitch.dim.pitch_length
-                    shots.append((goalmouth_y, goalmouth_z, color))  # Ajouter pour le visuel de la cage
-                    pitch.arrows(x, y, end_x, end_y, width=2, headwidth=3, headlength=3, color=color, ax=ax)
+                    pitch.arrows(x, y, end_x, end_y, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch)
 
-        # Ajouter la légende pour l'activité offensive sur le terrain
+        # Création de la légende
         legend_handles = [
-            mpatches.Patch(color='yellow', label='Dribble réussi'),
-            mpatches.Patch(color='red', label='Dribble raté'),
-            mpatches.Patch(color='green', label='But'),
-            mpatches.Patch(color='red', label='Tir manqué')
+            plt.Line2D([0], [0], marker='s', color='w', label='Dribble', markerfacecolor='black', markersize=15),
+            plt.Line2D([0], [0], marker='o', color='w', label='But', markerfacecolor='green', markersize=15),
+            plt.Line2D([0], [0], marker='o', color='w', label='Tir', markerfacecolor='red', markersize=15)
         ]
-        ax.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
+        ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
+        ax_pitch.set_title(f"Activité offensive de {self.player_data['player_name']}", fontsize=18, color='white', fontweight='bold')
 
-        ax.set_title(f"Activité offensive de {self.player_data['player_name']}", fontsize=18, color='white', fontweight='bold')
+        # 2. Visualisation des données sur le côté droit
+
+        # Jauge semi-circulaire pour les buts
+        ax_gauge = fig.add_subplot(gs[2:4, 1], polar=True)
+        self._plot_semi_circular_gauge(ax_gauge, "Dribbles réussis", len(successful_takeons), len(takeons))
+
+        # Barres horizontales pour les dribbles et tirs manqués
+        ax_bar1 = fig.add_subplot(gs[3, 1])
+        ax_bar2 = fig.add_subplot(gs[4, 1])
+
+        # Ajout des barres avec des pourcentages spécifiques à chaque type d'événement
+        self._add_horizontal_bar(ax_bar1, 'Dribbles réussis', len(successful_takeons), len(takeons))
+        self._add_horizontal_bar(ax_bar2, 'Tirs', len(missed_shots), len(missed_shots) + len(goals))
 
         plt.tight_layout()
         plt.savefig(save_path_pitch)
-        plt.close()
+        plt.show()
 
-        # Générer le visuel de la cage
-        if shots:
-            fig = plt.figure(figsize=(7.32, 2.44))  # Adapter la taille du graphique aux dimensions réelles
-
-            # Définir la couleur de fond globale
-            background_color = '#8549B7'  # Violet foncé
-
-            # Choisir les deux couleurs en hexadecimal
-            color1 = "#0c205d"  # Bleu foncé
-            color2 = "#4955c1"  # Violet
-
-            # Créer un gradient vertical (de haut en bas)
-            gradient = np.linspace(0, 1, 256).reshape(-1, 1)
-            gradient = np.hstack((gradient, gradient))
-
-            # Créer un colormap personnalisé à partir des couleurs hexadécimales
-            cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
-
-            # Créer une figure
-            fig = plt.figure(figsize=(7.32, 2.44))
-
-            # Ajouter un axe qui occupe toute la figure
-            ax = fig.add_axes([0, 0, 1, 1])
-
-            # Désactiver les axes
-            ax.axis('off')
-
-            # Appliquer le gradient vertical avec les couleurs choisies
-            ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
-            # Créer l'axe
-            ax = fig.add_subplot(1, 1, 1)
-
-            ax.set_xlim(0, 7.32)  # Largeur de la cage en mètres
-            ax.set_ylim(0, 2.44)  # Hauteur de la cage en mètres
-            ax.set_aspect('equal')
-            ax.set_title("Vue frontale des tirs",color='white')
-
-            # Normaliser les coordonnées pour correspondre aux dimensions réelles de la cage
-            for y, z, color in shots:
-                real_y = (y / 100) * 7.32
-                real_z = (z / 100) * 2.44
-                ax.scatter(real_y, real_z, s=200, color=color, edgecolor='black', linewidth=1.5)
-
-            # Supprimer les graduations
-            ax.set_xticks([])
-            ax.set_yticks([])
-
-            # Dessiner les lignes de la cage
-            ax.axhline(y=0, color='grey')  # Bas de la cage
-            ax.axhline(y=2.44, color='grey')  # Haut de la cage
-            ax.axvline(x=0, color='grey')  # Côté gauche
-            ax.axvline(x=7.32, color='grey')  # Côté droit
-
-            # Ajouter la légende pour la vue frontale des tirs
-            legend_handles = [
-                plt.Line2D([0], [0], marker='o', color='w', label='But', markerfacecolor='green', markersize=15, markeredgecolor='black'),
-                plt.Line2D([0], [0], marker='o', color='w', label='Tir manqué', markerfacecolor='red', markersize=15, markeredgecolor='black')
-            ]
-            ax.legend(handles=legend_handles, loc='upper right', fontsize=12)
-
-            plt.tight_layout()
-            plt.savefig(save_path_goal)
-            plt.close()
 
 
     def _process_stats_data(self):
