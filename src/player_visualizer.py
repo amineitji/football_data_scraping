@@ -76,17 +76,16 @@ class PlayerVisualizer:
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
     
         # Creating a grid to place the pitch on the left and visualizations on the right
-        gs = GridSpec(6, 2, width_ratios=[3, 1])  # 6 rows, 2 columns (3:1 ratio)
+        gs = GridSpec(6, 2, width_ratios=[3, 2])  # 6 rows, 2 columns (3:1 ratio)
     
         # 1. Plotting the pitch on the left side
         pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
         ax_pitch = fig.add_subplot(gs[:, 0])
         pitch.draw(ax=ax_pitch)
     
-        ax_pitch.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
-                          arrowprops=dict(facecolor='red', edgecolor='white', width=10, headwidth=25, headlength=25))
-        ax_pitch.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='white', rotation=0, transform=ax_pitch.transAxes)
-    
+        ax_pitch.annotate('', xy=(-0.05, 0.75), xytext=(-0.05, 0.25), xycoords='axes fraction',
+                          arrowprops=dict(edgecolor='white', facecolor='none', width=10, headwidth=25, headlength=25))
+
         for pas in passes:
             y_start = pas['x']
             x_start = pas['y']
@@ -98,13 +97,13 @@ class PlayerVisualizer:
     
         success_patch = mpatches.Patch(color='deepskyblue', label='Passe réussie')
         failed_patch = mpatches.Patch(color='red', label='Passe ratée')
-        ax_pitch.legend(handles=[success_patch, failed_patch], loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
-        ax_pitch.set_title(f"Passes de {self.player_data['player_name']}", fontsize=18, color='white', fontweight='bold')
+        ax_pitch.legend(handles=[success_patch, failed_patch], loc='upper right', bbox_to_anchor=(1.2925, 1), fontsize=12)
+        ax_pitch.set_title(f"Passes de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold')
     
         # 2. Plotting data visualizations on the right side
     
         # Move the semi-circular gauge lower (closer to the first bar plot)
-        ax_gauge = fig.add_subplot(gs[2:4, 1], polar=True)  # Now taking up only the third row, right above the bar chart
+        ax_gauge = fig.add_subplot(gs[1:5, 1], polar=True)  # Now taking up only the third row, right above the bar chart
         self._plot_semi_circular_gauge(ax_gauge, "Taux de passes réussies", len(successful_passes), total_passes)
     
         # Horizontal bars for forward, lateral, and backward passes
@@ -135,15 +134,15 @@ class PlayerVisualizer:
         color = cmap(percentage)
 
         # Plot the full background arc (gray, representing 100%)
-        ax.plot(theta, np.ones_like(theta) * 10, lw=30, color='#505050', solid_capstyle='butt')
+        ax.plot(theta, np.ones_like(theta) * 10, lw=80, color='#505050', solid_capstyle='butt')
 
         # Plot only the arc showing successful passes with interpolated color
         end_theta_index = int(percentage * len(theta))
         ax.plot(theta[:end_theta_index], np.ones_like(theta)[:end_theta_index] * 10, 
-                lw=30, color=color, solid_capstyle='butt')
+                lw=80, color=color, solid_capstyle='butt')
 
         # Add the percentage value in the center of the gauge
-        ax.text(0, 0, f'{int(percentage * 100)}%', ha='center', va='center', fontsize=32, 
+        ax.text(0, 0, f'{int(percentage * 100)}%', ha='center', va='center', fontsize=35, 
                 color=color, fontweight='bold')
 
         # Remove any axis labels, ticks, or spines
@@ -153,7 +152,7 @@ class PlayerVisualizer:
         ax.spines['polar'].set_visible(False)  # Hide the polar spines (borders)
 
         # Add a title above the gauge
-        ax.set_title(label, fontsize=14, color="white", fontweight='bold', pad=20)
+        ax.set_title(label, fontsize=20, color="white", fontweight='bold', pad=20)
 
     def _add_horizontal_bar(self, ax, label, value, max_value):
         bar_height = 0.3
@@ -180,10 +179,10 @@ class PlayerVisualizer:
         ax.barh(0, filled_length, height=bar_height, color=bar_color, edgecolor='none')
 
         # Ajouter l'étiquette à gauche de la barre (très proche de la barre)
-        ax.text(-0.005, 0.6, label, va='center', ha='left', fontsize=10, color='white', fontweight='bold', transform=ax.transAxes)  # Position de l'étiquette à gauche
+        ax.text(-0.005, 0.6, label, va='center', ha='left', fontsize=20, color='white', fontweight='bold', transform=ax.transAxes)  # Position de l'étiquette à gauche
 
         # Ajouter la valeur à droite de la barre (très proche de la barre)
-        ax.text(1.005, 0.6, f'{value}', va='center', ha='right', fontsize=10, color='white', fontweight='bold', transform=ax.transAxes)  # Position de la valeur à droite
+        ax.text(1.005, 0.6, f'{value}', va='center', ha='right', fontsize=20, color='white', fontweight='bold', transform=ax.transAxes)  # Position de la valeur à droite
 
         # Supprimer les axes
         ax.set_xlim(0, 1)
@@ -240,7 +239,7 @@ class PlayerVisualizer:
         # Ajouter présentation du joueur
         gs = GridSpec(3, 1, height_ratios=[0.5, 1, 1], figure=fig)  # Présentation en haut, stats et notes en bas
         ax0 = fig.add_subplot(gs[0, 0])
-        ax0.text(0.5, 0.5, f"Présentation du joueur : {self.player_data['player_name']}", fontsize=18, color='white', ha='center', va='center', fontweight='bold')
+        ax0.text(0.5, 0.5, f"Présentation du joueur : {self.player_data['player_name']}", fontsize=20, color='white', ha='center', va='center', fontweight='bold')
         ax0.axis('off')  # On désactive les axes pour cette section
 
         # Diagramme à barres verticales pour les statistiques globales
@@ -439,7 +438,7 @@ class PlayerVisualizer:
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
 
         # Création d'une grille pour placer le terrain à gauche et les visualisations à droite
-        gs = GridSpec(6, 2, width_ratios=[3, 1])  # 6 rangées, 2 colonnes (rapport 3:1)
+        gs = GridSpec(6, 2, width_ratios=[3, 2])  # 6 rangées, 2 colonnes (rapport 3:1)
 
         # 1. Tracé du terrain à gauche
         pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
@@ -447,10 +446,9 @@ class PlayerVisualizer:
         pitch.draw(ax=ax_pitch)
 
         # Ajouter une flèche pour le sens du jeu
-        ax_pitch.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
-                          arrowprops=dict(facecolor='red', edgecolor='white', width=10, headwidth=25, headlength=25))
-        ax_pitch.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='white', rotation=0, transform=ax_pitch.transAxes)
-
+        ax_pitch.annotate('', xy=(-0.05, 0.75), xytext=(-0.05, 0.25), xycoords='axes fraction',
+                          arrowprops=dict(edgecolor='white', facecolor='none', width=10, headwidth=25, headlength=25))
+        
         # Parcours des événements défensifs
         for event in defensive_events:
             x, y = event['x'], event['y']
@@ -469,18 +467,18 @@ class PlayerVisualizer:
 
         # Création de la légende
         legend_handles = [
-            plt.Line2D([0], [0], marker='o', color='w', label='Récupération de balle', markerfacecolor='black', markersize=15),
+            plt.Line2D([0], [0], marker='o', color='w', label='Récupération', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], marker='s', color='w', label='Duel', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], marker='^', color='w', label='Tacle', markerfacecolor='black', markersize=15),
-            plt.Line2D([0], [0], marker='*', color='w', label='Faute', markerfacecolor='black', markersize=15),
+            plt.Line2D([0], [0], marker='*', color='w', label='Faute', markerfacecolor='black'),
         ]
-        ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
-        ax_pitch.set_title(f"Activité défensive de {self.player_data['player_name']}", fontsize=18, color='white', fontweight='bold')
+        ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2925, 1), fontsize=12)
+        ax_pitch.set_title(f"Activité défensive de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold')
 
         # 2. Visualisation des données sur le côté droit
 
         # Jauge semi-circulaire pour les récupérations de balle réussies
-        ax_gauge = fig.add_subplot(gs[2:4, 1], polar=True)  # Prend la troisième rangée à droite
+        ax_gauge = fig.add_subplot(gs[1:5, 1], polar=True)  # Prend la troisième rangée à droite
         self._plot_semi_circular_gauge(ax_gauge, "Récupérations réussies", len(successful_ball_recoveries), len(ball_recoveries))
 
         # Barres horizontales pour les autres événements défensifs
@@ -494,7 +492,7 @@ class PlayerVisualizer:
         self._add_horizontal_bar(ax_bar3, 'Fautes commises', committed_fouls, len(events))
 
         plt.tight_layout()
-        plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
+        plt.savefig(save_path)
         plt.show()
 
     def plot_offensive_activity(self, save_path_pitch, save_path_goal):
@@ -542,7 +540,7 @@ class PlayerVisualizer:
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
 
         # Création d'une grille pour placer le terrain à gauche et les visualisations à droite
-        gs = GridSpec(6, 2, width_ratios=[3, 1])  # 6 rangées, 2 colonnes (rapport 3:1)
+        gs = GridSpec(6, 2, width_ratios=[3, 2])  # 6 rangées, 2 colonnes (rapport 3:1)
 
         # 1. Tracé du terrain à gauche
         pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
@@ -550,9 +548,8 @@ class PlayerVisualizer:
         pitch.draw(ax=ax_pitch)
 
         # Ajouter une flèche pour le sens du jeu
-        ax_pitch.annotate('', xy=(-0.1, 0.75), xytext=(-0.1, 0.25), xycoords='axes fraction',
-                          arrowprops=dict(facecolor='red', edgecolor='white', width=10, headwidth=25, headlength=25))
-        ax_pitch.text(-0.25, 0.5, "Sens du jeu", va='center', ha='center', fontsize=12, color='white', rotation=0, transform=ax_pitch.transAxes)
+        ax_pitch.annotate('', xy=(-0.05, 0.75), xytext=(-0.05, 0.25), xycoords='axes fraction',
+                          arrowprops=dict(edgecolor='white', facecolor='none', width=10, headwidth=25, headlength=25))
 
         # Parcours des événements offensifs
         for event in offensive_events:
@@ -590,12 +587,12 @@ class PlayerVisualizer:
             plt.Line2D([0], [0], marker='o', color='w', label='Tir', markerfacecolor='red', markersize=15)
         ]
         ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
-        ax_pitch.set_title(f"Activité offensive de {self.player_data['player_name']}", fontsize=18, color='white', fontweight='bold')
+        ax_pitch.set_title(f"Activité offensive de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold')
 
         # 2. Visualisation des données sur le côté droit
 
         # Jauge semi-circulaire pour les buts
-        ax_gauge = fig.add_subplot(gs[2:4, 1], polar=True)
+        ax_gauge = fig.add_subplot(gs[1:5, 1], polar=True)
         self._plot_semi_circular_gauge(ax_gauge, "Dribbles réussis", len(successful_takeons), len(takeons))
 
         # Barres horizontales pour les dribbles et tirs manqués
