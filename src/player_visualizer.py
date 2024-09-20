@@ -97,9 +97,12 @@ class PlayerVisualizer:
     
         success_patch = mpatches.Patch(color='deepskyblue', label='Passe réussie')
         failed_patch = mpatches.Patch(color='red', label='Passe ratée')
-        ax_pitch.legend(handles=[success_patch, failed_patch], loc='upper right', bbox_to_anchor=(1.2925, 1), fontsize=12)
-        ax_pitch.set_title(f"Passes de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold')
-    
+        ax_pitch.legend(handles=[success_patch, failed_patch], loc='upper right', bbox_to_anchor=(1.295, 1), fontsize=12)
+        ax_pitch.set_title("@MaData_fr", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
+
+        # Ajoutez cette ligne à la place
+        ax.text(0.5, 0.96, f"Passes de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
+
         # 2. Plotting data visualizations on the right side
     
         # Move the semi-circular gauge lower (closer to the first bar plot)
@@ -156,18 +159,18 @@ class PlayerVisualizer:
 
     def _add_horizontal_bar(self, ax, label, value, max_value):
         bar_height = 0.3
-        if max_value == 0:
-            max_value = max_value+1
-            
-        filled_length = value / max_value
+        filled_length = 0
+
+        if max_value != 0:
+            filled_length = value / max_value
 
         # Vérifier si la barre concerne les fautes commises
-        if 'Fautes' in label:
+        if 'Fautes commises' in label:
             # Palette de couleurs pour les fautes (toujours rouge)
             cmap = mcolors.LinearSegmentedColormap.from_list('red', ['#FF0000', '#FF0000'])  # Palette entièrement rouge
         else:
             # Palette de couleurs pour les autres événements (du rouge à vert)
-            cmap = mcolors.LinearSegmentedColormap.from_list('red_gray', ['red', 'orange', '#6DF176'])  # Rouge -> Vert
+            cmap = mcolors.LinearSegmentedColormap.from_list('orange', ['orange', '#6DF176'])  # Rouge -> Vert
 
         # Couleur interpolée en fonction de la longueur remplie
         bar_color = cmap(filled_length)
@@ -398,7 +401,7 @@ class PlayerVisualizer:
         successful_tackles = [event for event in tackles if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
         fouls = [event for event in defensive_events if event['type']['displayName'] == 'Foul']
-        committed_fouls = len(fouls)  # Assume all fouls are "committed"
+        committed_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
         total_events = len(defensive_events)
 
@@ -459,10 +462,12 @@ class PlayerVisualizer:
 
             # Si l'événement est une faute, la couleur doit toujours être rouge
             if event_type == 'Foul':
+                if outcome == 'Successful':
+                    continue
                 color = 'red'
             else:
                 color = color_map.get(outcome, 'green')  # Default to green if outcome not recognized
-
+            
             pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
 
         # Création de la légende
@@ -470,10 +475,13 @@ class PlayerVisualizer:
             plt.Line2D([0], [0], marker='o', color='w', label='Récupération', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], marker='s', color='w', label='Duel', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], marker='^', color='w', label='Tacle', markerfacecolor='black', markersize=15),
-            plt.Line2D([0], [0], marker='*', color='w', label='Faute', markerfacecolor='black'),
+            plt.Line2D([0], [0], marker='*', color='w', label='Faute', markerfacecolor='black', markersize=15),
         ]
         ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2925, 1), fontsize=12)
-        ax_pitch.set_title(f"Activité défensive de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold')
+        ax_pitch.set_title("@MaData_fr", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
+
+        # Ajoutez cette ligne à la place
+        ax.text(0.5, 0.96, f"Activité défensive de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
 
         # 2. Visualisation des données sur le côté droit
 
@@ -489,7 +497,7 @@ class PlayerVisualizer:
         # Ajout des barres avec des pourcentages spécifiques à chaque type d'événement
         self._add_horizontal_bar(ax_bar1, 'Duels réussis', len(successful_challenges), len(challenges))
         self._add_horizontal_bar(ax_bar2, 'Tacles réussis', len(successful_tackles), len(tackles))
-        self._add_horizontal_bar(ax_bar3, 'Fautes commises', committed_fouls, len(events))
+        self._add_horizontal_bar(ax_bar3, 'Fautes commises', len(committed_fouls), total_events)
 
         plt.tight_layout()
         plt.savefig(save_path)
@@ -500,7 +508,7 @@ class PlayerVisualizer:
 
         # Filtrage des événements offensifs
         offensive_events = [
-            event for event in events if event['type']['displayName'] in ['TakeOn', 'MissedShots', 'Goal']
+            event for event in events if event['type']['displayName'] in ['TakeOn', 'MissedShots', 'SavedShot', 'Goal', 'Foul']
         ]
 
         if not offensive_events:
@@ -512,7 +520,11 @@ class PlayerVisualizer:
         successful_takeons = [event for event in takeons if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
         missed_shots = [event for event in offensive_events if event['type']['displayName'] == 'MissedShots']
+        saved_shots = [event for event in offensive_events if event['type']['displayName'] == 'SavedShot']
         goals = [event for event in offensive_events if event['type']['displayName'] == 'Goal']
+
+        fouls = [event for event in offensive_events if event['type']['displayName'] == 'Foul']
+        submitted_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
 
         total_events = len(offensive_events)
 
@@ -558,12 +570,12 @@ class PlayerVisualizer:
             outcome = event['outcomeType']['displayName']
 
             if event_type == 'TakeOn':
-                # Étoiles pour les dribbles
+                # Carré pour les dribbles
                 marker = 's'  
                 color = 'green' if outcome == 'Successful' else 'red'
                 pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
 
-            elif event_type in ['MissedShots', 'Goal']:
+            elif event_type in ['MissedShots', 'SavedShot','Goal']:
                 # Ronds pour les tirs et les buts
                 marker = 'o'
                 color = 'green' if event_type == 'Goal' else 'red'
@@ -573,21 +585,31 @@ class PlayerVisualizer:
 
                 # Trajectoire du tir avec une flèche
                 goalmouth_y = next((float(q['value']) for q in event['qualifiers'] if q['type']['displayName'] == 'GoalMouthY'), None)
-                goalmouth_z = next((float(q['value']) for q in event['qualifiers'] if q['type']['displayName'] == 'GoalMouthZ'), None)
 
-                if goalmouth_y is not None and goalmouth_z is not None:
+                if goalmouth_y is not None:
                     end_x = 100  # Les tirs se terminent à la ligne de but
                     end_y = (goalmouth_y / 100) * pitch.dim.pitch_length
                     pitch.arrows(x, y, end_x, end_y, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch)
 
+            elif event_type == 'Foul':
+                
+                # Étoiles pour les fautes subies
+                marker = '*'  
+                color = 'green' #if outcome == 'Successful' else 'red'
+                if outcome == 'Successful':
+                    pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
+
         # Création de la légende
         legend_handles = [
             plt.Line2D([0], [0], marker='s', color='w', label='Dribble', markerfacecolor='black', markersize=15),
-            plt.Line2D([0], [0], marker='o', color='w', label='But', markerfacecolor='green', markersize=15),
-            plt.Line2D([0], [0], marker='o', color='w', label='Tir', markerfacecolor='red', markersize=15)
+            plt.Line2D([0], [0], marker='o', color='w', label='Tir', markerfacecolor='black', markersize=15),
+            plt.Line2D([0], [0], marker='*', color='w', label='Faute subie', markerfacecolor='black', markersize=15)
         ]
-        ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2, 1), fontsize=12)
-        ax_pitch.set_title(f"Activité offensive de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold')
+        ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.265, 1), fontsize=12)
+        ax_pitch.set_title("@MaData_fr", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
+
+        # Ajoutez cette ligne à la place
+        ax.text(0.5, 0.96, f"Activité offensive de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
 
         # 2. Visualisation des données sur le côté droit
 
@@ -598,10 +620,12 @@ class PlayerVisualizer:
         # Barres horizontales pour les dribbles et tirs manqués
         ax_bar1 = fig.add_subplot(gs[3, 1])
         ax_bar2 = fig.add_subplot(gs[4, 1])
+        ax_bar3 = fig.add_subplot(gs[5, 1])
 
         # Ajout des barres avec des pourcentages spécifiques à chaque type d'événement
         self._add_horizontal_bar(ax_bar1, 'Dribbles réussis', len(successful_takeons), len(takeons))
-        self._add_horizontal_bar(ax_bar2, 'Tirs', len(missed_shots), len(missed_shots) + len(goals))
+        self._add_horizontal_bar(ax_bar2, 'Fautes subies', len(submitted_fouls), len(takeons))
+        self._add_horizontal_bar(ax_bar3, 'Tirs cadrés', len(saved_shots) + len(goals), len(missed_shots) + len(goals) + len(saved_shots))
 
         plt.tight_layout()
         plt.savefig(save_path_pitch)
