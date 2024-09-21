@@ -7,6 +7,9 @@ import numpy as np
 from matplotlib.gridspec import GridSpec
 import matplotlib.colors as mcolors
 import matplotlib.image as mpimg
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from scipy.ndimage import gaussian_filter
+
 
 class PlayerVisualizer:
     def __init__(self, player_data_path):
@@ -40,6 +43,104 @@ class PlayerVisualizer:
                 failed_passes.append(pas)
 
         return forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes
+
+    def plot_passes_heatmap_and_bar_charts(self, save_path):
+        events = self.player_data.get('events', [])
+        passes = [event for event in events if event['type']['displayName'] == 'Pass']
+
+        if not passes:
+            print(f"Pas de passes trouvées pour {self.player_data['player_name']}. Aucun visuel généré.")
+            return
+
+        forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
+        total_passes = len(passes)
+
+        # Choisir les deux couleurs en hexadecimal
+        color1 = "#0c205d"  # Bleu foncé
+        color2 = "#4955c1"  # Violet
+
+        # Créer un gradient vertical (de haut en bas)
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+
+        # Créer un colormap personnalisé à partir des couleurs hexadécimales
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
+
+        # Créer une figure
+        fig = plt.figure(figsize=(12, 15))
+
+        # Ajouter un axe qui occupe toute la figure
+        ax = fig.add_axes([0, 0, 1, 1])
+
+        # Désactiver les axes
+        ax.axis('off')
+
+        # Appliquer le gradient vertical avec les couleurs choisies
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+
+        # Creating a grid to place data visualizations on the first line and pitches on the second line
+        gs = GridSpec(6, 2, width_ratios=[3, 2])
+
+        # Right side (0,1) with a semi-circular gauge and additional bar charts (like in the image)
+        #ax_gauge = fig.add_subplot(gs[0, 1], polar=True)
+        #self._plot_semi_circular_gauge(ax_gauge, "Récupérations réussies", 100, 100)
+
+        # Horizontal bars for forward, lateral, and backward passes
+        ax_bar1 = fig.add_subplot(gs[0, 1])
+        ax_bar2 = fig.add_subplot(gs[1, 1])
+        ax_bar3 = fig.add_subplot(gs[2, 1])
+    
+        self._add_horizontal_bar(ax_bar1, 'Dribbles réussies', len(forward_passes), total_passes)
+        self._add_horizontal_bar(ax_bar2, 'Tirs cadrés', len(lateral_passes), total_passes)
+        self._add_horizontal_bar(ax_bar3, 'Fautes subies', len(backward_passes), total_passes)
+
+        # 2. Plotting the pitches on the second row
+
+        # First pitch (1,0) - left side
+        pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
+        ax_pitch_left = fig.add_subplot(gs[3:, 0])
+        pitch.draw(ax=ax_pitch_left)
+
+        for pas in passes:
+            y_start = pas['x']
+            x_start = pas['y']
+            y_end = pas['endX']
+            x_end = pas['endY']
+
+            color = '#6DF176' if pas['outcomeType']['displayName'] == 'Successful' else 'red'
+            pitch.arrows(y_start, x_start, y_end, x_end, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch_left)
+
+        ax_pitch_left.set_title(f"Passes de {self.player_data['player_name']}", fontsize=15, color='white', fontweight='bold', ha='center')
+
+        # 3. Plotting the second pitch (right) with heatmap on the second row
+        ax_pitch_right = fig.add_subplot(gs[3:, 1])
+        pitch.draw(ax=ax_pitch_right)
+    
+        # Collecting all pass starting positions
+        touchs  = [event for event in events]
+        x_coords = [t['x'] for t in touchs]
+        y_coords = [t['y'] for t in touchs]
+    
+        # Compute bin statistic for heatmap
+        bin_statistic = pitch.bin_statistic(x_coords, y_coords, statistic='count', bins=(25, 25))
+    
+        # Apply Gaussian filter for smoothing
+        bin_statistic['statistic'] = gaussian_filter(bin_statistic['statistic'], 1)
+    
+        # Create a custom colormap with transparent low values and purple high values
+        transparent_to_purple = mcolors.LinearSegmentedColormap.from_list(
+            'transparent_purple', [(1, 1, 1, 0.1), (1, 1, 1, 0.5), '#ff0000'], N=256
+        )
+
+        # Plot the heatmap using the custom colormap with transparency for low activity areas
+        pitch.heatmap(bin_statistic, ax=ax_pitch_right, cmap=transparent_to_purple)
+    
+        ax_pitch_right.set_title("Heatmap des passes", fontsize=15, color='white', fontweight='bold', ha='center')
+    
+        plt.tight_layout()
+        plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
+        plt.show()
+
 
     def plot_passes_and_bar_charts(self, save_path):
         events = self.player_data.get('events', [])
@@ -92,10 +193,10 @@ class PlayerVisualizer:
             y_end = pas['endX']
             x_end = pas['endY']
     
-            color = 'deepskyblue' if pas['outcomeType']['displayName'] == 'Successful' else 'red'
+            color = '#6DF176' if pas['outcomeType']['displayName'] == 'Successful' else 'red'
             pitch.arrows(y_start, x_start, y_end, x_end, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch)
     
-        success_patch = mpatches.Patch(color='deepskyblue', label='Passe réussie')
+        success_patch = mpatches.Patch(color='#6DF176', label='Passe réussie')
         failed_patch = mpatches.Patch(color='red', label='Passe ratée')
         ax_pitch.legend(handles=[success_patch, failed_patch], loc='upper right', bbox_to_anchor=(1.295, 1), fontsize=12)
         ax_pitch.set_title("@MaData_fr", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
@@ -131,7 +232,7 @@ class PlayerVisualizer:
         theta = np.linspace(np.pi, 0, 100)
 
         # Create a color map from red to custom green (#6DF176)
-        cmap = mcolors.LinearSegmentedColormap.from_list('red_green', ['red', 'orange', '#6DF176'])
+        cmap = mcolors.LinearSegmentedColormap.from_list('orange', ['orange', '#6DF176'])
 
         # Get the interpolated color based on the percentage (0 is red, 1 is #6DF176)
         color = cmap(percentage)
@@ -298,7 +399,7 @@ class PlayerVisualizer:
 
         # Remplissage des zones
         ax2.fill_between(minutes, ratings_over_time, threshold, where=(ratings_over_time >= threshold), 
-                         interpolate=True, color='green', alpha=0.3)
+                         interpolate=True, color='#6DF176', alpha=0.3)
         ax2.fill_between(minutes, ratings_over_time, threshold, where=(ratings_over_time < threshold), 
                          interpolate=True, color='red', alpha=0.3)
 
@@ -413,7 +514,7 @@ class PlayerVisualizer:
             'Foul': '*'           # Étoile
         }
         color_map = {
-            'Successful': 'green',
+            'Successful': '#6DF176',
             'Unsuccessful': 'red'
         }
 
@@ -466,7 +567,7 @@ class PlayerVisualizer:
                     continue
                 color = 'red'
             else:
-                color = color_map.get(outcome, 'green')  # Default to green if outcome not recognized
+                color = color_map.get(outcome, '#6DF176')  # Default to green if outcome not recognized
             
             pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
 
@@ -572,13 +673,13 @@ class PlayerVisualizer:
             if event_type == 'TakeOn':
                 # Carré pour les dribbles
                 marker = 's'  
-                color = 'green' if outcome == 'Successful' else 'red'
+                color = '#6DF176' if outcome == 'Successful' else 'red'
                 pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
 
             elif event_type in ['MissedShots', 'SavedShot','Goal']:
                 # Ronds pour les tirs et les buts
                 marker = 'o'
-                color = 'green' if event_type == 'Goal' else 'red'
+                color = '#6DF176' if event_type == 'Goal' else 'red'
 
                 # Ajouter le point de tir
                 pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
@@ -595,7 +696,7 @@ class PlayerVisualizer:
                 
                 # Étoiles pour les fautes subies
                 marker = '*'  
-                color = 'green' #if outcome == 'Successful' else 'red'
+                color = '#6DF176' #if outcome == 'Successful' else 'red'
                 if outcome == 'Successful':
                     pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
 
