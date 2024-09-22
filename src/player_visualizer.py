@@ -9,6 +9,7 @@ import matplotlib.colors as mcolors
 import matplotlib.image as mpimg
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy.ndimage import gaussian_filter
+import cmasher as cmr
 
 
 class PlayerVisualizer:
@@ -67,7 +68,7 @@ class PlayerVisualizer:
         cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
 
         # Créer une figure
-        fig = plt.figure(figsize=(12, 15))
+        fig = plt.figure(figsize=(16, 16))
 
         # Ajouter un axe qui occupe toute la figure
         ax = fig.add_axes([0, 0, 1, 1])
@@ -79,7 +80,7 @@ class PlayerVisualizer:
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
 
         # Creating a grid to place data visualizations on the first line and pitches on the second line
-        gs = GridSpec(6, 2, width_ratios=[3, 2])
+        gs = GridSpec(7, 2,  height_ratios=[1,1,1,1,4,4,4])
 
         # Right side (0,1) with a semi-circular gauge and additional bar charts (like in the image)
         #ax_gauge = fig.add_subplot(gs[0, 1], polar=True)
@@ -89,16 +90,18 @@ class PlayerVisualizer:
         ax_bar1 = fig.add_subplot(gs[0, 1])
         ax_bar2 = fig.add_subplot(gs[1, 1])
         ax_bar3 = fig.add_subplot(gs[2, 1])
+        ax_bar4 = fig.add_subplot(gs[3, 1])
     
         self._add_horizontal_bar(ax_bar1, 'Dribbles réussies', len(forward_passes), total_passes)
         self._add_horizontal_bar(ax_bar2, 'Tirs cadrés', len(lateral_passes), total_passes)
         self._add_horizontal_bar(ax_bar3, 'Fautes subies', len(backward_passes), total_passes)
+        self._add_horizontal_bar(ax_bar4, 'Récuperations', len(backward_passes), total_passes)
 
         # 2. Plotting the pitches on the second row
 
         # First pitch (1,0) - left side
         pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
-        ax_pitch_left = fig.add_subplot(gs[3:, 0])
+        ax_pitch_left = fig.add_subplot(gs[4:, 0], aspect=1)
         pitch.draw(ax=ax_pitch_left)
 
         for pas in passes:
@@ -109,11 +112,9 @@ class PlayerVisualizer:
 
             color = '#6DF176' if pas['outcomeType']['displayName'] == 'Successful' else 'red'
             pitch.arrows(y_start, x_start, y_end, x_end, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch_left)
-
-        ax_pitch_left.set_title(f"Passes de {self.player_data['player_name']}", fontsize=15, color='white', fontweight='bold', ha='center')
-
+            
         # 3. Plotting the second pitch (right) with heatmap on the second row
-        ax_pitch_right = fig.add_subplot(gs[3:, 1])
+        ax_pitch_right = fig.add_subplot(gs[4:, 1], aspect=1)
         pitch.draw(ax=ax_pitch_right)
     
         # Collecting all pass starting positions
@@ -126,16 +127,16 @@ class PlayerVisualizer:
     
         # Apply Gaussian filter for smoothing
         bin_statistic['statistic'] = gaussian_filter(bin_statistic['statistic'], 1)
-    
-        # Create a custom colormap with transparent low values and purple high values
-        transparent_to_purple = mcolors.LinearSegmentedColormap.from_list(
-            'transparent_purple', [(1, 1, 1, 0.1), (1, 1, 1, 0.5), '#ff0000'], N=256
-        )
 
+        el_greco_transparent_orange_red = mcolors.LinearSegmentedColormap.from_list(
+            "Transparent-Orange-Red",
+            [(1, 1, 1, 0),    # Transparent (RGBA: alpha = 0)
+             (1, 0.65, 0, 1),  # Orange (RGBA: full opacity)
+             (1, 0, 0, 1)],    # Red (RGBA: full opacity)
+            N=10
+        )
         # Plot the heatmap using the custom colormap with transparency for low activity areas
-        pitch.heatmap(bin_statistic, ax=ax_pitch_right, cmap=transparent_to_purple)
-    
-        ax_pitch_right.set_title("Heatmap des passes", fontsize=15, color='white', fontweight='bold', ha='center')
+        pitch.heatmap(bin_statistic, ax=ax_pitch_right, cmap=el_greco_transparent_orange_red)
     
         plt.tight_layout()
         plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
@@ -259,7 +260,7 @@ class PlayerVisualizer:
         ax.set_title(label, fontsize=20, color="white", fontweight='bold', pad=20)
 
     def _add_horizontal_bar(self, ax, label, value, max_value):
-        bar_height = 0.3
+        bar_height = 0.2
         filled_length = 0
 
         if max_value != 0:
@@ -283,10 +284,10 @@ class PlayerVisualizer:
         ax.barh(0, filled_length, height=bar_height, color=bar_color, edgecolor='none')
 
         # Ajouter l'étiquette à gauche de la barre (très proche de la barre)
-        ax.text(-0.005, 0.6, label, va='center', ha='left', fontsize=20, color='white', fontweight='bold', transform=ax.transAxes)  # Position de l'étiquette à gauche
+        ax.text(-0.005, 0.6, label, va='center', ha='left', fontsize=25, color='white', fontweight='bold', transform=ax.transAxes)  # Position de l'étiquette à gauche
 
         # Ajouter la valeur à droite de la barre (très proche de la barre)
-        ax.text(1.005, 0.6, f'{value}', va='center', ha='right', fontsize=20, color='white', fontweight='bold', transform=ax.transAxes)  # Position de la valeur à droite
+        ax.text(1.005, 0.6, f'{value}', va='center', ha='right', fontsize=25, color='white', fontweight='bold', transform=ax.transAxes)  # Position de la valeur à droite
 
         # Supprimer les axes
         ax.set_xlim(0, 1)
