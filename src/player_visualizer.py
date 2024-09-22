@@ -49,12 +49,54 @@ class PlayerVisualizer:
         events = self.player_data.get('events', [])
         passes = [event for event in events if event['type']['displayName'] == 'Pass']
 
-        if not passes:
-            print(f"Pas de passes trouvées pour {self.player_data['player_name']}. Aucun visuel généré.")
-            return
-
+        #if not passes:
+        #    print(f"Pas de passes trouvées pour {self.player_data['player_name']}. Aucun visuel généré.")
+        #    return
         forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
         total_passes = len(passes)
+
+        # Filtrage des événements offensifs
+        offensive_events = [
+            event for event in events if event['type']['displayName'] in ['TakeOn', 'MissedShots', 'SavedShot', 'Goal', 'Foul']
+        ]
+
+        #if not offensive_events:
+        #    print(f"Aucune activité offensive trouvée pour {self.player_data['player_name']}. Aucun visuel généré.")
+        #    return
+
+        # Compter les événements offensifs par type
+        takeons = [event for event in offensive_events if event['type']['displayName'] == 'TakeOn']
+        successful_takeons = [event for event in takeons if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        missed_shots = [event for event in offensive_events if event['type']['displayName'] == 'MissedShots']
+        saved_shots = [event for event in offensive_events if event['type']['displayName'] == 'SavedShot']
+        goals = [event for event in offensive_events if event['type']['displayName'] == 'Goal']
+
+        fouls = [event for event in offensive_events if event['type']['displayName'] == 'Foul']
+        submitted_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
+
+
+        # Filtrage des événements défensifs
+        defensive_events = [
+            event for event in events if event['type']['displayName'] in ['BallRecovery', 'Challenge', 'Tackle', 'Foul']
+        ]
+
+        #if not defensive_events:
+        #    print(f"Aucune activité défensive trouvée pour {self.player_data['player_name']}. Aucun visuel généré.")
+        #    return
+
+        # Compter les événements défensifs par type
+        ball_recoveries = [event for event in defensive_events if event['type']['displayName'] == 'BallRecovery']
+        successful_ball_recoveries = [event for event in ball_recoveries if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        challenges = [event for event in defensive_events if event['type']['displayName'] == 'Challenge']
+        successful_challenges = [event for event in challenges if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        tackles = [event for event in defensive_events if event['type']['displayName'] == 'Tackle']
+        successful_tackles = [event for event in tackles if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        fouls = [event for event in defensive_events if event['type']['displayName'] == 'Foul']
+        committed_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
@@ -82,9 +124,26 @@ class PlayerVisualizer:
         # Creating a grid to place data visualizations on the first line and pitches on the second line
         gs = GridSpec(7, 2,  height_ratios=[1,1,1,1,4,4,4])
 
-        # Right side (0,1) with a semi-circular gauge and additional bar charts (like in the image)
-        #ax_gauge = fig.add_subplot(gs[0, 1], polar=True)
-        #self._plot_semi_circular_gauge(ax_gauge, "Récupérations réussies", 100, 100)
+        # Load the player photo
+        image_path = "data/player_photo.jpeg"  # Path to the player's photo
+        player_photo = mpimg.imread(image_path)
+
+        # Display player photo in the (0,0) position
+        ax_image = fig.add_subplot(gs[:4, 0])
+        ax_image.imshow(player_photo, aspect='equal')  # Ensure the aspect ratio of the image is maintained
+        ax_image.set_anchor('W')  # Align the image to the left side
+        ax_image.axis('off')  # Hide the axes for the image
+
+        # Adding the player's name (or any text) on the right side of the image
+        ax.text(0.28, 0.96, f"{self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        ax.text(0.28, 0.93, f"{self.player_data['age']} ans - {self.player_data['height']}cm", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        ax.text(0.28, 0.90, f"{self.player_data['position']} - {self.player_data['shirtNo']}", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        ax.text(0.28, 0.87, f"X buts", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        ax.text(0.28, 0.84, f"Y passes décisives", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        ax.text(0.28, 0.81, f"Man of the match", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+
+        ax.text(0.38, 0.72, f"@MaData_fr", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+
 
         # Horizontal bars for forward, lateral, and backward passes
         ax_bar1 = fig.add_subplot(gs[0, 1])
@@ -92,10 +151,10 @@ class PlayerVisualizer:
         ax_bar3 = fig.add_subplot(gs[2, 1])
         ax_bar4 = fig.add_subplot(gs[3, 1])
     
-        self._add_horizontal_bar(ax_bar1, 'Dribbles réussies', len(forward_passes), total_passes)
-        self._add_horizontal_bar(ax_bar2, 'Tirs cadrés', len(lateral_passes), total_passes)
-        self._add_horizontal_bar(ax_bar3, 'Fautes subies', len(backward_passes), total_passes)
-        self._add_horizontal_bar(ax_bar4, 'Récuperations', len(backward_passes), total_passes)
+        self._add_horizontal_bar(ax_bar1, 'Dribbles réussies', len(successful_takeons), len(takeons))
+        self._add_horizontal_bar(ax_bar2, 'Tirs cadrés', len(saved_shots), len(missed_shots) + len(saved_shots) + len(goals))
+        self._add_horizontal_bar(ax_bar3, 'Fautes subies', len(submitted_fouls), len(takeons))
+        self._add_horizontal_bar(ax_bar4, 'Récuperations', len(successful_ball_recoveries), len(ball_recoveries))
 
         # 2. Plotting the pitches on the second row
 
@@ -111,7 +170,7 @@ class PlayerVisualizer:
             x_end = pas['endY']
 
             color = '#6DF176' if pas['outcomeType']['displayName'] == 'Successful' else 'red'
-            pitch.arrows(y_start, x_start, y_end, x_end, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch_left)
+            pitch.arrows(y_start, x_start, y_end, x_end, width=3, headwidth=3, headlength=3, color=color, ax=ax_pitch_left)
             
         # 3. Plotting the second pitch (right) with heatmap on the second row
         ax_pitch_right = fig.add_subplot(gs[4:, 1], aspect=1)
@@ -287,7 +346,7 @@ class PlayerVisualizer:
         ax.text(-0.005, 0.6, label, va='center', ha='left', fontsize=25, color='white', fontweight='bold', transform=ax.transAxes)  # Position de l'étiquette à gauche
 
         # Ajouter la valeur à droite de la barre (très proche de la barre)
-        ax.text(1.005, 0.6, f'{value}', va='center', ha='right', fontsize=25, color='white', fontweight='bold', transform=ax.transAxes)  # Position de la valeur à droite
+        ax.text(1.005, 0.6, f'{value}({max_value})', va='center', ha='right', fontsize=25, color='white', fontweight='bold', transform=ax.transAxes)  # Position de la valeur à droite
 
         # Supprimer les axes
         ax.set_xlim(0, 1)
@@ -543,7 +602,7 @@ class PlayerVisualizer:
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
 
         # Création d'une grille pour placer le terrain à gauche et les visualisations à droite
-        gs = GridSpec(6, 2, width_ratios=[3, 2])  # 6 rangées, 2 colonnes (rapport 3:1)
+        gs = GridSpec(6, 2, width_ratios=[2, 2])  # 6 rangées, 2 colonnes (rapport 3:1)
 
         # 1. Tracé du terrain à gauche
         pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
@@ -654,7 +713,7 @@ class PlayerVisualizer:
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
 
         # Création d'une grille pour placer le terrain à gauche et les visualisations à droite
-        gs = GridSpec(6, 2, width_ratios=[3, 2])  # 6 rangées, 2 colonnes (rapport 3:1)
+        gs = GridSpec(6, 2, width_ratios=[2, 2])  # 6 rangées, 2 colonnes (rapport 3:1)
 
         # 1. Tracé du terrain à gauche
         pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
