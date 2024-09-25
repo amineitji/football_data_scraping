@@ -10,6 +10,7 @@ import matplotlib.image as mpimg
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy.ndimage import gaussian_filter
 import cmasher as cmr
+from player_image_downloader import PlayerProfileScraper
 
 
 class PlayerVisualizer:
@@ -125,7 +126,8 @@ class PlayerVisualizer:
         gs = GridSpec(7, 2,  height_ratios=[1,1,1,1,4,4,4])
 
         # Load the player photo
-        image_path = "data/player_photo.jpeg"  # Path to the player's photo
+        PlayerProfileScraper(self.player_data['player_name']).save_player_profile()
+        image_path = f"data/{self.player_data['player_name'].replace(' ', '_')}_profile_image.jpg"
         player_photo = mpimg.imread(image_path)
 
         # Display player photo in the (0,0) position
@@ -135,12 +137,12 @@ class PlayerVisualizer:
         ax_image.axis('off')  # Hide the axes for the image
 
         # Adding the player's name (or any text) on the right side of the image
-        ax.text(0.28, 0.96, f"{self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
-        ax.text(0.28, 0.93, f"{self.player_data['age']} ans - {self.player_data['height']}cm", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
-        ax.text(0.28, 0.90, f"{self.player_data['position']} - {self.player_data['shirtNo']}", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
-        ax.text(0.28, 0.87, f"X buts", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
-        ax.text(0.28, 0.84, f"Y passes décisives", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
-        ax.text(0.28, 0.81, f"Man of the match", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        ax.text(0.23, 0.96, f"{self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        ax.text(0.23, 0.93, f"{self.player_data['age']} ans - {self.player_data['height']}cm", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        ax.text(0.23, 0.90, f"{self.player_data['position']} - {self.player_data['shirtNo']}", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        ax.text(0.23, 0.87, f"X buts", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        ax.text(0.23, 0.84, f"Y passes décisives", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        ax.text(0.23, 0.81, f"Man of the match", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
 
         ax.text(0.38, 0.72, f"@MaData_fr", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
 
