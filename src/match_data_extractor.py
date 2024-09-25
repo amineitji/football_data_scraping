@@ -78,8 +78,13 @@ class MatchDataExtractor:
             "events": player_events
         }
 
-        # Créer le fichier JSON avec les données combinées
-        output_file = os.path.join(output_dir, f"{player_name.replace(' ', '_')}_combined_data.json")
+        # Extraire le nom du fichier à partir du chemin HTML
+        match_name = os.path.basename(self.html_path).replace("data/", "").replace(".html", "")
+
+        # Créer le nom du fichier de sortie en combinant player_name et match_name
+        output_file = os.path.join(output_dir, f"{player_name.replace(' ', '_')}_{match_name}.json")
+        
+        # Enregistrer les données combinées dans un fichier JSON
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(player_combined_data, f, ensure_ascii=False, indent=4)
 

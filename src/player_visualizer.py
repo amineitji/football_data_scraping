@@ -237,7 +237,7 @@ class PlayerVisualizer:
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
     
         # Creating a grid to place the pitch on the left and visualizations on the right
-        gs = GridSpec(6, 2, width_ratios=[3, 2])  # 6 rows, 2 columns (3:1 ratio)
+        gs = GridSpec(6, 2, width_ratios=[2, 2])  # 6 rows, 2 columns (3:1 ratio)
     
         # 1. Plotting the pitch on the left side
         pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
