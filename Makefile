@@ -15,7 +15,7 @@ all: run
 
 # Run the Python script with arguments (allowing spaces in the URL and PLAYER_NAME)
 run:
-	bash -c 'source $(VENV_ACTIVATE) && $(PYTHON) $(SCRIPT) "$(URL)" "$(PLAYER_NAME)"'
+	bash -c 'source $(VENV_ACTIVATE) && $(PYTHON) $(SCRIPT) "$(URL)" "$(PLAYER_NAME)" "$(POSTE)"'
 
 # Clean the viz_data and player_data directories
 clean:

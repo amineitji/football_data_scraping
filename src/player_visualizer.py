@@ -46,13 +46,11 @@ class PlayerVisualizer:
 
         return forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes
 
-    def plot_passes_heatmap_and_bar_charts(self, save_path):
+    def plot_passes_heatmap_and_bar_charts(self, save_path, type_data): #type_data = DEF,MIL,ATT
+            
         events = self.player_data.get('events', [])
         passes = [event for event in events if event['type']['displayName'] == 'Pass']
 
-        #if not passes:
-        #    print(f"Pas de passes trouvées pour {self.player_data['player_name']}. Aucun visuel généré.")
-        #    return
         forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
         total_passes = len(passes)
 
@@ -60,10 +58,6 @@ class PlayerVisualizer:
         offensive_events = [
             event for event in events if event['type']['displayName'] in ['TakeOn', 'MissedShots', 'SavedShot', 'Goal', 'Foul']
         ]
-
-        #if not offensive_events:
-        #    print(f"Aucune activité offensive trouvée pour {self.player_data['player_name']}. Aucun visuel généré.")
-        #    return
 
         # Compter les événements offensifs par type
         takeons = [event for event in offensive_events if event['type']['displayName'] == 'TakeOn']
@@ -76,15 +70,10 @@ class PlayerVisualizer:
         fouls = [event for event in offensive_events if event['type']['displayName'] == 'Foul']
         submitted_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
 
-
         # Filtrage des événements défensifs
         defensive_events = [
             event for event in events if event['type']['displayName'] in ['BallRecovery', 'Challenge', 'Tackle', 'Foul']
         ]
-
-        #if not defensive_events:
-        #    print(f"Aucune activité défensive trouvée pour {self.player_data['player_name']}. Aucun visuel généré.")
-        #    return
 
         # Compter les événements défensifs par type
         ball_recoveries = [event for event in defensive_events if event['type']['displayName'] == 'BallRecovery']
@@ -127,7 +116,7 @@ class PlayerVisualizer:
 
         # Load the player photo
         PlayerProfileScraper(self.player_data['player_name']).save_player_profile()
-        image_path = f"data/{self.player_data['player_name'].replace(' ', '_')}_profile_image.jpg"
+        image_path = f"data/photo/{self.player_data['player_name'].replace(' ', '_')}_profile_image.jpg"
         player_photo = mpimg.imread(image_path)
 
         # Display player photo in the (0,0) position
@@ -136,27 +125,67 @@ class PlayerVisualizer:
         ax_image.set_anchor('W')  # Align the image to the left side
         ax_image.axis('off')  # Hide the axes for the image
 
-        # Adding the player's name (or any text) on the right side of the image
-        ax.text(0.23, 0.96, f"{self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
-        ax.text(0.23, 0.93, f"{self.player_data['age']} ans - {self.player_data['height']}cm", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
-        ax.text(0.23, 0.90, f"{self.player_data['position']} - {self.player_data['shirtNo']}", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
-        ax.text(0.23, 0.87, f"X buts", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
-        ax.text(0.23, 0.84, f"Y passes décisives", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
-        ax.text(0.23, 0.81, f"Man of the match", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        # Check if the player was a starter or a substitute and calculate playing time
+        if self.player_data["isFirstEleven"]:
+            status_text = "Titulaire"
+            start_minute = 0
+        else:
+            first_minute = min(self.player_data["stats"]["ratings"].keys())
+            status_text = f'Rentré en jeu: {first_minute}"'
+            start_minute = first_minute
 
-        ax.text(0.38, 0.72, f"@MaData_fr", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        # Get the last minute played
+        last_minute = list(self.player_data["stats"]["ratings"].keys())[-1]
+        playing_time = int(last_minute) - int(start_minute)
+        
+        # Get the number of assists (key passes leading to a goal)
+        assists = sum(1 for event in self.player_data['events'] if any(qualifier['type']['displayName'] == 'IntentionalGoalAssist' for qualifier in event.get('qualifiers', [])))
+        
+        # Initial Y position for the first text line
+        y_position = 0.96
+        y_step = 0.03  # Step between text lines
 
+        # List of text items to display
+        text_items = [
+            f"{self.player_data['player_name']} - N°{self.player_data['shirtNo']}",
+            f"{self.player_data['age']} ans - {self.player_data['height']}cm",
+            f"{status_text}",
+            f"Temps de jeu: {playing_time} minutes",
+            f"{len(goals)} but(s)" if len(goals) == 1 else None,
+            f"{assists} p-d intentionnelle(s)" if assists > 0 else None,
+            f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
+        ]
+
+        # Loop through text items and display them if they are not None
+        for text in text_items:
+            if text:  # Only display non-None items
+                ax.text(0.23, y_position, text, fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+                y_position -= y_step  # Update the Y position for the next line
+
+        # Display your tag or source at a fixed position
+        ax.text(0.38, y_position - y_step, f"@MaData_fr", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
 
         # Horizontal bars for forward, lateral, and backward passes
         ax_bar1 = fig.add_subplot(gs[0, 1])
         ax_bar2 = fig.add_subplot(gs[1, 1])
         ax_bar3 = fig.add_subplot(gs[2, 1])
         ax_bar4 = fig.add_subplot(gs[3, 1])
-    
-        self._add_horizontal_bar(ax_bar1, 'Dribbles réussies', len(successful_takeons), len(takeons))
-        self._add_horizontal_bar(ax_bar2, 'Tirs cadrés', len(saved_shots), len(missed_shots) + len(saved_shots) + len(goals))
-        self._add_horizontal_bar(ax_bar3, 'Fautes subies', len(submitted_fouls), len(takeons))
-        self._add_horizontal_bar(ax_bar4, 'Récuperations', len(successful_ball_recoveries), len(ball_recoveries))
+
+        if type_data == 'DEF':
+            self._add_horizontal_bar(ax_bar1, 'Récuperations', len(successful_ball_recoveries), len(ball_recoveries))
+            self._add_horizontal_bar(ax_bar2, 'Tacles réussis', len(successful_tackles), len(tackles))
+            self._add_horizontal_bar(ax_bar3, 'Duels gagnés', len(challenges), len(successful_challenges))
+            self._add_horizontal_bar(ax_bar4, 'Fautes commises', len(committed_fouls), len(successful_challenges) + len(tackles))
+        elif type_data == 'MIL':
+            self._add_horizontal_bar(ax_bar1, 'Dribbles réussies', len(successful_takeons), len(takeons))
+            self._add_horizontal_bar(ax_bar2, 'Passes réussies', len(successful_passes), total_passes)
+            self._add_horizontal_bar(ax_bar3, 'Duels gagnés', len(challenges), len(successful_challenges))
+            self._add_horizontal_bar(ax_bar4, 'Récuperations', len(successful_ball_recoveries), len(ball_recoveries))
+        elif type_data == 'ATT':
+            self._add_horizontal_bar(ax_bar1, 'Dribbles réussies', len(successful_takeons), len(takeons))
+            self._add_horizontal_bar(ax_bar2, 'Tirs cadrés', len(saved_shots), len(missed_shots) + len(saved_shots) + len(goals))
+            self._add_horizontal_bar(ax_bar3, 'Fautes subies', len(submitted_fouls), len(takeons))
+            self._add_horizontal_bar(ax_bar4, 'Récuperations', len(successful_ball_recoveries), len(ball_recoveries))
 
         # 2. Plotting the pitches on the second row
 
@@ -348,7 +377,7 @@ class PlayerVisualizer:
         ax.text(-0.005, 0.6, label, va='center', ha='left', fontsize=25, color='white', fontweight='bold', transform=ax.transAxes)  # Position de l'étiquette à gauche
 
         # Ajouter la valeur à droite de la barre (très proche de la barre)
-        ax.text(1.005, 0.6, f'{value}({max_value})', va='center', ha='right', fontsize=25, color='white', fontweight='bold', transform=ax.transAxes)  # Position de la valeur à droite
+        ax.text(1.005, 0.6, f'{value}/{max_value}', va='center', ha='right', fontsize=25, color='white', fontweight='bold', transform=ax.transAxes)  # Position de la valeur à droite
 
         # Supprimer les axes
         ax.set_xlim(0, 1)

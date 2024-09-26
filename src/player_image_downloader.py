@@ -70,7 +70,7 @@ class PlayerProfileScraper:
         # Vérification que l'image commence bien par l'URL demandée
         if image_url and image_url.startswith("https://img.a.transfermarkt.technology/portrait/big"):
             # Télécharger et sauvegarder l'image
-            self.download_image(image_url, f"data/{self.full_name.replace(' ', '_')}_profile_image.jpg")
+            self.download_image(image_url, f"data/photo/{self.full_name.replace(' ', '_')}_profile_image.jpg")
         else:
             print("Aucune image valide trouvée ou l'URL ne correspond pas aux critères.")
             image_url = None

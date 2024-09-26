@@ -51,13 +51,13 @@ Ce projet fournit un outil pour extraire et visualiser les statistiques des joue
 Vous pouvez exécuter le script principal pour générer des visualisations pour un match et un joueur spécifiques en utilisant le Makefile :
 
 ```
-make run URL=<url_des_données_de_match> PLAYER_NAME=<nom_du_joueur>
+make run URL=<url_des_données_de_match> PLAYER_NAME=<nom_du_joueur> POSTE=<poste>
 ```
 
 Par exemple :
 
 ```
-make run URL="data/Monaco 3-1 Le Havre - Ligue 1 2024_2025 Live.html" PLAYER_NAME="Eliesse Ben Seghir"
+make run URL="data/html/Monaco 3-1 Le Havre - Ligue 1 2024_2025 Live.html" PLAYER_NAME="Eliesse Ben Seghir" POSTE="ATT"
 ```
 
 ## Nettoyage des répertoires de données

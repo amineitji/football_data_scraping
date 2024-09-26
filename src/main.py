@@ -3,7 +3,7 @@ import os
 from match_data_extractor import MatchDataExtractor
 from player_visualizer import PlayerVisualizer
 
-def main(url, player_name):
+def main(url, player_name, poste):
     # Extract the match name from the url by removing "data/" and ".json"
     match_name = os.path.basename(url).replace("data/", "").replace(".json", "")
     
@@ -30,20 +30,21 @@ def main(url, player_name):
     save_path_defensive = os.path.join(match_folder, f'{player_name.replace(" ", "_")}_defensive_activity.png')
     save_path_offensive_pitch = os.path.join(match_folder, f'{player_name.replace(" ", "_")}_offensive_activity_pitch.png')
     save_path_offensive_goal = os.path.join(match_folder, f'{player_name.replace(" ", "_")}_offensive_activity_goal.png')
-    save_path_activity = os.path.join(match_folder, f'{player_name.replace(" ", "_")}_activity_goal.png')
+    save_path_activity = os.path.join(match_folder, f'{player_name.replace(" ", "_")}_activity_{poste}.png')
 
     # Generate and save visualizations
-    visualizer.plot_passes_and_bar_charts(save_path_passes)
-    # visualizer.plot_stats_visualizations(save_path_stats)  # Uncomment if needed
-    visualizer.plot_defensive_activity(save_path_defensive)
-    visualizer.plot_offensive_activity(save_path_offensive_pitch, save_path_offensive_goal)
-    visualizer.plot_passes_heatmap_and_bar_charts(save_path_activity)
+    #visualizer.plot_passes_and_bar_charts(save_path_passes)
+    #visualizer.plot_stats_visualizations(save_path_stats)  # Uncomment if needed
+    #visualizer.plot_defensive_activity(save_path_defensive)
+    #visualizer.plot_offensive_activity(save_path_offensive_pitch, save_path_offensive_goal)
+    visualizer.plot_passes_heatmap_and_bar_charts(save_path_activity, poste)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python main.py <url> <player_name>")
+    if len(sys.argv) != 4:
+        print("Usage: python main.py <url> <player_name> <poste>")
         sys.exit(1)
     
     url = sys.argv[1]
     player_name = sys.argv[2]
-    main(url, player_name)
+    poste = sys.argv[3] # ATT, MIL, DEF
+    main(url, player_name, poste)
