@@ -174,17 +174,17 @@ class PlayerVisualizer:
         if type_data == 'DEF':
             self._add_horizontal_bar(ax_bar1, 'Récuperations', len(successful_ball_recoveries), len(ball_recoveries))
             self._add_horizontal_bar(ax_bar2, 'Tacles réussis', len(successful_tackles), len(tackles))
-            self._add_horizontal_bar(ax_bar3, 'Duels gagnés', len(challenges), len(successful_challenges))
-            self._add_horizontal_bar(ax_bar4, 'Fautes commises', len(committed_fouls), len(successful_challenges) + len(tackles))
+            self._add_horizontal_bar(ax_bar3, 'Duels gagnés', len(successful_challenges), len(challenges))
+            self._add_horizontal_bar(ax_bar4, 'Fautes commises', len(committed_fouls), len(challenges) + len(tackles) + len(ball_recoveries))
         elif type_data == 'MIL':
             self._add_horizontal_bar(ax_bar1, 'Dribbles réussies', len(successful_takeons), len(takeons))
             self._add_horizontal_bar(ax_bar2, 'Passes réussies', len(successful_passes), total_passes)
-            self._add_horizontal_bar(ax_bar3, 'Duels gagnés', len(challenges), len(successful_challenges))
+            self._add_horizontal_bar(ax_bar3, 'Duels gagnés', len(successful_challenges), len(challenges))
             self._add_horizontal_bar(ax_bar4, 'Récuperations', len(successful_ball_recoveries), len(ball_recoveries))
         elif type_data == 'ATT':
             self._add_horizontal_bar(ax_bar1, 'Dribbles réussies', len(successful_takeons), len(takeons))
-            self._add_horizontal_bar(ax_bar2, 'Tirs cadrés', len(saved_shots), len(missed_shots) + len(saved_shots) + len(goals))
-            self._add_horizontal_bar(ax_bar3, 'Fautes subies', len(submitted_fouls), len(takeons))
+            self._add_horizontal_bar(ax_bar2, 'Tirs cadrés', len(saved_shots) + len(goals), len(missed_shots) + len(saved_shots) + len(goals))
+            self._add_horizontal_bar(ax_bar3, 'Fautes subies', len(submitted_fouls), len(submitted_fouls) + len(takeons))
             self._add_horizontal_bar(ax_bar4, 'Récuperations', len(successful_ball_recoveries), len(ball_recoveries))
 
         # 2. Plotting the pitches on the second row
@@ -243,6 +243,8 @@ class PlayerVisualizer:
     
         forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
         total_passes = len(passes)
+
+        key_passes = sum(1 for event in self.player_data['events'] if any(qualifier['type']['displayName'] == 'KeyPass' for qualifier in event.get('qualifiers', [])))
     
         # Choisir les deux couleurs en hexadecimal
         color1 = "#0c205d"  # Bleu foncé
@@ -317,6 +319,8 @@ class PlayerVisualizer:
 
     def _plot_semi_circular_gauge(self, ax, label, successful_passes, total_passes):
         ax.set_facecolor('none')  # Background color for the gauge
+        if total_passes == 0:
+            total_passes = 0.001
         percentage = successful_passes / total_passes
 
         # Create the angle for the semi-circle (from pi to 0 for right-to-left)
@@ -689,7 +693,7 @@ class PlayerVisualizer:
         # Ajout des barres avec des pourcentages spécifiques à chaque type d'événement
         self._add_horizontal_bar(ax_bar1, 'Duels réussis', len(successful_challenges), len(challenges))
         self._add_horizontal_bar(ax_bar2, 'Tacles réussis', len(successful_tackles), len(tackles))
-        self._add_horizontal_bar(ax_bar3, 'Fautes commises', len(committed_fouls), total_events)
+        self._add_horizontal_bar(ax_bar3, 'Fautes commises', len(committed_fouls), len(challenges) + len(tackles) + len(ball_recoveries))
 
         plt.tight_layout()
         plt.savefig(save_path)
@@ -816,7 +820,7 @@ class PlayerVisualizer:
 
         # Ajout des barres avec des pourcentages spécifiques à chaque type d'événement
         self._add_horizontal_bar(ax_bar1, 'Dribbles réussis', len(successful_takeons), len(takeons))
-        self._add_horizontal_bar(ax_bar2, 'Fautes subies', len(submitted_fouls), len(takeons))
+        self._add_horizontal_bar(ax_bar2, 'Fautes subies', len(submitted_fouls), len(submitted_fouls) + len(takeons))
         self._add_horizontal_bar(ax_bar3, 'Tirs cadrés', len(saved_shots) + len(goals), len(missed_shots) + len(goals) + len(saved_shots))
 
         plt.tight_layout()
