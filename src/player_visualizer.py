@@ -67,9 +67,6 @@ class PlayerVisualizer:
         saved_shots = [event for event in offensive_events if event['type']['displayName'] == 'SavedShot']
         goals = [event for event in offensive_events if event['type']['displayName'] == 'Goal']
 
-        fouls = [event for event in offensive_events if event['type']['displayName'] == 'Foul']
-        submitted_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
-
         # Filtrage des événements défensifs
         defensive_events = [
             event for event in events if event['type']['displayName'] in ['BallRecovery', 'Challenge', 'Tackle', 'Foul']
@@ -86,11 +83,12 @@ class PlayerVisualizer:
         successful_tackles = [event for event in tackles if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
         fouls = [event for event in defensive_events if event['type']['displayName'] == 'Foul']
-        committed_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Successful']
+        committed_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
+        submitted_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
         # Choisir les deux couleurs en hexadecimal
-        color1 = "#0c205d"  # Bleu foncé
-        color2 = "#4955c1"  # Violet
+        color1 = "#000000"  # Bleu foncé
+        color2 = "#422308"  # Violet
 
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
@@ -151,8 +149,8 @@ class PlayerVisualizer:
             f"{self.player_data['age']} ans - {self.player_data['height']}cm",
             f"{status_text}",
             f"Temps de jeu: {playing_time} minutes",
-            f"{len(goals)} but(s)" if len(goals) == 1 else None,
-            f"{assists} p-d intentionnelle(s)" if assists > 0 else None,
+            #f"{len(goals)} but(s)" if len(goals) == 1 else None,
+            #f"{assists} p-d intentionnelle(s)" if assists > 0 else None,
             f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 
@@ -163,7 +161,7 @@ class PlayerVisualizer:
                 y_position -= y_step  # Update the Y position for the next line
 
         # Display your tag or source at a fixed position
-        ax.text(0.38, y_position - y_step, f"@MaData_fr", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        #ax.text(0.38, y_position - y_step, f"@MaData_fr", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
 
         # Horizontal bars for forward, lateral, and backward passes
         ax_bar1 = fig.add_subplot(gs[0, 1])
@@ -247,8 +245,8 @@ class PlayerVisualizer:
         key_passes = sum(1 for event in self.player_data['events'] if any(qualifier['type']['displayName'] == 'KeyPass' for qualifier in event.get('qualifiers', [])))
     
         # Choisir les deux couleurs en hexadecimal
-        color1 = "#0c205d"  # Bleu foncé
-        color2 = "#4955c1"  # Violet
+        color1 = "#000000"  # Bleu foncé
+        color2 = "#422308"  # Violet
     
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
@@ -378,10 +376,10 @@ class PlayerVisualizer:
         ax.barh(0, filled_length, height=bar_height, color=bar_color, edgecolor='none')
 
         # Ajouter l'étiquette à gauche de la barre (très proche de la barre)
-        ax.text(-0.005, 0.6, label, va='center', ha='left', fontsize=25, color='white', fontweight='bold', transform=ax.transAxes)  # Position de l'étiquette à gauche
+        ax.text(-0.005, 0.6, label, va='center', ha='left', fontsize=20, color='white', fontweight='bold', transform=ax.transAxes)  # Position de l'étiquette à gauche
 
         # Ajouter la valeur à droite de la barre (très proche de la barre)
-        ax.text(1.005, 0.6, f'{value}/{max_value}', va='center', ha='right', fontsize=25, color='white', fontweight='bold', transform=ax.transAxes)  # Position de la valeur à droite
+        ax.text(1.005, 0.6, f'{value}/{max_value}', va='center', ha='right', fontsize=20, color='white', fontweight='bold', transform=ax.transAxes)  # Position de la valeur à droite
 
         # Supprimer les axes
         ax.set_xlim(0, 1)
@@ -413,8 +411,8 @@ class PlayerVisualizer:
         orange_background = '#D4CAE1'  # Orange
 
         # Choisir les deux couleurs en hexadecimal
-        color1 = "#0c205d"  # Bleu foncé
-        color2 = "#4955c1"  # Violet
+        color1 = "#000000"  # Bleu foncé
+        color2 = "#422308"  # Violet
 
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
@@ -599,6 +597,11 @@ class PlayerVisualizer:
         fouls = [event for event in defensive_events if event['type']['displayName'] == 'Foul']
         committed_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
+        passes = [event for event in events if event['type']['displayName'] == 'Pass']
+
+        forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
+        total_passes = len(passes)
+
         total_events = len(defensive_events)
 
         # Définir les symboles et couleurs
@@ -614,8 +617,8 @@ class PlayerVisualizer:
         }
 
         # Choisir les deux couleurs en hexadecimal
-        color1 = "#0c205d"  # Bleu foncé
-        color2 = "#4955c1"  # Violet
+        color1 = "#000000"  # Bleu foncé
+        color2 = "#422308"  # Violet
 
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
@@ -683,7 +686,7 @@ class PlayerVisualizer:
 
         # Jauge semi-circulaire pour les récupérations de balle réussies
         ax_gauge = fig.add_subplot(gs[1:5, 1], polar=True)  # Prend la troisième rangée à droite
-        self._plot_semi_circular_gauge(ax_gauge, "Récupérations réussies", len(successful_ball_recoveries), len(ball_recoveries))
+        self._plot_semi_circular_gauge(ax_gauge, "Taux de passes réussies", len(successful_passes), total_passes)
 
         # Barres horizontales pour les autres événements défensifs
         ax_bar1 = fig.add_subplot(gs[3, 1])
@@ -693,7 +696,7 @@ class PlayerVisualizer:
         # Ajout des barres avec des pourcentages spécifiques à chaque type d'événement
         self._add_horizontal_bar(ax_bar1, 'Duels réussis', len(successful_challenges), len(challenges))
         self._add_horizontal_bar(ax_bar2, 'Tacles réussis', len(successful_tackles), len(tackles))
-        self._add_horizontal_bar(ax_bar3, 'Fautes commises', len(committed_fouls), len(challenges) + len(tackles) + len(ball_recoveries))
+        self._add_horizontal_bar(ax_bar3, 'Récupérations réussies', len(successful_ball_recoveries), len(ball_recoveries))
 
         plt.tight_layout()
         plt.savefig(save_path)
@@ -701,123 +704,143 @@ class PlayerVisualizer:
 
     def plot_offensive_activity(self, save_path_pitch, save_path_goal):
         events = self.player_data.get('events', [])
-
+    
         # Filtrage des événements offensifs
         offensive_events = [
-            event for event in events if event['type']['displayName'] in ['TakeOn', 'MissedShots', 'SavedShot', 'Goal', 'Foul']
+            event for event in events if event['type']['displayName'] in ['TakeOn', 'MissedShots', 'SavedShot', 'Goal', 'Foul', 'Pass']
         ]
-
+    
         if not offensive_events:
             print(f"Aucune activité offensive trouvée pour {self.player_data['player_name']}. Aucun visuel généré.")
             return
-
+    
+        # Filtrer les passes clés (KeyPass)
+        key_passes = [
+            event for event in offensive_events if event['type']['displayName'] == 'Pass' and
+            any(q['type']['displayName'] == 'KeyPass' for q in event.get('qualifiers', []))
+        ]
+    
         # Compter les événements offensifs par type
         takeons = [event for event in offensive_events if event['type']['displayName'] == 'TakeOn']
         successful_takeons = [event for event in takeons if event.get('outcomeType', {}).get('displayName') == 'Successful']
-
+    
         missed_shots = [event for event in offensive_events if event['type']['displayName'] == 'MissedShots']
         saved_shots = [event for event in offensive_events if event['type']['displayName'] == 'SavedShot']
         goals = [event for event in offensive_events if event['type']['displayName'] == 'Goal']
-
+    
         fouls = [event for event in offensive_events if event['type']['displayName'] == 'Foul']
-        submitted_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
+        submitted_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
+        passes = [event for event in events if event['type']['displayName'] == 'Pass']
+
+        forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
+        total_passes = len(passes)
+    
         total_events = len(offensive_events)
-
+    
         # Choisir les deux couleurs en hexadecimal
-        color1 = "#0c205d"  # Bleu foncé
-        color2 = "#4955c1"  # Violet
-
+        color1 = "#000000"  # Bleu foncé
+        color2 = "#422308"  # Violet
+    
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
         gradient = np.hstack((gradient, gradient))
-
+    
         # Créer un colormap personnalisé à partir des couleurs hexadécimales
         cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
-
+    
         # Créer une figure
         fig = plt.figure(figsize=(12, 9))
-
+    
         # Ajouter un axe qui occupe toute la figure
         ax = fig.add_axes([0, 0, 1, 1])
-
+    
         # Désactiver les axes
         ax.axis('off')
-
+    
         # Appliquer le gradient vertical avec les couleurs choisies
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
-
+    
         # Création d'une grille pour placer le terrain à gauche et les visualisations à droite
         gs = GridSpec(6, 2, width_ratios=[2, 2])  # 6 rangées, 2 colonnes (rapport 3:1)
-
+    
         # 1. Tracé du terrain à gauche
         pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
         ax_pitch = fig.add_subplot(gs[:, 0])
         pitch.draw(ax=ax_pitch)
-
+    
         # Ajouter une flèche pour le sens du jeu
         ax_pitch.annotate('', xy=(-0.05, 0.75), xytext=(-0.05, 0.25), xycoords='axes fraction',
                           arrowprops=dict(edgecolor='white', facecolor='none', width=10, headwidth=25, headlength=25))
-
+    
         # Parcours des événements offensifs
         for event in offensive_events:
             x, y = event['x'], event['y']
             event_type = event['type']['displayName']
             outcome = event['outcomeType']['displayName']
-
+    
             if event_type == 'TakeOn':
                 # Carré pour les dribbles
-                marker = 's'  
+                marker = 's'
                 color = '#6DF176' if outcome == 'Successful' else 'red'
                 pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
-
-            elif event_type in ['MissedShots', 'SavedShot','Goal']:
+    
+            elif event_type in ['MissedShots', 'SavedShot', 'Goal']:
                 # Ronds pour les tirs et les buts
                 marker = 'o'
                 color = '#6DF176' if event_type == 'Goal' else 'red'
-
+    
                 # Ajouter le point de tir
                 pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
-
+    
                 # Trajectoire du tir avec une flèche
                 goalmouth_y = next((float(q['value']) for q in event['qualifiers'] if q['type']['displayName'] == 'GoalMouthY'), None)
-
+    
                 if goalmouth_y is not None:
                     end_x = 100  # Les tirs se terminent à la ligne de but
                     end_y = (goalmouth_y / 100) * pitch.dim.pitch_length
                     pitch.arrows(x, y, end_x, end_y, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch)
-
+    
             elif event_type == 'Foul':
-                
                 # Étoiles pour les fautes subies
-                marker = '*'  
-                color = '#6DF176' #if outcome == 'Successful' else 'red'
+                marker = '*'
+                color = '#6DF176'
                 if outcome == 'Successful':
                     pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
-
+    
+        # Affichage des passes clés en vert
+        for pass_event in key_passes:
+            x_start, y_start = pass_event['x'], pass_event['y']
+            x_end = next((float(q['value']) for q in pass_event['qualifiers'] if q['type']['displayName'] == 'PassEndX'), None)
+            y_end = next((float(q['value']) for q in pass_event['qualifiers'] if q['type']['displayName'] == 'PassEndY'), None)
+    
+            if x_end is not None and y_end is not None:
+                pitch.arrows(x_start, y_start, x_end, y_end, width=2, headwidth=3, headlength=3, color='#6DF176', ax=ax_pitch)
+    
         # Création de la légende
         legend_handles = [
             plt.Line2D([0], [0], marker='s', color='w', label='Dribble', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], marker='o', color='w', label='Tir', markerfacecolor='black', markersize=15),
-            plt.Line2D([0], [0], marker='*', color='w', label='Faute subie', markerfacecolor='black', markersize=15)
+            plt.Line2D([0], [0], marker='*', color='w', label='Faute subie', markerfacecolor='black', markersize=15),
+            plt.Line2D([0], [0], color='#6DF176', lw=2, label='Passe clé')
         ]
         ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.265, 1), fontsize=12)
         ax_pitch.set_title("@MaData_fr", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
-
+    
         # Ajoutez cette ligne à la place
         ax.text(0.5, 0.96, f"Activité offensive de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
-
+    
         # 2. Visualisation des données sur le côté droit
-
+    
         # Jauge semi-circulaire pour les buts
         ax_gauge = fig.add_subplot(gs[1:5, 1], polar=True)
-        self._plot_semi_circular_gauge(ax_gauge, "Dribbles réussis", len(successful_takeons), len(takeons))
-
+        self._plot_semi_circular_gauge(ax_gauge, "Taux de passes réussies", len(successful_passes), total_passes)
+    
         # Barres horizontales pour les dribbles et tirs manqués
         ax_bar1 = fig.add_subplot(gs[3, 1])
         ax_bar2 = fig.add_subplot(gs[4, 1])
         ax_bar3 = fig.add_subplot(gs[5, 1])
-
+    
         # Ajout des barres avec des pourcentages spécifiques à chaque type d'événement
         self._add_horizontal_bar(ax_bar1, 'Dribbles réussis', len(successful_takeons), len(takeons))
         self._add_horizontal_bar(ax_bar2, 'Fautes subies', len(submitted_fouls), len(submitted_fouls) + len(takeons))
