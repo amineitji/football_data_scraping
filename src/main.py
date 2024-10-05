@@ -22,7 +22,7 @@ def main(url, player_name, poste):
     player_data_file = extractor.extract_player_stats_and_events(player_name)
 
     # Initialize the visualizer with the extracted data
-    visualizer = PlayerVisualizer(player_data_file)
+    visualizer = PlayerVisualizer(player_data_file, url)
     
     # Save paths for the various visualizations
     save_path_passes = os.path.join(match_folder, f'{player_name.replace(" ", "_")}_passes_and_pie_charts.png')

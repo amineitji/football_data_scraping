@@ -11,12 +11,17 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy.ndimage import gaussian_filter
 import cmasher as cmr
 from player_image_downloader import PlayerProfileScraper
+from match_data_extractor import MatchDataExtractor
 
 
 class PlayerVisualizer:
-    def __init__(self, player_data_path):
+    def __init__(self, player_data_path, html_path):
         self.player_data_path = player_data_path
         self.player_data = self._load_player_data()
+
+        self.match_extractor = MatchDataExtractor(html_path)
+        self.competition, self.color1, self.color2 = self.match_extractor.get_competition_and_colors()
+
 
     def _load_player_data(self):
         with open(self.player_data_path, 'r') as file:
@@ -86,16 +91,12 @@ class PlayerVisualizer:
         committed_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
         submitted_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
-        # Choisir les deux couleurs en hexadecimal
-        color1 = "#000000"  # Bleu foncé
-        color2 = "#422308"  # Violet
-
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
         gradient = np.hstack((gradient, gradient))
 
         # Créer un colormap personnalisé à partir des couleurs hexadécimales
-        cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
 
         # Créer une figure
         fig = plt.figure(figsize=(16, 16))
@@ -273,16 +274,12 @@ class PlayerVisualizer:
 
         key_passes = sum(1 for event in self.player_data['events'] if any(qualifier['type']['displayName'] == 'KeyPass' for qualifier in event.get('qualifiers', [])))
     
-        # Choisir les deux couleurs en hexadecimal
-        color1 = "#000000"  # Bleu foncé
-        color2 = "#422308"  # Violet
-    
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
         gradient = np.hstack((gradient, gradient))
     
         # Créer un colormap personnalisé à partir des couleurs hexadécimales
-        cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
     
         # Créer une figure
         fig = plt.figure(figsize=(12, 9))
@@ -439,16 +436,12 @@ class PlayerVisualizer:
         background_color = '#8549B7'  # Violet foncé
         orange_background = '#D4CAE1'  # Orange
 
-        # Choisir les deux couleurs en hexadecimal
-        color1 = "#000000"  # Bleu foncé
-        color2 = "#422308"  # Violet
-
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
         gradient = np.hstack((gradient, gradient))
 
         # Créer un colormap personnalisé à partir des couleurs hexadécimales
-        cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
 
         # Créer une figure adaptée pour téléphone
         fig = plt.figure(figsize=(9, 16))  # Largeur 9, hauteur 16 pour un meilleur ajustement mobile
@@ -645,16 +638,12 @@ class PlayerVisualizer:
             'Unsuccessful': 'red'
         }
 
-        # Choisir les deux couleurs en hexadecimal
-        color1 = "#000000"  # Bleu foncé
-        color2 = "#422308"  # Violet
-
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
         gradient = np.hstack((gradient, gradient))
 
         # Créer un colormap personnalisé à partir des couleurs hexadécimales
-        cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
 
         # Créer une figure
         fig = plt.figure(figsize=(12, 9))
@@ -767,16 +756,12 @@ class PlayerVisualizer:
     
         total_events = len(offensive_events)
     
-        # Choisir les deux couleurs en hexadecimal
-        color1 = "#000000"  # Bleu foncé
-        color2 = "#422308"  # Violet
-    
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
         gradient = np.hstack((gradient, gradient))
     
         # Créer un colormap personnalisé à partir des couleurs hexadécimales
-        cmap = mcolors.LinearSegmentedColormap.from_list("", [color1, color2])
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
     
         # Créer une figure
         fig = plt.figure(figsize=(12, 9))

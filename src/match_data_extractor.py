@@ -3,8 +3,9 @@ import json
 import os
 
 class MatchDataExtractor:
-    def __init__(self, html_path):
+    def __init__(self, html_path, color_json_path="data/color_template.json"):
         self.html_path = html_path
+        self.color_json_path = color_json_path
         self.data = self._extract_data_html()
 
     def _extract_data_html(self):
@@ -25,6 +26,43 @@ class MatchDataExtractor:
         data_json = json.loads(data_txt)
 
         return data_json
+
+    def get_competition_from_filename(self):
+        """Extracts the competition name from the HTML filename."""
+        filename = os.path.basename(self.html_path)
+        competition_keywords = [
+            "Ligue 1", "Premier League", "Serie A", "La Liga", "Bundesliga",
+            "Champions League", "Europa League", "Conference League"
+        ]
+        for keyword in competition_keywords:
+            if keyword.lower() in filename.lower():
+                return keyword
+        return None  # Return None if no competition is found
+
+    def load_colors_for_competition(self, competition_name):
+        """Loads the colors for the given competition from the JSON file."""
+        try:
+            with open(self.color_json_path, 'r') as f:
+                colors_data = json.load(f)
+        except FileNotFoundError:
+            print(f"JSON file '{self.color_json_path}' not found.")
+            return "#FFFFFF", "#000000"  # Default colors in case of an error
+
+        # Get the colors for the competition
+        competition_colors = colors_data.get("competitions", {}).get(competition_name)
+        if competition_colors:
+            return competition_colors["color1"], competition_colors["color2"]
+        else:
+            return "#FFFFFF", "#000000"  # Default colors if not found
+
+    def get_competition_and_colors(self):
+        """Combines competition extraction and color loading."""
+        competition = self.get_competition_from_filename()
+        if competition:
+            color1, color2 = self.load_colors_for_competition(competition)
+            return competition, color1, color2
+        else:
+            return "Unknown Competition", "#FFFFFF", "#000000"
 
     def extract_player_stats_and_events(self, player_name, output_dir="player_data"):
         print("Extraction des données pour le joueur - ", player_name)
