@@ -91,6 +91,8 @@ class PlayerVisualizer:
         committed_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
         submitted_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
+        key_passes = sum(1 for event in self.player_data['events'] if any(qualifier['type']['displayName'] == 'KeyPass' for qualifier in event.get('qualifiers', [])))
+    
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
         gradient = np.hstack((gradient, gradient))
@@ -176,9 +178,10 @@ class PlayerVisualizer:
             ('Duels gagnés', len(successful_challenges), len(challenges)),
             ('Fautes commises', len(committed_fouls), len(challenges) + len(tackles) + len(ball_recoveries)),
             ('Passes réussies', len(successful_passes), total_passes),
-            ('Dribbles réussies', len(successful_takeons), len(takeons)),
+            ('Dribbles réussis', len(successful_takeons), len(takeons)),
             ('Tirs cadrés', len(saved_shots) + len(goals), len(missed_shots) + len(saved_shots) + len(goals)),
-            ('Fautes subies', len(submitted_fouls), len(submitted_fouls) + len(takeons))
+            ('Fautes subies', len(submitted_fouls), len(submitted_fouls) + len(takeons)),
+            ("Passes clés", key_passes, total_passes)
         ]
 
         # Priorités par type de joueur
