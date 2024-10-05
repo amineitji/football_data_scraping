@@ -148,10 +148,9 @@ class PlayerVisualizer:
         text_items = [
             f"{self.player_data['player_name']} - N°{self.player_data['shirtNo']}",
             f"{self.player_data['age']} ans - {self.player_data['height']}cm",
-            f"{status_text}",
+            f"{status_text} - {self.competition}",
             f"Temps de jeu: {playing_time} minutes",
             #f"{len(goals)} but(s)" if len(goals) == 1 else None,
-            #f"{assists} p-d intentionnelle(s)" if assists > 0 else None,
             f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 
