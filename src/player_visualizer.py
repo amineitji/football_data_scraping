@@ -169,21 +169,50 @@ class PlayerVisualizer:
         ax_bar3 = fig.add_subplot(gs[2, 1])
         ax_bar4 = fig.add_subplot(gs[3, 1])
 
-        if type_data == 'DEF':
-            self._add_horizontal_bar(ax_bar1, 'Récuperations', len(successful_ball_recoveries), len(ball_recoveries))
-            self._add_horizontal_bar(ax_bar2, 'Tacles réussis', len(successful_tackles), len(tackles))
-            self._add_horizontal_bar(ax_bar3, 'Duels gagnés', len(successful_challenges), len(challenges))
-            self._add_horizontal_bar(ax_bar4, 'Fautes commises', len(committed_fouls), len(challenges) + len(tackles) + len(ball_recoveries))
-        elif type_data == 'MIL':
-            self._add_horizontal_bar(ax_bar1, 'Dribbles réussies', len(successful_takeons), len(takeons))
-            self._add_horizontal_bar(ax_bar2, 'Passes réussies', len(successful_passes), total_passes)
-            self._add_horizontal_bar(ax_bar3, 'Duels gagnés', len(successful_challenges), len(challenges))
-            self._add_horizontal_bar(ax_bar4, 'Récuperations', len(successful_ball_recoveries), len(ball_recoveries))
-        elif type_data == 'ATT':
-            self._add_horizontal_bar(ax_bar1, 'Dribbles réussies', len(successful_takeons), len(takeons))
-            self._add_horizontal_bar(ax_bar2, 'Tirs cadrés', len(saved_shots) + len(goals), len(missed_shots) + len(saved_shots) + len(goals))
-            self._add_horizontal_bar(ax_bar3, 'Fautes subies', len(submitted_fouls), len(submitted_fouls) + len(takeons))
-            self._add_horizontal_bar(ax_bar4, 'Récuperations', len(successful_ball_recoveries), len(ball_recoveries))
+        # Liste des statistiques avec leur ordre de priorité
+        all_stats = [
+            ('Récuperations', len(successful_ball_recoveries), len(ball_recoveries)),
+            ('Tacles réussis', len(successful_tackles), len(tackles)),
+            ('Duels gagnés', len(successful_challenges), len(challenges)),
+            ('Fautes commises', len(committed_fouls), len(challenges) + len(tackles) + len(ball_recoveries)),
+            ('Passes réussies', len(successful_passes), total_passes),
+            ('Dribbles réussies', len(successful_takeons), len(takeons)),
+            ('Tirs cadrés', len(saved_shots) + len(goals), len(missed_shots) + len(saved_shots) + len(goals)),
+            ('Fautes subies', len(submitted_fouls), len(submitted_fouls) + len(takeons))
+        ]
+
+        # Priorités par type de joueur
+        priorities = {
+            'DEF': ['Récuperations', 'Tacles réussis', 'Duels gagnés', 'Fautes commises'],
+            'MIL': ['Dribbles réussies', 'Passes réussies', 'Duels gagnés', 'Récuperations'],
+            'ATT': ['Dribbles réussies', 'Tirs cadrés', 'Fautes subies', 'Récuperations']
+        }
+
+        # Récupère la liste des priorités pour le type de joueur
+        priority_stats = priorities.get(type_data, [])
+
+        # Sélectionner les stats selon les priorités et vérifier s'il y a des valeurs non nulles
+        selected_stats = []
+        for priority in priority_stats:
+            for stat in all_stats:
+                label, value, total = stat
+                if label == priority and value > 0:  # Si la stat correspond à la priorité et qu'elle n'est pas à 0
+                    selected_stats.append(stat)
+                    break
+                
+        # Ajouter des stats supplémentaires si certaines sont à 0 ou manquantes
+        for stat in all_stats:
+            if len(selected_stats) >= 4:  # Limite à 4 stats à afficher
+                break
+            if stat not in selected_stats and stat[1] > 0:  # Si la stat n'a pas été ajoutée et qu'elle est non nulle
+                selected_stats.append(stat)
+
+        # Affichage des 4 premières stats non nulles
+        ax_bars = [ax_bar1, ax_bar2, ax_bar3, ax_bar4]  # Liste des axes pour afficher les barres
+        for i in range(4):
+            label, value, total = selected_stats[i]
+            self._add_horizontal_bar(ax_bars[i], label, value, total)
+
 
         # 2. Plotting the pitches on the second row
 
