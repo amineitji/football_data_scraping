@@ -31,7 +31,7 @@ class MatchDataExtractor:
         """Extracts the competition name from the HTML filename."""
         filename = os.path.basename(self.html_path)
         competition_keywords = [
-            "Ligue 1", "Premier League", "Serie A", "La Liga", "Bundesliga",
+            "Ligue 1", "Premier League", "Serie A", "LaLiga", "Bundesliga",
             "Champions League", "Europa League", "Conference League"
         ]
         for keyword in competition_keywords:
