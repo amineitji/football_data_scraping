@@ -182,7 +182,7 @@ class PlayerVisualizer:
                 y_position -= y_step  # Update the Y position for the next line
 
         # Display your tag or source at a fixed position
-        #ax.text(0.38, y_position - y_step, f"@MaData_fr", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+        ax.text(0.425, 0.72, f"@TarbouchData", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
 
         # Horizontal bars for forward, lateral, and backward passes
         ax_bar1 = fig.add_subplot(gs[0, 1])
@@ -199,8 +199,8 @@ class PlayerVisualizer:
             ('Passes réussies', len(successful_passes), total_passes),
             ('Dribbles réussis', len(successful_takeons), len(takeons)),
             ('Tirs cadrés', len(saved_shots) + len(goals), len(missed_shots) + len(saved_shots) + len(goals)),
-            ('Fautes commises', len(committed_fouls), len(challenges) + len(tackles) + len(ball_recoveries)),
-            ('Fautes subies', len(submitted_fouls), len(submitted_fouls) + len(takeons))
+            ('Fautes commises', len(committed_fouls), len(committed_fouls)),
+            ('Fautes subies', len(submitted_fouls), len(submitted_fouls))
         ]
 
         # Priorités par type de joueur
@@ -355,6 +355,10 @@ class PlayerVisualizer:
 
         # Ajoutez cette ligne à la place
         ax.text(0.5, 0.96, f"Passes de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
+
+        # Display your tag or source at a fixed position
+        ax.text(0.445, 0.82, f"@TarbouchData", fontsize=14, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+
 
         # 2. Plotting data visualizations on the right side
     
@@ -730,10 +734,13 @@ class PlayerVisualizer:
             plt.Line2D([0], [0], marker='*', color='w', label='Faute', markerfacecolor='black', markersize=15),
         ]
         ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.2925, 1), fontsize=12)
-        ax_pitch.set_title("@MaData_fr", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
+        ax_pitch.set_title("@TarbouchData", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
 
         # Ajoutez cette ligne à la place
         ax.text(0.5, 0.96, f"Activité défensive de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
+
+        # Display your tag or source at a fixed position
+        ax.text(0.445, 0.76, f"@TarbouchData", fontsize=14, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
 
         # 2. Visualisation des données sur le côté droit
 
@@ -884,6 +891,9 @@ class PlayerVisualizer:
         # Ajoutez cette ligne à la place
         ax.text(0.5, 0.96, f"Activité offensive de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
     
+        # Display your tag or source at a fixed position
+        ax.text(0.45, 0.76, f"@TarbouchData", fontsize=14, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+
         # 2. Visualisation des données sur le côté droit
     
         # Jauge semi-circulaire pour les buts
