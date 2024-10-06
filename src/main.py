@@ -3,7 +3,7 @@ import os
 from match_data_extractor import MatchDataExtractor
 from player_visualizer import PlayerVisualizer
 
-def main(url, player_name, poste):
+def main(url, player_name, poste, nb_passe_d=0):
     # Extract the match name from the url by removing "data/" and ".json"
     match_name = os.path.basename(url).replace("data/", "").replace(".json", "")
     
@@ -36,14 +36,22 @@ def main(url, player_name, poste):
     visualizer.plot_passes_and_bar_charts(save_path_passes)
     visualizer.plot_defensive_activity(save_path_defensive)
     visualizer.plot_offensive_activity(save_path_offensive_pitch, save_path_offensive_goal)
-    visualizer.plot_passes_heatmap_and_bar_charts(save_path_activity, poste)
+    visualizer.plot_passes_heatmap_and_bar_charts(save_path_activity, poste, nb_passe_d)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: python main.py <url> <player_name> <poste>")
+    # Check if enough arguments are passed
+    if len(sys.argv) < 4 or len(sys.argv) > 5:
+        print("Usage: python main.py <url> <player_name> <poste> [nb_passe_d]")
         sys.exit(1)
-    
+
     url = sys.argv[1]
     player_name = sys.argv[2]
-    poste = sys.argv[3] # ATT, MIL, DEF
-    main(url, player_name, poste)
+    poste = sys.argv[3]  # ATT, MIL, DEF
+    
+    # Check if the optional nb_passe_d argument is provided
+    if len(sys.argv) == 5:
+        nb_passe_d = int(sys.argv[4])  # Convert the optional argument to an integer
+    else:
+        nb_passe_d = 0  # Default value if not provided
+    
+    main(url, player_name, poste, nb_passe_d)

@@ -51,17 +51,26 @@ class PlayerVisualizer:
 
         return forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes
 
-    def plot_passes_heatmap_and_bar_charts(self, save_path, type_data): #type_data = DEF,MIL,ATT
+    def plot_passes_heatmap_and_bar_charts(self, save_path, type_data, nb_passe_d): #type_data = DEF,MIL,ATT
             
         events = self.player_data.get('events', [])
         passes = [event for event in events if event['type']['displayName'] == 'Pass']
+
+        # Détection des passes décisives (IntentionalGoalAssist ou BigChanceCreated)
+        assists = [
+            event for event in passes if any(
+                q['type']['displayName'] in ['IntentionalGoalAssist', 'BigChanceCreated']
+                for q in event.get('qualifiers', [])
+            )
+        ]
+        nb_passe_d = len(assists)
 
         forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
         total_passes = len(passes)
 
         # Filtrage des événements offensifs
         offensive_events = [
-            event for event in events if event['type']['displayName'] in ['TakeOn', 'MissedShots', 'SavedShot', 'Goal', 'Foul']
+            event for event in events if event['type']['displayName'] in ['TakeOn', 'MissedShots', 'SavedShot', 'Goal', 'Foul', 'Pass']
         ]
 
         # Compter les événements offensifs par type
@@ -91,7 +100,16 @@ class PlayerVisualizer:
         committed_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
         submitted_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
-        key_passes = sum(1 for event in self.player_data['events'] if any(qualifier['type']['displayName'] == 'KeyPass' for qualifier in event.get('qualifiers', [])))
+        # Filtrer les passes clés (KeyPass)
+        key_passes = [
+            event for event in offensive_events if event['type']['displayName'] == 'Pass' and
+            any(q['type']['displayName'] == 'KeyPass' for q in event.get('qualifiers', []))
+        ]
+
+        # Filtrer les passes clés réussies
+        key_passes_successful = [
+            event for event in key_passes if event.get('outcomeType', {}).get('displayName') == 'Successful'
+        ]
     
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
@@ -132,7 +150,7 @@ class PlayerVisualizer:
             start_minute = 0
         else:
             first_minute = min(self.player_data["stats"]["ratings"].keys())
-            status_text = f'Rentré en jeu: {first_minute}"'
+            status_text = f'Rentré {first_minute}"'
             start_minute = first_minute
 
         # Get the last minute played
@@ -152,7 +170,8 @@ class PlayerVisualizer:
             f"{self.player_data['age']} ans - {self.player_data['height']}cm",
             f"{status_text} - {self.competition}",
             f"Temps de jeu: {playing_time} minutes",
-            #f"{len(goals)} but(s)" if len(goals) == 1 else None,
+            f"{len(goals)} but(s)" if len(goals) >= 1 else None,
+            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None,
             f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 
@@ -173,22 +192,22 @@ class PlayerVisualizer:
 
         # Liste des statistiques avec leur ordre de priorité
         all_stats = [
+            ("Passes clés", len(key_passes_successful), len(key_passes)),
             ('Récuperations', len(successful_ball_recoveries), len(ball_recoveries)),
             ('Tacles réussis', len(successful_tackles), len(tackles)),
             ('Duels gagnés', len(successful_challenges), len(challenges)),
-            ('Fautes commises', len(committed_fouls), len(challenges) + len(tackles) + len(ball_recoveries)),
             ('Passes réussies', len(successful_passes), total_passes),
             ('Dribbles réussis', len(successful_takeons), len(takeons)),
             ('Tirs cadrés', len(saved_shots) + len(goals), len(missed_shots) + len(saved_shots) + len(goals)),
-            ('Fautes subies', len(submitted_fouls), len(submitted_fouls) + len(takeons)),
-            ("Passes clés", key_passes, total_passes)
+            ('Fautes commises', len(committed_fouls), len(challenges) + len(tackles) + len(ball_recoveries)),
+            ('Fautes subies', len(submitted_fouls), len(submitted_fouls) + len(takeons))
         ]
 
         # Priorités par type de joueur
         priorities = {
             'DEF': ['Récuperations', 'Tacles réussis', 'Duels gagnés', 'Fautes commises'],
-            'MIL': ['Dribbles réussies', 'Passes réussies', 'Duels gagnés', 'Récuperations'],
-            'ATT': ['Dribbles réussies', 'Tirs cadrés', 'Fautes subies', 'Récuperations']
+            'MIL': ['Dribbles réussis', 'Passes réussies', 'Passes clés', 'Récuperations'],
+            'ATT': ['Dribbles réussis', 'Tirs cadrés', 'Passes clés', 'Récuperations']
         }
 
         # Récupère la liste des priorités pour le type de joueur
@@ -266,6 +285,11 @@ class PlayerVisualizer:
     def plot_passes_and_bar_charts(self, save_path):
         events = self.player_data.get('events', [])
         passes = [event for event in events if event['type']['displayName'] == 'Pass']
+        
+        # Filtrage des événements offensifs
+        offensive_events = [
+            event for event in events if event['type']['displayName'] in ['TakeOn', 'MissedShots', 'SavedShot', 'Goal', 'Foul', 'Pass']
+        ]
     
         if not passes:
             print(f"Pas de passes trouvées pour {self.player_data['player_name']}. Aucun visuel généré.")
@@ -274,7 +298,16 @@ class PlayerVisualizer:
         forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
         total_passes = len(passes)
 
-        key_passes = sum(1 for event in self.player_data['events'] if any(qualifier['type']['displayName'] == 'KeyPass' for qualifier in event.get('qualifiers', [])))
+        # Filtrer les passes clés (KeyPass)
+        key_passes = [
+            event for event in offensive_events if event['type']['displayName'] == 'Pass' and
+            any(q['type']['displayName'] == 'KeyPass' for q in event.get('qualifiers', []))
+        ]
+
+        # Filtrer les passes clés réussies
+        key_passes_successful = [
+            event for event in key_passes if event.get('outcomeType', {}).get('displayName') == 'Successful'
+        ]
     
         # Créer un gradient vertical (de haut en bas)
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
@@ -739,6 +772,11 @@ class PlayerVisualizer:
             event for event in offensive_events if event['type']['displayName'] == 'Pass' and
             any(q['type']['displayName'] == 'KeyPass' for q in event.get('qualifiers', []))
         ]
+
+        # Filtrer les passes clés réussies
+        key_passes_successful = [
+            event for event in key_passes if event.get('outcomeType', {}).get('displayName') == 'Successful'
+        ]
     
         # Compter les événements offensifs par type
         takeons = [event for event in offensive_events if event['type']['displayName'] == 'TakeOn']
@@ -825,7 +863,7 @@ class PlayerVisualizer:
                     pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
     
         # Affichage des passes clés en vert
-        for pass_event in key_passes:
+        for pass_event in key_passes_successful:
             x_start, y_start = pass_event['x'], pass_event['y']
             x_end = next((float(q['value']) for q in pass_event['qualifiers'] if q['type']['displayName'] == 'PassEndX'), None)
             y_end = next((float(q['value']) for q in pass_event['qualifiers'] if q['type']['displayName'] == 'PassEndY'), None)
@@ -859,7 +897,7 @@ class PlayerVisualizer:
     
         # Ajout des barres avec des pourcentages spécifiques à chaque type d'événement
         self._add_horizontal_bar(ax_bar1, 'Dribbles réussis', len(successful_takeons), len(takeons))
-        self._add_horizontal_bar(ax_bar2, 'Fautes subies', len(submitted_fouls), len(submitted_fouls) + len(takeons))
+        self._add_horizontal_bar(ax_bar2, 'Passes clés', len(key_passes_successful), len(key_passes))      
         self._add_horizontal_bar(ax_bar3, 'Tirs cadrés', len(saved_shots) + len(goals), len(missed_shots) + len(goals) + len(saved_shots))
 
         plt.tight_layout()

@@ -1,3 +1,7 @@
+Voici la section mise à jour avec des exemples d'usage pour le nouvel argument `nb_passe_d` dans votre fichier `README.md` :
+
+---
+
 ITJI Amine
 
 # Projet de visualisation des données de joueurs
@@ -51,24 +55,36 @@ Ce projet fournit un outil pour extraire et visualiser les statistiques des joue
 Vous pouvez exécuter le script principal pour générer des visualisations pour un match et un joueur spécifiques en utilisant le Makefile :
 
 ```
-make run URL=<url_des_données_de_match> PLAYER_NAME=<nom_du_joueur> POSTE=<poste>
+make run URL=<url_des_données_de_match> PLAYER_NAME=<nom_du_joueur> POSTE=<poste> [NB_PASSE_D=<nombre_de_passes_décisives>]
 ```
 
-Par exemple :
+Par exemple, pour un joueur sans préciser le nombre de passes décisives (la valeur par défaut sera `0`) :
 
 ```
 make run URL="data/html/Monaco 3-1 Le Havre - Ligue 1 2024_2025 Live.html" PLAYER_NAME="Eliesse Ben Seghir" POSTE="ATT"
 ```
 
+Si vous souhaitez spécifier le nombre de passes décisives, utilisez l'argument optionnel `NB_PASSE_D` comme suit :
+
+```
+make run URL="data/html/Monaco 3-1 Le Havre - Ligue 1 2024_2025 Live.html" PLAYER_NAME="Eliesse Ben Seghir" POSTE="ATT" NB_PASSE_D=5
+```
+
+### Explication des arguments :
+- `URL` : Lien vers le fichier de données du match (HTML ou JSON).
+- `PLAYER_NAME` : Nom complet du joueur (garder les guillemets si le nom contient des espaces).
+- `POSTE` : Poste du joueur (`ATT` pour attaquant, `MIL` pour milieu, `DEF` pour défenseur).
+- `NB_PASSE_D` (optionnel) : Nombre de passes décisives du joueur (valeur par défaut = `0`).
+
 ## Nettoyage des répertoires de données
 
-Pour nettoyer les répertoires `/viz_data` et `/player_data`, utilisez :
+Pour nettoyer les répertoires `/viz_data`, `/player_data`, `/data/html`, et `/data/photo`, utilisez :
 
 ```
 make clean
 ```
 
-Cela supprimera toutes les visualisations et données de joueurs générées précédemment.
+Cela supprimera toutes les visualisations, données de joueurs extraites et les fichiers HTML/photo générés précédemment.
 
 ## Documentation
 
