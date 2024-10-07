@@ -266,7 +266,7 @@ class PlayerVisualizer:
         y_coords = [t['y'] for t in touchs]
     
         # Compute bin statistic for heatmap
-        bin_statistic = pitch.bin_statistic(x_coords, y_coords, statistic='count', bins=(25, 25))
+        bin_statistic = pitch.bin_statistic(x_coords, y_coords, statistic='count', bins=(20, 20))
     
         # Apply Gaussian filter for smoothing
         bin_statistic['statistic'] = gaussian_filter(bin_statistic['statistic'], 1)

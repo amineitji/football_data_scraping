@@ -32,7 +32,7 @@ class MatchDataExtractor:
 
         # Attente explicite que la page soit complètement chargée (exemple : attendre l'élément body)
         print("Attente que la page se charge complètement...")
-        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 
         # Récupération du contenu HTML après le chargement complet
         print("Récupération du contenu HTML...")
@@ -41,9 +41,7 @@ class MatchDataExtractor:
         print("Fermeture du navigateur Selenium...")
         driver.quit()
 
-        print("Analyse du HTML avec BeautifulSoup...")
-        soup = BeautifulSoup(html, 'html.parser')
-
+        # Suppression de l'analyse avec BeautifulSoup car non utilisée
         print("Extraction des données avec le modèle regex...")
         regex_pattern = r'(?<=require\.config\.params\["args"\].=.)[\s\S]*?;'
         data_txt = re.findall(regex_pattern, html)[0]
@@ -68,7 +66,7 @@ class MatchDataExtractor:
             "France-Ligue-1", "England-Premier-League", "Italy-Serie-A", "Spain-LaLiga", "Germany-Bundesliga",
             "Europe-Champions-League", "Europe-Europa-League", "Europe-Conference-League"
         ]
-        
+
         for keyword in competition_keywords:
             if keyword.lower() in filename.lower():
                 # Split the keyword by hyphen and remove the first word
@@ -76,7 +74,7 @@ class MatchDataExtractor:
                 # Join the remaining parts with spaces
                 competition_name = ' '.join(parts)
                 return competition_name
-    
+
         return None  # Return None if no competition is found
 
     def load_colors_for_competition(self, competition_name):
