@@ -32,7 +32,7 @@ class MatchDataExtractor:
 
         # Attente explicite que la page soit complètement chargée (exemple : attendre l'élément body)
         print("Attente que la page se charge complètement...")
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 
         # Récupération du contenu HTML après le chargement complet
         print("Récupération du contenu HTML...")
