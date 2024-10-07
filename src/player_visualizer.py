@@ -37,19 +37,22 @@ class PlayerVisualizer:
             x_end, y_end = pas['endX'], pas['endY']
             angle = np.degrees(np.arctan2(y_end - y_start, x_end - x_start))
 
-            if -30 <= angle <= 30:
+            # Définir les catégories de passes
+            if 30 <= angle <= 150:
                 forward_passes.append(pas)
-            elif 30 < angle < 150 or -150 < angle < -30:
-                lateral_passes.append(pas)
-            else:
+            elif -150 <= angle <= -30:  
                 backward_passes.append(pas)
-
+            else:
+                lateral_passes.append(pas)
+                
             if pas['outcomeType']['displayName'] == 'Successful':
                 successful_passes.append(pas)
             else:
                 failed_passes.append(pas)
 
         return forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes
+
+
 
     def plot_passes_heatmap_and_bar_charts(self, save_path, type_data, nb_passe_d): #type_data = DEF,MIL,ATT
             
@@ -344,20 +347,36 @@ class PlayerVisualizer:
             x_start = pas['y']
             y_end = pas['endX']
             x_end = pas['endY']
+            alpha_pass = 1
+            
+            # Calcul de l'angle
+            angle = np.degrees(np.arctan2(y_end - y_start, x_end - x_start))
     
-            color = '#6DF176' if pas['outcomeType']['displayName'] == 'Successful' else 'red'
-            pitch.arrows(y_start, x_start, y_end, x_end, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch)
+            # Définir les couleurs selon le type de passe
+            if 30 <= angle <= 150:
+                color = '#78ff00'  # Couleur pour les passes en avant
+            elif -150 <= angle <= -30:
+                alpha_pass = 0.3
+                color = '#ff3600'  # Couleur pour les passes en arrière 
+            else:
+                color = '#ffb200'  # Couleur pour les passes latérales 
+                alpha_pass = 0.5
+
+            # Dessiner la flèche avec la couleur appropriée
+            pitch.arrows(y_start, x_start, y_end, x_end, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch, alpha=alpha_pass)
+
     
-        success_patch = mpatches.Patch(color='#6DF176', label='Passe réussie')
-        failed_patch = mpatches.Patch(color='red', label='Passe ratée')
-        ax_pitch.legend(handles=[success_patch, failed_patch], loc='upper right', bbox_to_anchor=(1.295, 1), fontsize=12)
+        p_1 = mpatches.Patch(color='#78ff00', label='Passes vers l\'avant')
+        p_2 = mpatches.Patch(color='#ffb200', label='Passes latérales')
+        p_3 = mpatches.Patch(color='#ff3600', label='Passes vers l\'arrière')
+        ax_pitch.legend(handles=[p_1, p_2, p_3], loc='upper right', bbox_to_anchor=(1.425, 1), fontsize=12)
         ax_pitch.set_title("@MaData_fr", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
 
         # Ajoutez cette ligne à la place
         ax.text(0.5, 0.96, f"Passes de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
 
         # Display your tag or source at a fixed position
-        ax.text(0.445, 0.82, f"@TarbouchData", fontsize=14, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+        ax.text(0.425, 0.77, f"@TarbouchData", fontsize=14, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
 
 
         # 2. Plotting data visualizations on the right side

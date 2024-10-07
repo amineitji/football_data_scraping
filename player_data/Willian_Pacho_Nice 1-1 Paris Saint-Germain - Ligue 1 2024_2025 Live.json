@@ -105,26 +105,27 @@
             "68": 6.77,
             "69": 6.77,
             "71": 6.77,
-            "74": 6.74,
-            "76": 6.92,
-            "77": 6.97,
-            "79": 6.97,
-            "81": 6.98,
-            "83": 6.98,
-            "84": 6.98,
-            "85": 7.07,
-            "89": 7.04,
-            "91": 7.04,
-            "92": 7.03,
-            "93": 7.04,
-            "94": 7.05,
-            "95": 7.05,
-            "96": 7.06
+            "75": 6.82,
+            "76": 6.96,
+            "77": 7.01,
+            "79": 7.01,
+            "81": 7.01,
+            "83": 7.01,
+            "84": 7.02,
+            "85": 7.11,
+            "89": 7.07,
+            "91": 7.08,
+            "92": 7.06,
+            "93": 7.07,
+            "94": 7.08,
+            "95": 7.08,
+            "96": 7.1
         },
         "clearances": {
             "21": 1.0,
             "37": 1.0,
-            "76": 2.0,
+            "75": 1.0,
+            "76": 1.0,
             "77": 1.0
         },
         "interceptions": {
@@ -175,14 +176,15 @@
             "68": 2.0,
             "69": 1.0,
             "71": 1.0,
-            "76": 2.0,
+            "75": 1.0,
+            "76": 1.0,
             "77": 1.0,
             "79": 1.0,
             "81": 2.0,
             "83": 1.0,
             "84": 1.0,
             "85": 2.0,
-            "89": 1.0,
+            "89": 2.0,
             "91": 1.0,
             "93": 3.0,
             "94": 2.0,
@@ -370,25 +372,17 @@
         "tacklesTotal": {
             "51": 1.0,
             "21": 1.0,
-            "85": 1.0,
-            "74": 1.0
+            "85": 1.0
         },
         "tackleSuccessful": {
             "51": 1.0,
             "21": 1.0,
             "85": 1.0
         },
-        "tackleUnsuccesful": {
-            "74": 1.0
-        },
         "tackleSuccess": {
             "51": 100.0,
             "21": 100.0,
-            "85": 100.0,
-            "74": 0.0
-        },
-        "dribbledPast": {
-            "74": 1.0
+            "85": 100.0
         },
         "dispossessed": {
             "89": 1.0
@@ -420,17 +414,30 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "74.9"
-                },
-                {
-                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
                     "value": "16.9"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "42.9"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "74.9"
                 },
                 {
                     "type": {
@@ -445,13 +452,6 @@
                         "displayName": "Zone"
                     },
                     "value": "Back"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "42.9"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -506,13 +506,6 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "39.1"
-                },
-                {
-                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -524,6 +517,19 @@
                         "displayName": "Angle"
                     },
                     "value": "4.50"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "39.1"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -564,27 +570,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "37.5"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "0.77"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "57.3"
-                },
-                {
-                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
@@ -596,6 +581,33 @@
                         "displayName": "Zone"
                     },
                     "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "57.3"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "37.5"
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "0.77"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -615,7 +627,7 @@
             "id": 2731997167.0,
             "eventId": 24,
             "minute": 1,
-            "second": 8,
+            "second": 6,
             "teamId": 304,
             "playerId": 432378,
             "x": 30.1,
@@ -636,24 +648,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "Back"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "4.80"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "10.8"
+                    "value": "31.0"
                 },
                 {
                     "type": {
@@ -664,10 +662,30 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "31.0"
+                    "value": "4.80"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "10.8"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -687,7 +705,7 @@
             "id": 2731997263.0,
             "eventId": 26,
             "minute": 1,
-            "second": 13,
+            "second": 11,
             "teamId": 304,
             "playerId": 432378,
             "x": 27.9,
@@ -715,6 +733,12 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
@@ -729,17 +753,17 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "34.8"
-                },
-                {
-                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
                     "value": "0.50"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "34.8"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -759,7 +783,7 @@
             "id": 2731997501.0,
             "eventId": 29,
             "minute": 1,
-            "second": 20,
+            "second": 19,
             "teamId": 304,
             "playerId": 432378,
             "x": 33.0,
@@ -780,10 +804,16 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "1.62"
+                    "value": "14.5"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -794,6 +824,13 @@
                 },
                 {
                     "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
+                },
+                {
+                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
@@ -801,17 +838,10 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "14.5"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
+                    "value": "1.62"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -852,6 +882,27 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "63.3"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "8.5"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "32.4"
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
@@ -866,24 +917,9 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "32.4"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "63.3"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "8.5"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -924,6 +960,26 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "12.8"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "32.9"
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
@@ -938,24 +994,10 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "12.8"
-                },
-                {
-                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
                     "value": "41.5"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "32.9"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -975,7 +1017,7 @@
             "id": 2731998259.0,
             "eventId": 43,
             "minute": 1,
-            "second": 59,
+            "second": 58,
             "teamId": 304,
             "playerId": 432378,
             "x": 33.6,
@@ -996,10 +1038,23 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "34.7"
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
                     "value": "1.47"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -1014,13 +1069,6 @@
                         "displayName": "Length"
                     },
                     "value": "11.7"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "34.7"
                 },
                 {
                     "type": {
@@ -1047,7 +1095,7 @@
             "id": 2731998331.0,
             "eventId": 45,
             "minute": 2,
-            "second": 3,
+            "second": 2,
             "teamId": 304,
             "playerId": 432378,
             "x": 34.2,
@@ -1068,17 +1116,24 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
-                },
-                {
-                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
                     "value": "12.9"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "32.7"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
                 },
                 {
                     "type": {
@@ -1096,10 +1151,9 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "32.7"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -1119,7 +1173,7 @@
             "id": 2731999015.0,
             "eventId": 52,
             "minute": 2,
-            "second": 42,
+            "second": 41,
             "teamId": 304,
             "playerId": 432378,
             "x": 37.1,
@@ -1147,7 +1201,7 @@
             "id": 2731999131.0,
             "eventId": 53,
             "minute": 2,
-            "second": 44,
+            "second": 43,
             "teamId": 304,
             "playerId": 432378,
             "x": 34.5,
@@ -1172,6 +1226,12 @@
                         "displayName": "PassEndY"
                     },
                     "value": "68.6"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -1240,10 +1300,17 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "0.89"
+                    "value": "8.0"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "37.9"
                 },
                 {
                     "type": {
@@ -1254,10 +1321,16 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "8.0"
+                    "value": "0.89"
                 },
                 {
                     "type": {
@@ -1265,13 +1338,6 @@
                         "displayName": "PassEndY"
                     },
                     "value": "62.4"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "37.9"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -1319,10 +1385,53 @@
                 },
                 {
                     "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
+                },
+                {
+                    "type": {
                         "value": 94,
                         "displayName": "OutfielderBlock"
                     }
                 },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                }
+            ],
+            "satisfiedEventsTypes": [
+                91,
+                58
+            ],
+            "isTouch": true
+        },
+        {
+            "id": 2732142507.0,
+            "eventId": 1094,
+            "minute": 4,
+            "second": 21,
+            "teamId": 304,
+            "playerId": 432378,
+            "x": 43.4,
+            "y": 95.7,
+            "expandedMinute": 4,
+            "period": {
+                "value": 1,
+                "displayName": "FirstHalf"
+            },
+            "type": {
+                "value": 56,
+                "displayName": "ShieldBallOpp"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "qualifiers": [
                 {
                     "type": {
                         "value": 56,
@@ -1331,11 +1440,8 @@
                     "value": "Back"
                 }
             ],
-            "satisfiedEventsTypes": [
-                91,
-                58
-            ],
-            "isTouch": true
+            "satisfiedEventsTypes": [],
+            "isTouch": false
         },
         {
             "id": 2732001111.0,
@@ -1362,30 +1468,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 107,
-                        "displayName": "ThrowIn"
-                    }
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "90.6"
-                },
-                {
-                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
                     "value": "44.3"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "5.15"
                 },
                 {
                     "type": {
@@ -1396,10 +1482,30 @@
                 },
                 {
                     "type": {
+                        "value": 107,
+                        "displayName": "ThrowIn"
+                    }
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
                     "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "90.6"
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "5.15"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -1445,6 +1551,13 @@
                 },
                 {
                     "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "41.6"
+                },
+                {
+                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
@@ -1452,10 +1565,10 @@
                 },
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "41.6"
+                    "value": "4.73"
                 },
                 {
                     "type": {
@@ -1466,10 +1579,9 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "4.73"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -1510,10 +1622,17 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "4.77"
+                    "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "27.4"
                 },
                 {
                     "type": {
@@ -1524,10 +1643,9 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -1538,10 +1656,10 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "27.4"
+                    "value": "4.77"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -1582,17 +1700,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "Back"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "4.57"
+                    "value": "11.0"
                 },
                 {
                     "type": {
@@ -1610,10 +1721,23 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "11.0"
+                    "value": "4.57"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -1661,20 +1785,6 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "13.9"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
-                },
-                {
-                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
@@ -1682,10 +1792,30 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "13.9"
+                },
+                {
+                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
                     "value": "44.0"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -1726,6 +1856,19 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "1.55"
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -1740,24 +1883,17 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "15.9"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "1.55"
-                },
-                {
-                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
                     "value": "42.7"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "15.9"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -1777,7 +1913,7 @@
             "id": 2732004763.0,
             "eventId": 109,
             "minute": 7,
-            "second": 42,
+            "second": 43,
             "teamId": 304,
             "playerId": 432378,
             "x": 43.6,
@@ -1798,6 +1934,33 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "12.4"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "43.0"
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "4.66"
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -1809,27 +1972,6 @@
                         "displayName": "PassEndY"
                     },
                     "value": "28.1"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "4.66"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "43.0"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "12.4"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -1877,17 +2019,17 @@
                 },
                 {
                     "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "55.1"
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
                     "value": "0.44"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
                 },
                 {
                     "type": {
@@ -1898,10 +2040,16 @@
                 },
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "55.1"
+                    "value": "Back"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -1942,10 +2090,17 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 141,
+                        "displayName": "PassEndY"
                     },
-                    "value": "16.2"
+                    "value": "65.1"
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "1.60"
                 },
                 {
                     "type": {
@@ -1963,17 +2118,16 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "1.60"
+                    "value": "16.2"
                 },
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "65.1"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -1994,7 +2148,7 @@
             "id": 2732005949.0,
             "eventId": 130,
             "minute": 8,
-            "second": 46,
+            "second": 45,
             "teamId": 304,
             "playerId": 432378,
             "x": 55.4,
@@ -2015,17 +2169,17 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
                     "value": "4.84"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "13.2"
                 },
                 {
                     "type": {
@@ -2036,6 +2190,12 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
@@ -2043,10 +2203,10 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "Center"
+                    "value": "13.2"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -2088,6 +2248,13 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "7.9"
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -2095,10 +2262,9 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "0.55"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -2109,17 +2275,17 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "7.9"
-                },
-                {
-                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
                     "value": "17.8"
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "0.55"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -2139,7 +2305,7 @@
             "id": 2732007603.0,
             "eventId": 147,
             "minute": 10,
-            "second": 14,
+            "second": 13,
             "teamId": 304,
             "playerId": 432378,
             "x": 19.1,
@@ -2160,10 +2326,17 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "18.1"
+                    "value": "4.66"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
                 },
                 {
                     "type": {
@@ -2181,17 +2354,16 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "4.66"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "Back"
+                    "value": "18.1"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -2211,7 +2383,7 @@
             "id": 2732007751.0,
             "eventId": 151,
             "minute": 10,
-            "second": 27,
+            "second": 26,
             "teamId": 304,
             "playerId": 432378,
             "x": 29.9,
@@ -2232,24 +2404,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "67.8"
-                },
-                {
-                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
                     "value": "39.0"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "0.56"
                 },
                 {
                     "type": {
@@ -2264,6 +2422,26 @@
                         "displayName": "Length"
                     },
                     "value": "11.3"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "67.8"
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "0.56"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -2304,6 +2482,19 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "5.35"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
@@ -2318,13 +2509,6 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "5.7"
-                },
-                {
-                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
@@ -2332,10 +2516,10 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "5.35"
+                    "value": "5.7"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -2355,7 +2539,7 @@
             "id": 2732008005.0,
             "eventId": 156,
             "minute": 10,
-            "second": 39,
+            "second": 38,
             "teamId": 304,
             "playerId": 432378,
             "x": 27.0,
@@ -2376,13 +2560,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "12.7"
-                },
-                {
-                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
@@ -2390,10 +2567,10 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "28.4"
+                    "value": "4.83"
                 },
                 {
                     "type": {
@@ -2404,10 +2581,23 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "4.83"
+                    "value": "12.7"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "28.4"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -2448,13 +2638,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "45.5"
-                },
-                {
-                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
@@ -2462,10 +2645,16 @@
                 },
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "58.8"
+                    "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -2476,10 +2665,17 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 141,
+                        "displayName": "PassEndY"
                     },
-                    "value": "Back"
+                    "value": "58.8"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "45.5"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -2499,7 +2695,7 @@
             "id": 2732008645.0,
             "eventId": 164,
             "minute": 11,
-            "second": 4,
+            "second": 3,
             "teamId": 304,
             "playerId": 432378,
             "x": 45.8,
@@ -2520,13 +2716,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "35.8"
-                },
-                {
-                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
@@ -2534,10 +2723,23 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "Back"
+                    "value": "43.6"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "35.8"
                 },
                 {
                     "type": {
@@ -2548,10 +2750,10 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "43.6"
+                    "value": "Back"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -2571,7 +2773,7 @@
             "id": 2732008819.0,
             "eventId": 166,
             "minute": 11,
-            "second": 11,
+            "second": 12,
             "teamId": 304,
             "playerId": 432378,
             "x": 52.7,
@@ -2599,13 +2801,6 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "16.6"
-                },
-                {
-                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -2617,6 +2812,19 @@
                         "displayName": "Angle"
                     },
                     "value": "1.99"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "16.6"
                 },
                 {
                     "type": {
@@ -2664,6 +2872,13 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "15.0"
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -2685,10 +2900,9 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "15.0"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -2737,24 +2951,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "31.0"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "12.9"
+                    "value": "46.2"
                 },
                 {
                     "type": {
@@ -2765,10 +2965,30 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "46.2"
+                    "value": "12.9"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "31.0"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -2788,7 +3008,7 @@
             "id": 2732011719.0,
             "eventId": 185,
             "minute": 13,
-            "second": 45,
+            "second": 43,
             "teamId": 304,
             "playerId": 432378,
             "x": 60.2,
@@ -2809,17 +3029,23 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 233,
-                        "displayName": "OppositeRelatedEvent"
-                    },
-                    "value": "97"
-                },
-                {
-                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
                     "value": "Center"
+                },
+                {
+                    "type": {
+                        "value": 13,
+                        "displayName": "Foul"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 233,
+                        "displayName": "OppositeRelatedEvent"
+                    },
+                    "value": "97"
                 },
                 {
                     "type": {
@@ -2829,8 +3055,8 @@
                 },
                 {
                     "type": {
-                        "value": 13,
-                        "displayName": "Foul"
+                        "value": 178,
+                        "displayName": "StandingSave"
                     }
                 }
             ],
@@ -2843,7 +3069,7 @@
             "id": 2732013145.0,
             "eventId": 200,
             "minute": 15,
-            "second": 13,
+            "second": 12,
             "teamId": 304,
             "playerId": 432378,
             "x": 53.6,
@@ -2864,16 +3090,16 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 15,
-                        "displayName": "Head"
-                    }
-                },
-                {
-                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
                     "value": "Center"
+                },
+                {
+                    "type": {
+                        "value": 15,
+                        "displayName": "Head"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -2915,6 +3141,13 @@
                 },
                 {
                     "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "4.68"
+                },
+                {
+                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
@@ -2922,17 +3155,16 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
                     "value": "Back"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "4.68"
                 },
                 {
                     "type": {
@@ -2980,17 +3212,9 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "64.8"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "0.33"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -3001,10 +3225,10 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "8.9"
+                    "value": "0.33"
                 },
                 {
                     "type": {
@@ -3012,6 +3236,20 @@
                         "displayName": "Zone"
                     },
                     "value": "Center"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "8.9"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "64.8"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3032,7 +3270,7 @@
             "id": 2732016271.0,
             "eventId": 232,
             "minute": 18,
-            "second": 9,
+            "second": 8,
             "teamId": 304,
             "playerId": 432378,
             "x": 46.5,
@@ -3053,6 +3291,13 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "72.6"
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -3060,17 +3305,16 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "15.2"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "72.6"
+                    "value": "57.2"
                 },
                 {
                     "type": {
@@ -3081,10 +3325,10 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "57.2"
+                    "value": "15.2"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3126,17 +3370,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "35.6"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "44.2"
+                    "value": "19.8"
                 },
                 {
                     "type": {
@@ -3147,10 +3384,16 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "19.8"
+                    "value": "35.6"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -3158,6 +3401,13 @@
                         "displayName": "Angle"
                     },
                     "value": "4.58"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "44.2"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3205,10 +3455,16 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "4.60"
+                    "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -3219,17 +3475,17 @@
                 },
                 {
                     "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "4.60"
+                },
+                {
+                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
                     "value": "35.6"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3270,17 +3526,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "72.0"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "23.8"
+                    "value": "Center"
                 },
                 {
                     "type": {
@@ -3291,10 +3540,16 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 141,
+                        "displayName": "PassEndY"
                     },
-                    "value": "Center"
+                    "value": "72.0"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -3302,6 +3557,13 @@
                         "displayName": "PassEndX"
                     },
                     "value": "63.7"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "23.8"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3343,10 +3605,9 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "34.9"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -3354,6 +3615,20 @@
                         "displayName": "Angle"
                     },
                     "value": "4.22"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "46.6"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "34.9"
                 },
                 {
                     "type": {
@@ -3368,13 +3643,6 @@
                         "displayName": "Zone"
                     },
                     "value": "Back"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "46.6"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3422,6 +3690,13 @@
                 },
                 {
                     "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
@@ -3436,17 +3711,16 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
-                },
-                {
-                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
                     "value": "55.5"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3488,6 +3762,13 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "50.6"
+                },
+                {
+                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
@@ -3495,10 +3776,16 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
                     },
-                    "value": "Center"
+                    "value": "30.2"
                 },
                 {
                     "type": {
@@ -3509,17 +3796,10 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "50.6"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "30.2"
+                    "value": "Center"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3540,7 +3820,7 @@
             "id": 2732018931.0,
             "eventId": 268,
             "minute": 20,
-            "second": 21,
+            "second": 18,
             "teamId": 304,
             "playerId": 432378,
             "x": 10.9,
@@ -3568,6 +3848,13 @@
                 },
                 {
                     "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "4.55"
+                },
+                {
+                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
@@ -3582,17 +3869,16 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
                     "value": "8.8"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "4.55"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3612,7 +3898,7 @@
             "id": 2732019635.0,
             "eventId": 274,
             "minute": 20,
-            "second": 56,
+            "second": 55,
             "teamId": 304,
             "playerId": 432378,
             "x": 59.8,
@@ -3633,6 +3919,19 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 285,
                         "displayName": "Defensive"
                     }
@@ -3649,13 +3948,6 @@
                         "value": 13,
                         "displayName": "Foul"
                     }
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3667,7 +3959,7 @@
             "id": 2732020005.0,
             "eventId": 275,
             "minute": 21,
-            "second": 15,
+            "second": 14,
             "teamId": 304,
             "playerId": 432378,
             "x": 8.3,
@@ -3688,6 +3980,19 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "100.0"
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
@@ -3702,24 +4007,17 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "23.8"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "100.0"
-                },
-                {
-                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
                     "value": "13.8"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "23.8"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3736,7 +4034,7 @@
             "id": 2732020257.0,
             "eventId": 278,
             "minute": 21,
-            "second": 27,
+            "second": 26,
             "teamId": 304,
             "playerId": 432378,
             "x": 3.3,
@@ -3757,9 +4055,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 185,
-                        "displayName": "BlockedCross"
-                    }
+                        "value": 233,
+                        "displayName": "OppositeRelatedEvent"
+                    },
+                    "value": "157"
                 },
                 {
                     "type": {
@@ -3770,10 +4069,15 @@
                 },
                 {
                     "type": {
-                        "value": 233,
-                        "displayName": "OppositeRelatedEvent"
-                    },
-                    "value": "157"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 185,
+                        "displayName": "BlockedCross"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3786,7 +4090,7 @@
             "id": 2732020271.0,
             "eventId": 279,
             "minute": 21,
-            "second": 30,
+            "second": 27,
             "teamId": 304,
             "playerId": 432378,
             "x": 2.2,
@@ -3856,13 +4160,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
-                },
-                {
-                    "type": {
                         "value": 233,
                         "displayName": "OppositeRelatedEvent"
                     },
@@ -3872,6 +4169,19 @@
                     "type": {
                         "value": 285,
                         "displayName": "Defensive"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
                     }
                 }
             ],
@@ -3885,7 +4195,7 @@
             "id": 2732021807.0,
             "eventId": 290,
             "minute": 22,
-            "second": 52,
+            "second": 47,
             "teamId": 304,
             "playerId": 432378,
             "x": 35.2,
@@ -3906,10 +4216,30 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "15.1"
+                },
+                {
+                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
                     "value": "45.1"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "67.7"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -3924,20 +4254,6 @@
                         "displayName": "Zone"
                     },
                     "value": "Back"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "15.1"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "67.7"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -3978,10 +4294,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "25.9"
+                    "value": "40.9"
                 },
                 {
                     "type": {
@@ -3989,6 +4305,12 @@
                         "displayName": "Length"
                     },
                     "value": "17.3"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -4006,10 +4328,10 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 141,
+                        "displayName": "PassEndY"
                     },
-                    "value": "40.9"
+                    "value": "25.9"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -4050,10 +4372,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "76.1"
+                    "value": "61.2"
                 },
                 {
                     "type": {
@@ -4064,6 +4386,13 @@
                 },
                 {
                     "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "15.5"
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -4071,17 +4400,16 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "61.2"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 141,
+                        "displayName": "PassEndY"
                     },
-                    "value": "15.5"
+                    "value": "76.1"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -4123,10 +4451,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "53.4"
+                    "value": "20.0"
                 },
                 {
                     "type": {
@@ -4137,10 +4465,9 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "20.0"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -4148,6 +4475,13 @@
                         "displayName": "PassEndY"
                     },
                     "value": "79.4"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "53.4"
                 },
                 {
                     "type": {
@@ -4196,10 +4530,9 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "34.0"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -4210,10 +4543,17 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "4.45"
+                    "value": "45.1"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "34.0"
                 },
                 {
                     "type": {
@@ -4224,10 +4564,10 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "45.1"
+                    "value": "4.45"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -4247,7 +4587,7 @@
             "id": 2732024231.0,
             "eventId": 321,
             "minute": 24,
-            "second": 58,
+            "second": 57,
             "teamId": 304,
             "playerId": 432378,
             "x": 49.8,
@@ -4275,10 +4615,16 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "18.9"
+                    "value": "1.39"
                 },
                 {
                     "type": {
@@ -4289,10 +4635,10 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "1.39"
+                    "value": "18.9"
                 },
                 {
                     "type": {
@@ -4369,6 +4715,12 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
@@ -4392,7 +4744,7 @@
             "id": 2732025181.0,
             "eventId": 332,
             "minute": 25,
-            "second": 50,
+            "second": 49,
             "teamId": 304,
             "playerId": 432378,
             "x": 41.6,
@@ -4413,10 +4765,17 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "4.39"
+                    "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "35.7"
                 },
                 {
                     "type": {
@@ -4427,10 +4786,9 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -4441,10 +4799,10 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "35.7"
+                    "value": "4.39"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -4464,7 +4822,7 @@
             "id": 2732026919.0,
             "eventId": 352,
             "minute": 27,
-            "second": 39,
+            "second": 38,
             "teamId": 304,
             "playerId": 432378,
             "x": 89.7,
@@ -4535,17 +4893,16 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "1.34"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 141,
+                        "displayName": "PassEndY"
                     },
-                    "value": "25.3"
+                    "value": "92.3"
                 },
                 {
                     "type": {
@@ -4556,6 +4913,13 @@
                 },
                 {
                     "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "1.34"
+                },
+                {
+                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
@@ -4563,10 +4927,10 @@
                 },
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "92.3"
+                    "value": "25.3"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -4609,10 +4973,30 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "5.65"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "65.5"
+                },
+                {
+                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
                     "value": "49.4"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -4627,20 +5011,6 @@
                         "displayName": "Length"
                     },
                     "value": "6.0"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "65.5"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "5.65"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -4682,17 +5052,17 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "69.0"
-                },
-                {
-                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
                     "value": "4.66"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "69.0"
                 },
                 {
                     "type": {
@@ -4714,6 +5084,12 @@
                         "displayName": "PassEndY"
                     },
                     "value": "35.8"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -4735,7 +5111,7 @@
             "id": 2732031327.0,
             "eventId": 402,
             "minute": 31,
-            "second": 49,
+            "second": 48,
             "teamId": 304,
             "playerId": 432378,
             "x": 71.1,
@@ -4760,6 +5136,12 @@
                         "displayName": "Zone"
                     },
                     "value": "Center"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -4772,7 +5154,7 @@
             "id": 2732031455.0,
             "eventId": 403,
             "minute": 31,
-            "second": 59,
+            "second": 57,
             "teamId": 304,
             "playerId": 432378,
             "x": 22.5,
@@ -4800,7 +5182,7 @@
             "id": 2732031483.0,
             "eventId": 404,
             "minute": 31,
-            "second": 59,
+            "second": 57,
             "teamId": 304,
             "playerId": 432378,
             "x": 22.5,
@@ -4821,10 +5203,9 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -4832,13 +5213,6 @@
                         "displayName": "Length"
                     },
                     "value": "27.1"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "2.10"
                 },
                 {
                     "type": {
@@ -4853,6 +5227,20 @@
                         "displayName": "PassEndY"
                     },
                     "value": "44.5"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "2.10"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -4872,7 +5260,7 @@
             "id": 2732032185.0,
             "eventId": 416,
             "minute": 32,
-            "second": 40,
+            "second": 38,
             "teamId": 304,
             "playerId": 432378,
             "x": 30.0,
@@ -4891,6 +5279,12 @@
                 "displayName": "Successful"
             },
             "qualifiers": [
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
                 {
                     "type": {
                         "value": 56,
@@ -4931,17 +5325,16 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "4.75"
+                    "value": "12.5"
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -4959,10 +5352,17 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "12.5"
+                    "value": "4.75"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -4984,7 +5384,7 @@
             "id": 2732039199.0,
             "eventId": 468,
             "minute": 37,
-            "second": 58,
+            "second": 57,
             "teamId": 304,
             "playerId": 432378,
             "x": 7.4,
@@ -5012,16 +5412,16 @@
                 },
                 {
                     "type": {
-                        "value": 285,
-                        "displayName": "Defensive"
-                    }
-                },
-                {
-                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
                     "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 285,
+                        "displayName": "Defensive"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -5034,7 +5434,7 @@
             "id": 2732037163.0,
             "eventId": 454,
             "minute": 37,
-            "second": 59,
+            "second": 57,
             "teamId": 304,
             "playerId": 432378,
             "x": 9.8,
@@ -5055,23 +5455,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "37.4"
-                },
-                {
-                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
                     "value": "23.4"
-                },
-                {
-                    "type": {
-                        "value": 15,
-                        "displayName": "Head"
-                    }
                 },
                 {
                     "type": {
@@ -5082,10 +5469,9 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
+                        "value": 15,
+                        "displayName": "Head"
+                    }
                 },
                 {
                     "type": {
@@ -5093,6 +5479,20 @@
                         "displayName": "Length"
                     },
                     "value": "15.4"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "37.4"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -5110,7 +5510,7 @@
             "id": 2732038467.0,
             "eventId": 462,
             "minute": 39,
-            "second": 30,
+            "second": 26,
             "teamId": 304,
             "playerId": 432378,
             "x": 52.8,
@@ -5138,7 +5538,7 @@
             "id": 2732038535.0,
             "eventId": 463,
             "minute": 39,
-            "second": 30,
+            "second": 29,
             "teamId": 304,
             "playerId": 432378,
             "x": 52.8,
@@ -5159,10 +5559,9 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "1.77"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -5173,10 +5572,10 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "49.5"
+                    "value": "1.77"
                 },
                 {
                     "type": {
@@ -5184,6 +5583,13 @@
                         "displayName": "PassEndY"
                     },
                     "value": "76.8"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "49.5"
                 },
                 {
                     "type": {
@@ -5210,7 +5616,7 @@
             "id": 2732039507.0,
             "eventId": 476,
             "minute": 40,
-            "second": 36,
+            "second": 35,
             "teamId": 304,
             "playerId": 432378,
             "x": 56.1,
@@ -5231,24 +5637,9 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "70.8"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "15.0"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -5263,6 +5654,27 @@
                         "displayName": "PassEndX"
                     },
                     "value": "57.0"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "70.8"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "15.0"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -5304,17 +5716,17 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "26.6"
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
                     "value": "4.86"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
                 },
                 {
                     "type": {
@@ -5325,17 +5737,23 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
+                },
+                {
+                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
                     "value": "57.3"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "26.6"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -5377,6 +5795,12 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
@@ -5391,10 +5815,10 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "Right"
+                    "value": "15.5"
                 },
                 {
                     "type": {
@@ -5405,10 +5829,10 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "15.5"
+                    "value": "Right"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -5429,7 +5853,7 @@
             "id": 2732040173.0,
             "eventId": 491,
             "minute": 41,
-            "second": 25,
+            "second": 24,
             "teamId": 304,
             "playerId": 432378,
             "x": 68.9,
@@ -5450,20 +5874,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "80.6"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "70.2"
-                },
-                {
-                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
@@ -5478,10 +5888,30 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "80.6"
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
                     "value": "1.37"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "70.2"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -5503,7 +5933,7 @@
             "id": 2732040319.0,
             "eventId": 493,
             "minute": 41,
-            "second": 30,
+            "second": 29,
             "teamId": 304,
             "playerId": 432378,
             "x": 67.0,
@@ -5524,24 +5954,16 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "22.6"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "74.4"
-                },
-                {
-                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
                     "value": "90.3"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -5552,10 +5974,24 @@
                 },
                 {
                     "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "74.4"
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
                     "value": "Left"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "22.6"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -5577,7 +6013,7 @@
             "id": 2732040517.0,
             "eventId": 496,
             "minute": 41,
-            "second": 41,
+            "second": 42,
             "teamId": 304,
             "playerId": 432378,
             "x": 67.0,
@@ -5605,17 +6041,10 @@
                 },
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "63.0"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "10.3"
+                    "value": "1.64"
                 },
                 {
                     "type": {
@@ -5626,10 +6055,23 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "1.64"
+                    "value": "10.3"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "63.0"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -5671,10 +6113,16 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 141,
+                        "displayName": "PassEndY"
                     },
-                    "value": "10.8"
+                    "value": "34.4"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -5692,17 +6140,17 @@
                 },
                 {
                     "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "10.8"
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
                     "value": "4.76"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "34.4"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -5744,13 +6192,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "63.5"
-                },
-                {
-                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -5765,6 +6206,20 @@
                 },
                 {
                     "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "75.6"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "63.5"
+                },
+                {
+                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
@@ -5772,10 +6227,9 @@
                 },
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "75.6"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -5824,6 +6278,13 @@
                 },
                 {
                     "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
+                },
+                {
+                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
@@ -5831,17 +6292,16 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
                     "value": "19.7"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
                 },
                 {
                     "type": {
@@ -5868,7 +6328,7 @@
             "id": 2732041901.0,
             "eventId": 520,
             "minute": 43,
-            "second": 5,
+            "second": 6,
             "teamId": 304,
             "playerId": 432378,
             "x": 24.1,
@@ -5889,17 +6349,23 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "1.03"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
                     "value": "32.0"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "16.0"
                 },
                 {
                     "type": {
@@ -5910,17 +6376,17 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "1.03"
-                },
-                {
-                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
                     "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "16.0"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -5961,27 +6427,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "40.0"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "24.4"
-                },
-                {
-                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
@@ -5993,6 +6438,33 @@
                         "displayName": "PassEndX"
                     },
                     "value": "19.0"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "24.4"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "40.0"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -6033,24 +6505,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "34.4"
-                },
-                {
-                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
                     "value": "21.5"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
                 },
                 {
                     "type": {
@@ -6061,10 +6519,30 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "34.4"
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
                     "value": "4.99"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -6113,10 +6591,9 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "23.0"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -6131,6 +6608,13 @@
                         "displayName": "PassEndY"
                     },
                     "value": "85.8"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "23.0"
                 },
                 {
                     "type": {
@@ -6159,7 +6643,7 @@
             "id": 2732058159.0,
             "eventId": 598,
             "minute": 46,
-            "second": 44,
+            "second": 43,
             "teamId": 304,
             "playerId": 432378,
             "x": 68.1,
@@ -6187,6 +6671,19 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "4.83"
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -6205,13 +6702,6 @@
                         "displayName": "PassEndY"
                     },
                     "value": "36.7"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "4.83"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -6233,7 +6723,7 @@
             "id": 2732059019.0,
             "eventId": 612,
             "minute": 47,
-            "second": 59,
+            "second": 58,
             "teamId": 304,
             "playerId": 432378,
             "x": 61.1,
@@ -6267,17 +6757,17 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "70.1"
-                },
-                {
-                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
                     "value": "13.5"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "70.1"
                 },
                 {
                     "type": {
@@ -6312,7 +6802,7 @@
             "id": 2732059141.0,
             "eventId": 613,
             "minute": 48,
-            "second": 7,
+            "second": 5,
             "teamId": 304,
             "playerId": 432378,
             "x": 44.1,
@@ -6340,8 +6830,8 @@
                 },
                 {
                     "type": {
-                        "value": 285,
-                        "displayName": "Defensive"
+                        "value": 178,
+                        "displayName": "StandingSave"
                     }
                 },
                 {
@@ -6350,6 +6840,12 @@
                         "displayName": "OppositeRelatedEvent"
                     },
                     "value": "353"
+                },
+                {
+                    "type": {
+                        "value": 285,
+                        "displayName": "Defensive"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -6383,6 +6879,13 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "12.6"
+                },
+                {
+                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
@@ -6390,10 +6893,16 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
                     },
-                    "value": "4.10"
+                    "value": "43.9"
                 },
                 {
                     "type": {
@@ -6404,17 +6913,10 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "12.6"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "43.9"
+                    "value": "4.10"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -6455,24 +6957,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "87.5"
-                },
-                {
-                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
                     "value": "1.51"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
                 },
                 {
                     "type": {
@@ -6483,10 +6971,30 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
                     "value": "18.1"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "87.5"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -6506,7 +7014,7 @@
             "id": 2732062391.0,
             "eventId": 656,
             "minute": 52,
-            "second": 18,
+            "second": 16,
             "teamId": 304,
             "playerId": 432378,
             "x": 36.7,
@@ -6527,10 +7035,16 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "77.0"
+                    "value": "Back"
                 },
                 {
                     "type": {
@@ -6538,6 +7052,13 @@
                         "displayName": "Length"
                     },
                     "value": "15.6"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "77.0"
                 },
                 {
                     "type": {
@@ -6552,13 +7073,6 @@
                         "displayName": "Angle"
                     },
                     "value": "1.19"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -6578,7 +7092,7 @@
             "id": 2732062955.0,
             "eventId": 669,
             "minute": 53,
-            "second": 19,
+            "second": 17,
             "teamId": 304,
             "playerId": 432378,
             "x": 15.8,
@@ -6599,10 +7113,16 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 233,
-                        "displayName": "OppositeRelatedEvent"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "392"
+                    "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -6612,10 +7132,10 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 233,
+                        "displayName": "OppositeRelatedEvent"
                     },
-                    "value": "Back"
+                    "value": "392"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -6649,6 +7169,20 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "14.9"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "37.2"
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -6663,17 +7197,9 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "14.9"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "37.2"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -6721,27 +7247,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "19.8"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "18.0"
-                },
-                {
-                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
@@ -6753,6 +7258,33 @@
                         "displayName": "Angle"
                     },
                     "value": "4.67"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "18.0"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "19.8"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -6793,24 +7325,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "34.6"
-                },
-                {
-                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
                     "value": "77.6"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "12.6"
                 },
                 {
                     "type": {
@@ -6825,6 +7343,26 @@
                         "displayName": "Zone"
                     },
                     "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "12.6"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "34.6"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -6844,7 +7382,7 @@
             "id": 2732072123.0,
             "eventId": 753,
             "minute": 65,
-            "second": 11,
+            "second": 8,
             "teamId": 304,
             "playerId": 432378,
             "x": 31.7,
@@ -6865,6 +7403,12 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -6880,7 +7424,7 @@
             "id": 2732072607.0,
             "eventId": 764,
             "minute": 65,
-            "second": 39,
+            "second": 38,
             "teamId": 304,
             "playerId": 432378,
             "x": 56.4,
@@ -6901,10 +7445,30 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
+                },
+                {
+                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
                     "value": "71.6"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "19.0"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -6915,24 +7479,10 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
-                },
-                {
-                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
                     "value": "1.20"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "19.0"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -6974,10 +7524,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "39.7"
+                    "value": "1.36"
                 },
                 {
                     "type": {
@@ -6988,10 +7538,9 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -7002,10 +7551,17 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "1.36"
+                    "value": "39.7"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -7046,17 +7602,16 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "46.8"
+                    "value": "Back"
                 },
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "41.3"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -7067,10 +7622,10 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "Back"
+                    "value": "46.8"
                 },
                 {
                     "type": {
@@ -7078,6 +7633,13 @@
                         "displayName": "Angle"
                     },
                     "value": "5.31"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "41.3"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -7094,64 +7656,15 @@
             "endY": 41.3
         },
         {
-            "id": 2732078683.0,
-            "eventId": 835,
-            "minute": 71,
-            "second": 56,
-            "teamId": 304,
-            "playerId": 432378,
-            "x": 62.9,
-            "y": 61.7,
-            "expandedMinute": 74,
-            "period": {
-                "value": 2,
-                "displayName": "SecondHalf"
-            },
-            "type": {
-                "value": 45,
-                "displayName": "Challenge"
-            },
-            "outcomeType": {
-                "value": 0,
-                "displayName": "Unsuccessful"
-            },
-            "qualifiers": [
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
-                },
-                {
-                    "type": {
-                        "value": 285,
-                        "displayName": "Defensive"
-                    }
-                },
-                {
-                    "type": {
-                        "value": 233,
-                        "displayName": "OppositeRelatedEvent"
-                    },
-                    "value": "524"
-                }
-            ],
-            "satisfiedEventsTypes": [
-                55
-            ],
-            "isTouch": false
-        },
-        {
             "id": 2732079541.0,
             "eventId": 839,
-            "minute": 73,
-            "second": 0,
+            "minute": 72,
+            "second": 58,
             "teamId": 304,
             "playerId": 432378,
             "x": 9.2,
             "y": 40.9,
-            "expandedMinute": 76,
+            "expandedMinute": 75,
             "period": {
                 "value": 2,
                 "displayName": "SecondHalf"
@@ -7165,13 +7678,6 @@
                 "displayName": "Successful"
             },
             "qualifiers": [
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "5.90"
-                },
                 {
                     "type": {
                         "value": 212,
@@ -7188,13 +7694,6 @@
                 },
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "31.7"
-                },
-                {
-                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
@@ -7205,6 +7704,20 @@
                         "value": 15,
                         "displayName": "Head"
                     }
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "5.90"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "31.7"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -7243,10 +7756,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 233,
-                        "displayName": "OppositeRelatedEvent"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "530"
+                    "value": "Back"
                 },
                 {
                     "type": {
@@ -7256,10 +7769,10 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 233,
+                        "displayName": "OppositeRelatedEvent"
                     },
-                    "value": "Back"
+                    "value": "530"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -7293,24 +7806,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "14.6"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "49.1"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
+                    "value": "0.01"
                 },
                 {
                     "type": {
@@ -7321,16 +7820,30 @@
                 },
                 {
                     "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "49.1"
+                },
+                {
+                    "type": {
                         "value": 15,
                         "displayName": "Head"
                     }
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "0.01"
+                    "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "14.6"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -7348,7 +7861,7 @@
             "id": 2732080679.0,
             "eventId": 854,
             "minute": 74,
-            "second": 22,
+            "second": 20,
             "teamId": 304,
             "playerId": 432378,
             "x": 20.4,
@@ -7369,13 +7882,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "0.49"
-                },
-                {
-                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
@@ -7383,10 +7889,9 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "29.8"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -7397,10 +7902,24 @@
                 },
                 {
                     "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "0.49"
+                },
+                {
+                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
                     "value": "60.1"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "29.8"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -7438,17 +7957,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "0.97"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "64.9"
+                    "value": "Center"
                 },
                 {
                     "type": {
@@ -7459,6 +7971,19 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "0.97"
+                },
+                {
+                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
@@ -7466,10 +7991,10 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "Center"
+                    "value": "64.9"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -7490,7 +8015,7 @@
             "id": 2732083755.0,
             "eventId": 891,
             "minute": 78,
-            "second": 5,
+            "second": 4,
             "teamId": 304,
             "playerId": 432378,
             "x": 49.1,
@@ -7511,6 +8036,13 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "5.22"
+                },
+                {
+                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
@@ -7525,13 +8057,6 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
-                },
-                {
-                    "type": {
                         "value": 141,
                         "displayName": "PassEndY"
                     },
@@ -7539,10 +8064,16 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "5.22"
+                    "value": "Center"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -7563,7 +8094,7 @@
             "id": 2732084243.0,
             "eventId": 904,
             "minute": 78,
-            "second": 40,
+            "second": 38,
             "teamId": 304,
             "playerId": 432378,
             "x": 54.4,
@@ -7584,10 +8115,17 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "5.11"
+                    "value": "61.1"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "18.1"
                 },
                 {
                     "type": {
@@ -7598,10 +8136,10 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 213,
+                        "displayName": "Angle"
                     },
-                    "value": "61.1"
+                    "value": "5.11"
                 },
                 {
                     "type": {
@@ -7612,10 +8150,9 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "18.1"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -7636,7 +8173,7 @@
             "id": 2732086175.0,
             "eventId": 922,
             "minute": 80,
-            "second": 55,
+            "second": 52,
             "teamId": 304,
             "playerId": 432378,
             "x": 34.5,
@@ -7657,20 +8194,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "25.2"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "24.5"
-                },
-                {
-                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
@@ -7684,10 +8207,30 @@
                 },
                 {
                     "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
                     "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "25.2"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "24.5"
                 },
                 {
                     "type": {
@@ -7715,7 +8258,7 @@
             "id": 2732086381.0,
             "eventId": 925,
             "minute": 81,
-            "second": 5,
+            "second": 4,
             "teamId": 304,
             "playerId": 432378,
             "x": 41.7,
@@ -7743,10 +8286,9 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -7754,6 +8296,13 @@
                         "displayName": "PassEndX"
                     },
                     "value": "43.3"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
                 },
                 {
                     "type": {
@@ -7808,17 +8357,23 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Back"
-                },
-                {
-                    "type": {
                         "value": 233,
                         "displayName": "OppositeRelatedEvent"
                     },
                     "value": "596"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
                 },
                 {
                     "type": {
@@ -7837,7 +8392,7 @@
             "id": 2732087945.0,
             "eventId": 947,
             "minute": 82,
-            "second": 54,
+            "second": 53,
             "teamId": 304,
             "playerId": 432378,
             "x": 31.6,
@@ -7865,7 +8420,7 @@
             "id": 2732089329.0,
             "eventId": 967,
             "minute": 82,
-            "second": 55,
+            "second": 54,
             "teamId": 304,
             "playerId": 432378,
             "x": 42.2,
@@ -7886,10 +8441,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "29.3"
+                    "value": "36.5"
                 },
                 {
                     "type": {
@@ -7897,6 +8452,12 @@
                         "displayName": "Length"
                     },
                     "value": "6.5"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -7914,10 +8475,10 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
+                        "value": 141,
+                        "displayName": "PassEndY"
                     },
-                    "value": "36.5"
+                    "value": "29.3"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -7940,8 +8501,8 @@
             "second": 28,
             "teamId": 304,
             "playerId": 432378,
-            "x": 74.2,
-            "y": 70.0,
+            "x": 74.3,
+            "y": 69.4,
             "expandedMinute": 89,
             "period": {
                 "value": 2,
@@ -7958,10 +8519,9 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
+                        "value": 286,
+                        "displayName": "Offensive"
+                    }
                 },
                 {
                     "type": {
@@ -7972,14 +8532,57 @@
                 },
                 {
                     "type": {
-                        "value": 286,
-                        "displayName": "Offensive"
-                    }
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
                 }
             ],
             "satisfiedEventsTypes": [
                 91,
                 70
+            ],
+            "isTouch": true
+        },
+        {
+            "id": 2732176267.0,
+            "eventId": 1104,
+            "minute": 86,
+            "second": 28,
+            "teamId": 304,
+            "playerId": 432378,
+            "x": 74.7,
+            "y": 65.4,
+            "expandedMinute": 89,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "qualifiers": [
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
+                }
+            ],
+            "satisfiedEventsTypes": [
+                91
             ],
             "isTouch": true
         },
@@ -8008,10 +8611,9 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Left"
+                        "value": 3,
+                        "displayName": "HeadPass"
+                    }
                 },
                 {
                     "type": {
@@ -8022,13 +8624,6 @@
                 },
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "66.8"
-                },
-                {
-                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
@@ -8036,16 +8631,24 @@
                 },
                 {
                     "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "66.8"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Left"
+                },
+                {
+                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
                     "value": "6.1"
-                },
-                {
-                    "type": {
-                        "value": 3,
-                        "displayName": "HeadPass"
-                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -8068,11 +8671,11 @@
             "id": 2732093937.0,
             "eventId": 1017,
             "minute": 89,
-            "second": 46,
+            "second": 45,
             "teamId": 304,
             "playerId": 432378,
-            "x": 38.9,
-            "y": 36.8,
+            "x": 39.4,
+            "y": 37.5,
             "expandedMinute": 92,
             "period": {
                 "value": 2,
@@ -8089,16 +8692,16 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 285,
+                        "displayName": "Defensive"
+                    }
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
                     "value": "Back"
-                },
-                {
-                    "type": {
-                        "value": 285,
-                        "displayName": "Defensive"
-                    }
                 },
                 {
                     "type": {
@@ -8139,20 +8742,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "37.9"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "56.6"
-                },
-                {
-                    "type": {
                         "value": 212,
                         "displayName": "Length"
                     },
@@ -8167,10 +8756,30 @@
                 },
                 {
                     "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "37.9"
+                },
+                {
+                    "type": {
                         "value": 56,
                         "displayName": "Zone"
                     },
                     "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "56.6"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -8190,7 +8799,7 @@
             "id": 2732094563.0,
             "eventId": 1028,
             "minute": 90,
-            "second": 20,
+            "second": 21,
             "teamId": 304,
             "playerId": 432378,
             "x": 59.8,
@@ -8211,17 +8820,9 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "19.4"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "5.3"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -8232,10 +8833,10 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "Right"
+                    "value": "19.4"
                 },
                 {
                     "type": {
@@ -8243,6 +8844,20 @@
                         "displayName": "Angle"
                     },
                     "value": "5.26"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "5.3"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Right"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -8285,17 +8900,9 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "23.3"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "56.2"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -8306,10 +8913,17 @@
                 },
                 {
                     "type": {
-                        "value": 213,
-                        "displayName": "Angle"
+                        "value": 140,
+                        "displayName": "PassEndX"
                     },
-                    "value": "1.61"
+                    "value": "56.2"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "23.3"
                 },
                 {
                     "type": {
@@ -8317,6 +8931,13 @@
                         "displayName": "PassEndY"
                     },
                     "value": "62.9"
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "1.61"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -8337,7 +8958,7 @@
             "id": 2732095585.0,
             "eventId": 1038,
             "minute": 91,
-            "second": 29,
+            "second": 28,
             "teamId": 304,
             "playerId": 432378,
             "x": 30.1,
@@ -8386,10 +9007,9 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "27.0"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -8400,10 +9020,10 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
+                        "value": 212,
+                        "displayName": "Length"
                     },
-                    "value": "Back"
+                    "value": "27.0"
                 },
                 {
                     "type": {
@@ -8411,6 +9031,13 @@
                         "displayName": "PassEndX"
                     },
                     "value": "37.0"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
                 },
                 {
                     "type": {
@@ -8437,7 +9064,7 @@
             "id": 2732096031.0,
             "eventId": 1046,
             "minute": 91,
-            "second": 52,
+            "second": 50,
             "teamId": 304,
             "playerId": 432378,
             "x": 53.9,
@@ -8458,27 +9085,6 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
-                },
-                {
-                    "type": {
-                        "value": 213,
-                        "displayName": "Angle"
-                    },
-                    "value": "0.85"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "16.1"
-                },
-                {
-                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
@@ -8490,6 +9096,33 @@
                         "displayName": "PassEndY"
                     },
                     "value": "78.0"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "16.1"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "0.85"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -8510,7 +9143,7 @@
             "id": 2732096345.0,
             "eventId": 1051,
             "minute": 92,
-            "second": 13,
+            "second": 12,
             "teamId": 304,
             "playerId": 432378,
             "x": 50.4,
@@ -8538,13 +9171,6 @@
                 },
                 {
                     "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
-                },
-                {
-                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
@@ -8556,6 +9182,19 @@
                         "displayName": "PassEndX"
                     },
                     "value": "58.4"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
@@ -8604,6 +9243,33 @@
             "qualifiers": [
                 {
                     "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "12.2"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "62.4"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "33.8"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
+                },
+                {
+                    "type": {
                         "value": 213,
                         "displayName": "Angle"
                     },
@@ -8615,27 +9281,6 @@
                         "displayName": "Zone"
                     },
                     "value": "Center"
-                },
-                {
-                    "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "33.8"
-                },
-                {
-                    "type": {
-                        "value": 140,
-                        "displayName": "PassEndX"
-                    },
-                    "value": "62.4"
-                },
-                {
-                    "type": {
-                        "value": 212,
-                        "displayName": "Length"
-                    },
-                    "value": "12.2"
                 }
             ],
             "satisfiedEventsTypes": [
@@ -8656,7 +9301,7 @@
             "id": 2732098605.0,
             "eventId": 1081,
             "minute": 93,
-            "second": 41,
+            "second": 11,
             "teamId": 304,
             "playerId": 432378,
             "x": 43.6,
@@ -8684,11 +9329,11 @@
             "id": 2732097785.0,
             "eventId": 1070,
             "minute": 93,
-            "second": 42,
+            "second": 38,
             "teamId": 304,
             "playerId": 432378,
-            "x": 44.4,
-            "y": 49.9,
+            "x": 44.6,
+            "y": 49.5,
             "expandedMinute": 96,
             "period": {
                 "value": 2,
@@ -8705,10 +9350,10 @@
             "qualifiers": [
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
+                        "value": 56,
+                        "displayName": "Zone"
                     },
-                    "value": "29.8"
+                    "value": "Center"
                 },
                 {
                     "type": {
@@ -8719,24 +9364,30 @@
                 },
                 {
                     "type": {
-                        "value": 212,
-                        "displayName": "Length"
+                        "value": 141,
+                        "displayName": "PassEndY"
                     },
-                    "value": "18.8"
-                },
-                {
-                    "type": {
-                        "value": 56,
-                        "displayName": "Zone"
-                    },
-                    "value": "Center"
+                    "value": "37.6"
                 },
                 {
                     "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
-                    "value": "56.7"
+                    "value": "51.9"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "11.1"
+                },
+                {
+                    "type": {
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 }
             ],
             "satisfiedEventsTypes": [
@@ -8750,14 +9401,14 @@
                 218
             ],
             "isTouch": true,
-            "endX": 56.7,
-            "endY": 29.8
+            "endX": 51.9,
+            "endY": 37.6
         },
         {
             "id": 2732098031.0,
             "eventId": 1074,
             "minute": 93,
-            "second": 50,
+            "second": 51,
             "teamId": 304,
             "playerId": 432378,
             "x": 54.9,
@@ -8792,6 +9443,13 @@
                 },
                 {
                     "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "82.5"
+                },
+                {
+                    "type": {
                         "value": 140,
                         "displayName": "PassEndX"
                     },
@@ -8799,10 +9457,9 @@
                 },
                 {
                     "type": {
-                        "value": 141,
-                        "displayName": "PassEndY"
-                    },
-                    "value": "82.5"
+                        "value": 178,
+                        "displayName": "StandingSave"
+                    }
                 },
                 {
                     "type": {
