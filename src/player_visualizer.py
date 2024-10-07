@@ -35,8 +35,9 @@ class PlayerVisualizer:
         for pas in passes:
             x_start, y_start = pas['x'], pas['y']
             x_end, y_end = pas['endX'], pas['endY']
+            
+            # Calcul de l'angle
             angle = np.degrees(np.arctan2(y_end - y_start, x_end - x_start))
-
             # Définir les catégories de passes
             if 30 <= angle <= 150:
                 forward_passes.append(pas)
@@ -342,6 +343,10 @@ class PlayerVisualizer:
         ax_pitch.annotate('', xy=(-0.05, 0.75), xytext=(-0.05, 0.25), xycoords='axes fraction',
                           arrowprops=dict(edgecolor='white', facecolor='none', width=10, headwidth=25, headlength=25))
 
+        forward_passes = 0 
+        lateral_passes = 0 
+        backward_passes = 0
+
         for pas in passes:
             y_start = pas['x']
             x_start = pas['y']
@@ -355,12 +360,15 @@ class PlayerVisualizer:
             # Définir les couleurs selon le type de passe
             if 30 <= angle <= 150:
                 color = '#78ff00'  # Couleur pour les passes en avant
+                forward_passes = forward_passes+1
             elif -150 <= angle <= -30:
                 alpha_pass = 0.3
                 color = '#ff3600'  # Couleur pour les passes en arrière 
+                backward_passes = backward_passes+1
             else:
                 color = '#ffb200'  # Couleur pour les passes latérales 
                 alpha_pass = 0.5
+                lateral_passes = lateral_passes+1
 
             # Dessiner la flèche avec la couleur appropriée
             pitch.arrows(y_start, x_start, y_end, x_end, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch, alpha=alpha_pass)
@@ -390,9 +398,15 @@ class PlayerVisualizer:
         ax_bar2 = fig.add_subplot(gs[4, 1])
         ax_bar3 = fig.add_subplot(gs[5, 1])
     
-        self._add_horizontal_bar(ax_bar1, 'Passes vers l\'avant', len(forward_passes), total_passes)
-        self._add_horizontal_bar(ax_bar2, 'Passes latérales', len(lateral_passes), total_passes)
-        self._add_horizontal_bar(ax_bar3, 'Passes vers l\'arrière', len(backward_passes), total_passes)
+
+        print("XXXXXXXXXXXXXXXXXXXXX")
+        print(forward_passes)
+        print(lateral_passes)
+        print(backward_passes)
+
+        self._add_horizontal_bar(ax_bar1, 'Passes vers l\'avant', forward_passes, total_passes)
+        self._add_horizontal_bar(ax_bar2, 'Passes latérales', lateral_passes, total_passes)
+        self._add_horizontal_bar(ax_bar3, 'Passes vers l\'arrière', backward_passes, total_passes)
     
         plt.tight_layout()
         plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
