@@ -1,6 +1,14 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from bs4 import BeautifulSoup
 import re
 import json
+import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import os
+
 
 class MatchDataExtractor:
     def __init__(self, html_path, color_json_path="data/color_template.json"):
@@ -9,34 +17,66 @@ class MatchDataExtractor:
         self.data = self._extract_data_html()
 
     def _extract_data_html(self):
-        with open(self.html_path, 'r') as html_file:
-            html = html_file.read()
+        print("Configuration de Selenium avec le mode headless...")
+        options = Options()
+        options.headless = True
+        options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36')
 
+        driver = webdriver.Chrome(options=options)
+
+        # Désactiver la détection de Selenium par les sites
+        driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+
+        print(f"Chargement de la page {self.html_path}...")
+        driver.get(self.html_path)
+
+        # Attente explicite que la page soit complètement chargée (exemple : attendre l'élément body)
+        print("Attente que la page se charge complètement...")
+        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+
+        # Récupération du contenu HTML après le chargement complet
+        print("Récupération du contenu HTML...")
+        html = driver.page_source
+
+        print("Fermeture du navigateur Selenium...")
+        driver.quit()
+
+        print("Analyse du HTML avec BeautifulSoup...")
+        soup = BeautifulSoup(html, 'html.parser')
+
+        print("Extraction des données avec le modèle regex...")
         regex_pattern = r'(?<=require\.config\.params\["args"\].=.)[\s\S]*?;'
         data_txt = re.findall(regex_pattern, html)[0]
 
-        # Add quotations for JSON parser
+        print("Nettoyage des données pour le format JSON...")
         data_txt = data_txt.replace('matchId', '"matchId"')
         data_txt = data_txt.replace('matchCentreData', '"matchCentreData"')
         data_txt = data_txt.replace('matchCentreEventTypeJson', '"matchCentreEventTypeJson"')
         data_txt = data_txt.replace('formationIdNameMappings', '"formationIdNameMappings"')
         data_txt = data_txt.replace('};', '}')
 
-        # Convert extracted data to JSON
+        print("Conversion des données extraites en JSON...")
         data_json = json.loads(data_txt)
 
+        print("Extraction et conversion terminées.")
         return data_json
 
     def get_competition_from_filename(self):
-        """Extracts the competition name from the HTML filename."""
+        """Extracts and formats the competition name from the HTML filename."""
         filename = os.path.basename(self.html_path)
         competition_keywords = [
-            "Ligue 1", "Premier League", "Serie A", "LaLiga", "Bundesliga",
-            "Champions League", "Europa League", "Conference League"
+            "France-Ligue-1", "England-Premier-League", "Italy-Serie-A", "Spain-LaLiga", "Germany-Bundesliga",
+            "Europe-Champions-League", "Europe-Europa-League", "Europe-Conference-League"
         ]
+        
         for keyword in competition_keywords:
             if keyword.lower() in filename.lower():
-                return keyword
+                # Split the keyword by hyphen and remove the first word
+                parts = keyword.split('-')[1:]
+                # Join the remaining parts with spaces
+                competition_name = ' '.join(parts)
+                return competition_name
+    
         return None  # Return None if no competition is found
 
     def load_colors_for_competition(self, competition_name):
