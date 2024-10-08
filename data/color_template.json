@@ -4,7 +4,11 @@
         "color1": "#000000",
         "color2": "#082b42"
       },
-      "England-Premier-League": {
+      "Premier League": {
+        "color1": "#000000",
+        "color2": "#150842"
+      },
+      "League Cup": {
         "color1": "#000000",
         "color2": "#150842"
       },

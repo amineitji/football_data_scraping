@@ -11,6 +11,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy.ndimage import gaussian_filter
 import cmasher as cmr
 from player_image_downloader import PlayerProfileScraper
+import re
 from match_data_extractor import MatchDataExtractor
 
 
@@ -21,6 +22,8 @@ class PlayerVisualizer:
 
         self.match_extractor = MatchDataExtractor(html_path)
         self.competition, self.color1, self.color2 = self.match_extractor.get_competition_and_colors()
+
+        self.match_name = re.split(r'-\d{4}-\d{4}-', html_path)[-1] if re.search(r'-\d{4}-\d{4}-', html_path) else None
 
 
     def _load_player_data(self):
@@ -173,9 +176,10 @@ class PlayerVisualizer:
             f"{self.player_data['player_name']} - N°{self.player_data['shirtNo']}",
             f"{self.player_data['age']} ans - {self.player_data['height']}cm",
             f"{status_text} - {self.competition}",
+            f"{self.match_name}",  # Add the match name here
             f"Temps de jeu: {playing_time} minutes",
             f"{len(goals)} but(s)" if len(goals) >= 1 else None,
-            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None,
+            # TODO problematique f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None,
             f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 
