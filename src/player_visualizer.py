@@ -175,11 +175,11 @@ class PlayerVisualizer:
         text_items = [
             f"{self.player_data['player_name']} - N°{self.player_data['shirtNo']}",
             f"{self.player_data['age']} ans - {self.player_data['height']}cm",
-            f"{status_text} - {self.competition}",
+            f"{status_text} ",
             f"{self.match_name}",  # Add the match name here
             f"Temps de jeu: {playing_time} minutes",
             f"{len(goals)} but(s)" if len(goals) >= 1 else None,
-            # TODO problematique f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None,
+            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None,
             f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 

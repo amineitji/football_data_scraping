@@ -35,6 +35,10 @@
       "Conference League": {
         "color1": "#000000",
         "color2": "#234208"
+      },
+      "Liga Portugal": {
+        "color1": "#000000",
+        "color2": "#234208"
       }
     }
   }

@@ -64,7 +64,7 @@ class MatchDataExtractor:
         filename = os.path.basename(self.html_path)
         competition_keywords = [
             "France-Ligue-1", "England-Premier-League", "Italy-Serie-A", "Spain-LaLiga", "Germany-Bundesliga",
-            "Europe-Champions-League", "Europe-Europa-League", "Europe-Conference-League", "Angleterre-League-Cup"
+            "Europe-Champions-League", "Europe-Europa-League", "Europe-Conference-League", "Angleterre-League-Cup", "Portugal-Liga-Portugal"
         ]
 
         for keyword in competition_keywords:
@@ -84,14 +84,14 @@ class MatchDataExtractor:
                 colors_data = json.load(f)
         except FileNotFoundError:
             print(f"JSON file '{self.color_json_path}' not found.")
-            return "#FFFFFF", "#000000"  # Default colors in case of an error
+            return "#000000", "#5a5403" # Default colors in case of an error
 
         # Get the colors for the competition
         competition_colors = colors_data.get("competitions", {}).get(competition_name)
         if competition_colors:
             return competition_colors["color1"], competition_colors["color2"]
         else:
-            return "#FFFFFF", "#000000"  # Default colors if not found
+            return "#000000", "#5a5403"  # Default colors if not found
 
     def get_competition_and_colors(self):
         """Combines competition extraction and color loading."""
@@ -100,7 +100,7 @@ class MatchDataExtractor:
             color1, color2 = self.load_colors_for_competition(competition)
             return competition, color1, color2
         else:
-            return "Unknown Competition", "#FFFFFF", "#000000"
+            return "Unknown Competition", "#000000", "#5a5403"
 
     def extract_player_stats_and_events(self, player_name, output_dir="player_data"):
         print("Extraction des données pour le joueur - ", player_name)

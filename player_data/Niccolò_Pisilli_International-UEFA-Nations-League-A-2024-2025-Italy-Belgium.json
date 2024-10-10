@@ -1,0 +1,564 @@
+{
+    "player_name": "Niccolò Pisilli",
+    "player_id": "476440",
+    "team": "home",
+    "position": "Sub",
+    "shirtNo": 23,
+    "height": 181,
+    "weight": 0,
+    "age": 20,
+    "isFirstEleven": null,
+    "isManOfTheMatch": false,
+    "stats": {
+        "possession": {
+            "86": 1.0,
+            "88": 1.0
+        },
+        "ratings": {
+            "82": 6.0,
+            "86": 6.02,
+            "88": 6.01,
+            "97": 6.04,
+            "98": 5.93
+        },
+        "clearances": {
+            "86": 1.0
+        },
+        "touches": {
+            "86": 3.0,
+            "88": 1.0,
+            "97": 1.0
+        },
+        "passesTotal": {
+            "86": 1.0,
+            "88": 1.0
+        },
+        "passesAccurate": {
+            "86": 1.0
+        },
+        "passSuccess": {
+            "86": 100.0,
+            "88": 0.0
+        },
+        "foulsCommited": {
+            "98": 1.0
+        },
+        "dispossessed": {
+            "86": 1.0
+        }
+    },
+    "events": [
+        {
+            "id": 2733021463.0,
+            "eventId": 576,
+            "minute": 79,
+            "second": 38,
+            "teamId": 343,
+            "playerId": 476440,
+            "relatedEventId": 575,
+            "relatedPlayerId": 343501,
+            "x": 0.0,
+            "y": 0.0,
+            "expandedMinute": 82,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 19,
+                "displayName": "SubstitutionOn"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "qualifiers": [
+                {
+                    "type": {
+                        "value": 59,
+                        "displayName": "JerseyNumber"
+                    },
+                    "value": "23"
+                },
+                {
+                    "type": {
+                        "value": 145,
+                        "displayName": "FormationSlot"
+                    },
+                    "value": "8"
+                },
+                {
+                    "type": {
+                        "value": 55,
+                        "displayName": "RelatedEventId"
+                    },
+                    "value": "575"
+                },
+                {
+                    "type": {
+                        "value": 44,
+                        "displayName": "PlayerPosition"
+                    },
+                    "value": "Midfielder"
+                }
+            ],
+            "satisfiedEventsTypes": [
+                213
+            ],
+            "isTouch": false
+        },
+        {
+            "id": 2733023069.0,
+            "eventId": 593,
+            "minute": 83,
+            "second": 6,
+            "teamId": 343,
+            "playerId": 476440,
+            "x": 67.5,
+            "y": 14.6,
+            "expandedMinute": 86,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 1,
+                "displayName": "Pass"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "qualifiers": [
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "0.27"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Right"
+                },
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "80.4"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "20.1"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "14.1"
+                }
+            ],
+            "satisfiedEventsTypes": [
+                91,
+                119,
+                117,
+                30,
+                205,
+                36,
+                37,
+                217,
+                218
+            ],
+            "isTouch": true,
+            "endX": 80.4,
+            "endY": 20.1
+        },
+        {
+            "id": 2733023085.0,
+            "eventId": 595,
+            "minute": 83,
+            "second": 9,
+            "teamId": 343,
+            "playerId": 476440,
+            "x": 80.1,
+            "y": 21.2,
+            "expandedMinute": 86,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 50,
+                "displayName": "Dispossessed"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "qualifiers": [
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
+                },
+                {
+                    "type": {
+                        "value": 286,
+                        "displayName": "Offensive"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 233,
+                        "displayName": "OppositeRelatedEvent"
+                    },
+                    "value": "753"
+                }
+            ],
+            "satisfiedEventsTypes": [
+                91,
+                70
+            ],
+            "isTouch": true
+        },
+        {
+            "id": 2733023291.0,
+            "eventId": 601,
+            "minute": 83,
+            "second": 39,
+            "teamId": 343,
+            "playerId": 476440,
+            "x": 14.1,
+            "y": 50.9,
+            "expandedMinute": 86,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 12,
+                "displayName": "Clearance"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "qualifiers": [
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "26.1"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "19.6"
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "0.87"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "73.0"
+                },
+                {
+                    "type": {
+                        "value": 15,
+                        "displayName": "Head"
+                    }
+                }
+            ],
+            "satisfiedEventsTypes": [
+                91,
+                94,
+                95,
+                57,
+                215
+            ],
+            "isTouch": true,
+            "endX": 26.1,
+            "endY": 73.0
+        },
+        {
+            "id": 2733023947.0,
+            "eventId": 614,
+            "minute": 85,
+            "second": 27,
+            "teamId": 343,
+            "playerId": 476440,
+            "x": 35.1,
+            "y": 22.4,
+            "expandedMinute": 88,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 1,
+                "displayName": "Pass"
+            },
+            "outcomeType": {
+                "value": 0,
+                "displayName": "Unsuccessful"
+            },
+            "qualifiers": [
+                {
+                    "type": {
+                        "value": 140,
+                        "displayName": "PassEndX"
+                    },
+                    "value": "69.8"
+                },
+                {
+                    "type": {
+                        "value": 212,
+                        "displayName": "Length"
+                    },
+                    "value": "42.1"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
+                },
+                {
+                    "type": {
+                        "value": 141,
+                        "displayName": "PassEndY"
+                    },
+                    "value": "53.4"
+                },
+                {
+                    "type": {
+                        "value": 213,
+                        "displayName": "Angle"
+                    },
+                    "value": "0.52"
+                },
+                {
+                    "type": {
+                        "value": 1,
+                        "displayName": "Longball"
+                    }
+                }
+            ],
+            "satisfiedEventsTypes": [
+                91,
+                120,
+                128,
+                36,
+                37,
+                217,
+                218
+            ],
+            "isTouch": true,
+            "endX": 69.8,
+            "endY": 53.4
+        },
+        {
+            "id": 2733027605.0,
+            "eventId": 659,
+            "minute": 94,
+            "second": 41,
+            "teamId": 343,
+            "playerId": 476440,
+            "x": 57.9,
+            "y": 75.2,
+            "expandedMinute": 97,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 4,
+                "displayName": "Foul"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "qualifiers": [
+                {
+                    "type": {
+                        "value": 233,
+                        "displayName": "OppositeRelatedEvent"
+                    },
+                    "value": "858"
+                },
+                {
+                    "type": {
+                        "value": 13,
+                        "displayName": "Foul"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 286,
+                        "displayName": "Offensive"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Center"
+                }
+            ],
+            "satisfiedEventsTypes": [
+                91,
+                63
+            ],
+            "isTouch": true
+        },
+        {
+            "id": 2733027815.0,
+            "eventId": 661,
+            "minute": 95,
+            "second": 31,
+            "teamId": 343,
+            "playerId": 476440,
+            "relatedEventId": 662,
+            "relatedPlayerId": 476440,
+            "x": 42.8,
+            "y": 28.2,
+            "expandedMinute": 98,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 4,
+                "displayName": "Foul"
+            },
+            "outcomeType": {
+                "value": 0,
+                "displayName": "Unsuccessful"
+            },
+            "qualifiers": [
+                {
+                    "type": {
+                        "value": 13,
+                        "displayName": "Foul"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 55,
+                        "displayName": "RelatedEventId"
+                    },
+                    "value": "662"
+                },
+                {
+                    "type": {
+                        "value": 285,
+                        "displayName": "Defensive"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 233,
+                        "displayName": "OppositeRelatedEvent"
+                    },
+                    "value": "863"
+                },
+                {
+                    "type": {
+                        "value": 56,
+                        "displayName": "Zone"
+                    },
+                    "value": "Back"
+                }
+            ],
+            "satisfiedEventsTypes": [
+                64
+            ],
+            "isTouch": false
+        },
+        {
+            "id": 2733027829.0,
+            "eventId": 662,
+            "minute": 95,
+            "second": 33,
+            "teamId": 343,
+            "playerId": 476440,
+            "relatedEventId": 661,
+            "relatedPlayerId": 476440,
+            "x": 0.0,
+            "y": 0.0,
+            "expandedMinute": 98,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 17,
+                "displayName": "Card"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "qualifiers": [
+                {
+                    "type": {
+                        "value": 13,
+                        "displayName": "Foul"
+                    },
+                    "value": "243"
+                },
+                {
+                    "type": {
+                        "value": 31,
+                        "displayName": "Yellow"
+                    }
+                },
+                {
+                    "type": {
+                        "value": 55,
+                        "displayName": "RelatedEventId"
+                    },
+                    "value": "661"
+                }
+            ],
+            "satisfiedEventsTypes": [
+                65
+            ],
+            "isTouch": false,
+            "cardType": {
+                "value": 31,
+                "displayName": "Yellow"
+            }
+        }
+    ]
+}
