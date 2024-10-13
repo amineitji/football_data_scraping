@@ -1,6 +1,6 @@
 import json
 import os
-from mplsoccer import VerticalPitch
+from mplsoccer import Pitch, VerticalPitch
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
@@ -16,15 +16,15 @@ from match_data_extractor import MatchDataExtractor
 
 
 class PlayerVisualizer:
-    def __init__(self, player_data_path, html_path):
+    def __init__(self, player_data_path, competition, color1, color2, match_name):
         self.player_data_path = player_data_path
         self.player_data = self._load_player_data()
 
-        self.match_extractor = MatchDataExtractor(html_path)
-        self.competition, self.color1, self.color2 = self.match_extractor.get_competition_and_colors()
-
-        self.match_name = re.split(r'-\d{4}-\d{4}-', html_path)[-1] if re.search(r'-\d{4}-\d{4}-', html_path) else None
-
+        # Charger les informations passées directement (au lieu d'utiliser MatchDataExtractor)
+        self.competition = competition
+        self.color1 = color1
+        self.color2 = color2
+        self.match_name = match_name
 
     def _load_player_data(self):
         with open(self.player_data_path, 'r') as file:
@@ -179,7 +179,7 @@ class PlayerVisualizer:
             f"{self.match_name}",  # Add the match name here
             f"Temps de jeu: {playing_time} minutes",
             f"{len(goals)} but(s)" if len(goals) >= 1 else None,
-            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None,
+            #f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None,
             f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 
@@ -985,3 +985,169 @@ class PlayerVisualizer:
             'minutes': minutes,
             'ratings_over_time': ratings_over_time
         }
+
+    def plot_shots_heatmap_and_bar_charts(self, save_path, type_data):
+        """Visualize shots and heatmap for a player's match performance, with bar plots for key stats."""
+
+        events = self.player_data.get('events', [])
+        stats = self.player_data.get('stats', {})
+
+        # Stats extracted from the JSON structure
+        total_passes = stats.get("totalPass", 0)
+        accurate_passes = stats.get("accuratePass", 0)
+        shots_off_target = stats.get("shotOffTarget", 0)
+        shots_on_target = stats.get("onTargetScoringAttempt", 0)
+        goals = stats.get("goals", 0)
+
+        # Additional stats you provided
+        total_long_balls = stats.get("totalLongBalls", 0)
+        accurate_long_balls = stats.get("accurateLongBalls", 0)
+        duels_won = stats.get("duelWon", 0)
+        won_contests = stats.get("wonContest", 0)
+        total_contests = stats.get("totalContest", 0)
+        total_tackles = stats.get("totalTackle", 0)
+        touches = stats.get("touches", 0)
+        key_passes = stats.get("keyPass", 0)
+
+        # Visualization setup (using the same layout as before)
+        fig = plt.figure(figsize=(16, 16))
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
+
+        ax = fig.add_axes([0, 0, 1, 1])
+        ax.axis('off')
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+
+        gs = GridSpec(7, 2, height_ratios=[1, 1, 1, 1, 4, 4, 4])
+
+        # Load and display player photo
+        PlayerProfileScraper(self.player_data['player_name']).save_player_profile()
+        image_path = f"data/photo/{self.player_data['player_name'].replace(' ', '_')}_profile_image.jpg"
+        player_photo = mpimg.imread(image_path)
+        ax_image = fig.add_subplot(gs[:4, 0])
+        ax_image.imshow(player_photo, aspect='equal')
+        ax_image.set_anchor('W')
+        ax_image.axis('off')
+
+        # Display player info
+        status_text = "Titulaire" if self.player_data["isFirstEleven"] else "Substitute"
+        text_items = [
+            f"{self.player_data['player_name']}",# - N°{self.player_data['shirtNo']}",
+            f"{self.player_data['age']} ans - {self.player_data['height']}cm",
+            f"{status_text}",
+            f"Temps de jeu: {stats['minutesPlayed']} minutes",
+            f"{goals} but(s)" if goals >= 1 else None,
+            f"{stats['goalAssist']} passe(s) décisive(s)" if stats['goalAssist'] >= 1 else None,
+            f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
+        ]
+
+        y_position = 0.96
+        y_step = 0.03
+        for text in text_items:
+            if text:
+                ax.text(0.23, y_position, text, fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+                y_position -= y_step
+
+        # Horizontal bars for the stats
+        ax_bar1 = fig.add_subplot(gs[0, 1])
+        ax_bar2 = fig.add_subplot(gs[1, 1])
+        ax_bar3 = fig.add_subplot(gs[2, 1])
+        ax_bar4 = fig.add_subplot(gs[3, 1])
+
+        # Select key stats for display based on player type (DEF, MIL, ATT)
+        all_stats = [
+            ('Passes réussies', accurate_passes, total_passes),
+            ('Tirs cadrés', shots_on_target, shots_on_target + shots_off_target),
+            ('But(s)', goals, goals),  # Goals stats
+            ('Possession perdue', stats.get("possessionLostCtrl", 0), stats.get("possessionLostCtrl", 0)),
+            ('Long balls réussis', accurate_long_balls, total_long_balls),  # Long ball stats
+            ('Duels gagnés', duels_won, duels_won),  # Duels won stats
+            ('Dribbles réussis', won_contests, total_contests),  # Contests won stats
+            ('Tacles', total_tackles, total_tackles),  # Tackles stats
+            ('Touches de balle', touches, touches),  # Touches stats
+            ('Passes clés', key_passes, key_passes),  # Key passes stats
+        ]
+
+        # Update priorities based on player type (DEF, MIL, ATT)
+        priorities = {
+            'DEF': ['Passes réussies', 'Tacles', 'Duels gagnés', 'Long balls réussis'],
+            'MIL': ['Passes réussies', 'Dribbles réussis', 'Touches de balle', 'Passes clés'],
+            'ATT': ['Tirs cadrés', 'But(s)', 'Passes clés', 'Dribbles réussis']
+        }
+
+        # Select stats based on the player's type
+        selected_stats = []
+        priority_stats = priorities.get(type_data, [])
+        for priority in priority_stats:
+            for stat in all_stats:
+                label, value, total = stat
+                if label == priority and value > 0:
+                    selected_stats.append(stat)
+                    break
+                
+        # Ensure we have at least 4 stats to display
+        for stat in all_stats:
+            if len(selected_stats) >= 4:
+                break
+            if stat not in selected_stats and stat[1] > 0:
+                selected_stats.append(stat)
+
+        # Plot the selected stats in horizontal bars
+        ax_bars = [ax_bar1, ax_bar2, ax_bar3, ax_bar4]
+        for i in range(4):
+            label, value, total = selected_stats[i]
+            self._add_horizontal_bar(ax_bars[i], label, value, total)
+
+
+        # Plot the pitch and shots visualization
+        pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
+        pitch_2 = Pitch(half=True, pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
+        ax_pitch_left = fig.add_subplot(gs[4:, 0], aspect=1)
+        pitch.draw(ax=ax_pitch_left)
+
+        # Plotting shots and goals with a point and an arrow for direction
+        for event in events:
+            if event['type']['displayName'] in ['Shot', 'Goal']:
+                y = 100 - event['x']  # Start position of the shot
+                x = 100 - event['y']  # Start position of the shot
+                event_type = event['type']['displayName']
+                color = '#6DF176' if event_type == 'Goal' else 'red'
+
+                # Draw the point (start of the shot)
+                pitch_2.scatter(x, y, s=200, marker='o', color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch_left)
+
+                end_x = 100 - event['endX']
+                end_y = 100 - event['endY']
+                # Draw the arrow from the start position to the goal mouth
+                pitch_2.arrows(x, y, end_x, end_y, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch_left)
+
+        # Adding legend for shots
+        legend_handles = [
+            plt.Line2D([0], [0], marker='o', color='w', label='Tir', markerfacecolor='red', markersize=15),
+            plt.Line2D([0], [0], marker='o', color='w', label='But', markerfacecolor='#6DF176', markersize=15)
+        ]
+        ax_pitch_left.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(0.97, 0.98), fontsize=12)
+
+        # Heatmap on the right pitch
+        ax_pitch_right = fig.add_subplot(gs[4:, 1], aspect=1)
+        pitch.draw(ax=ax_pitch_right)
+
+        ball_touches = [event for event in events if event['type']['displayName'] == 'BallTouch']
+        x_coords = [t['x'] for t in ball_touches]
+        y_coords = [t['y'] for t in ball_touches]
+
+        bin_statistic = pitch.bin_statistic(x_coords, y_coords, statistic='count', bins=(20, 20))
+        bin_statistic['statistic'] = gaussian_filter(bin_statistic['statistic'], 1)
+
+        el_greco_transparent_orange_red = mcolors.LinearSegmentedColormap.from_list(
+            "Transparent-Orange-Red",
+            [(1, 1, 1, 0), (1, 0.65, 0, 1), (1, 0, 0, 1)],  # Transparent to orange to red
+            N=10
+        )
+
+        pitch.heatmap(bin_statistic, ax=ax_pitch_right, cmap=el_greco_transparent_orange_red)
+
+        plt.tight_layout()
+        plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
+        plt.show()

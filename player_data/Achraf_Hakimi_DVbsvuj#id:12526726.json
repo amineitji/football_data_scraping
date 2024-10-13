@@ -1,0 +1,2553 @@
+{
+    "player_name": "Achraf Hakimi",
+    "player_id": 814594,
+    "team": "home",
+    "position": "D",
+    "shirtNo": "2",
+    "height": 181,
+    "weight": null,
+    "age": 25,
+    "isFirstEleven": true,
+    "isManOfTheMatch": false,
+    "stats": {
+        "totalPass": 73,
+        "accuratePass": 63,
+        "totalLongBalls": 1,
+        "goalAssist": 0,
+        "totalCross": 4,
+        "accurateCross": 3,
+        "duelLost": 1,
+        "duelWon": 5,
+        "dispossessed": 1,
+        "totalContest": 1,
+        "wonContest": 1,
+        "shotOffTarget": 1,
+        "onTargetScoringAttempt": 1,
+        "goals": 1,
+        "totalTackle": 2,
+        "wasFouled": 2,
+        "minutesPlayed": 90,
+        "touches": 104,
+        "rating": 8.2,
+        "possessionLostCtrl": 15,
+        "keyPass": 1,
+        "ratingVersions": {
+            "original": 8.2,
+            "alternative": null
+        }
+    },
+    "events": [
+        {
+            "id": 1.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 38,
+            "y": 2,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 2.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 90,
+            "y": 15,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 3.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 97,
+            "y": 27,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 4.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 91,
+            "y": 37,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 5.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 59,
+            "y": 4,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 6.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 13,
+            "y": 18,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 7.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 9,
+            "y": 2,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 8.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 11,
+            "y": 3,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 9.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 39,
+            "y": 5,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 10.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 30,
+            "y": 23,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 11.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 29,
+            "y": 22,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 12.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 77,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 13.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 78,
+            "y": 2,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 14.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 64,
+            "y": 32,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 15.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 35,
+            "y": 9,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 16.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 62,
+            "y": 3,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 17.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 39,
+            "y": 5,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 18.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 41,
+            "y": 7,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 19.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 81,
+            "y": 7,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 20.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 70,
+            "y": 6,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 21.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 87,
+            "y": 22,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 22.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 69,
+            "y": 4,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 23.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 74,
+            "y": 4,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 24.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 71,
+            "y": 7,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 25.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 76,
+            "y": 3,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 26.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 77,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 27.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 41,
+            "y": 24,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 28.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 72,
+            "y": 58,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 29.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 22,
+            "y": 14,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 30.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 92,
+            "y": 6,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 31.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 33,
+            "y": 5,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 32.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 56,
+            "y": 23,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 33.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 30,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 34.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 59,
+            "y": 2,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 35.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 60,
+            "y": 3,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 36.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 76,
+            "y": 23,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 37.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 60,
+            "y": 3,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 38.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 61,
+            "y": 6,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 39.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 80,
+            "y": 28,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 40.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 81,
+            "y": 41,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 41.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 57,
+            "y": 19,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 42.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 26,
+            "y": 15,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 43.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 8,
+            "y": 17,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 44.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 16,
+            "y": 10,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 45.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 46,
+            "y": 16,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 46.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 46,
+            "y": 16,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 47.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 41,
+            "y": 8,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 48.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 36,
+            "y": 7,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 49.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 59,
+            "y": 53,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 50.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 37,
+            "y": 31,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 51.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 35,
+            "y": 32,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 52.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 67,
+            "y": 42,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 53.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 60,
+            "y": 21,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 54.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 54,
+            "y": 21,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 55.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 38,
+            "y": 4,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 56.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 38,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 57.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 42,
+            "y": 3,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 58.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 45,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 59.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 66,
+            "y": 5,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 60.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 45,
+            "y": 10,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 61.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 39,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 62.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 58,
+            "y": 8,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 63.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 73,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 64.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 53,
+            "y": 3,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 65.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 68,
+            "y": 4,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 66.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 70,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 67.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 57,
+            "y": 4,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 68.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 45,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 69.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 58,
+            "y": 16,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 70.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 37,
+            "y": 11,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 71.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 55,
+            "y": 5,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 72.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 31,
+            "y": 10,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 73.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 35,
+            "y": 5,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 74.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 35,
+            "y": 4,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 75.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 71,
+            "y": 2,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 76.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 46,
+            "y": 4,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 77.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 43,
+            "y": 11,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 78.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 69,
+            "y": 16,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 79.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 95,
+            "y": 14,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 80.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 22,
+            "y": 7,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 81.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 22,
+            "y": 7,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 82.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 39,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 83.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 54,
+            "y": 13,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 84.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 36,
+            "y": 10,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 85.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 63,
+            "y": 11,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 86.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 36,
+            "y": 8,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 87.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 67,
+            "y": 7,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 88.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 48,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 89.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 39,
+            "y": 8,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 90.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 21,
+            "y": 27,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 91.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 26,
+            "y": 14,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 92.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 27,
+            "y": 8,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 93.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 73,
+            "y": 6,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 94.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 77,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 95.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 79,
+            "y": 2,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 96.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 75,
+            "y": 6,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 97.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 70,
+            "y": 6,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 98.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 75,
+            "y": 29,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 99.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 32,
+            "y": 5,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 100.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 45,
+            "y": 5,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 101.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 45,
+            "y": 6,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 102.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 99,
+            "y": 99,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 103.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 43,
+            "y": 4,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 104.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 56,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 105.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 55,
+            "y": 3,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 106.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 34,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 107.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 46,
+            "y": 6,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 108.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 37,
+            "y": 11,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 109.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 33,
+            "y": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 110.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 40,
+            "y": 7,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 111.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 37,
+            "y": 16,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 112.0,
+            "minute": 0,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 38,
+            "y": 14,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 61,
+                "displayName": "BallTouch"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 3901756.0,
+            "minute": 45,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 18.1,
+            "y": 58.1,
+            "endX": 46.3,
+            "endY": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 62,
+                "displayName": "Goal"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        },
+        {
+            "id": 3901657.0,
+            "minute": 5,
+            "second": 0,
+            "teamId": null,
+            "playerId": 814594,
+            "x": 8.7,
+            "y": 62.3,
+            "endX": 42.5,
+            "endY": 0,
+            "period": {
+                "value": 2,
+                "displayName": "SecondHalf"
+            },
+            "type": {
+                "value": 62,
+                "displayName": "Shot"
+            },
+            "outcomeType": {
+                "value": 1,
+                "displayName": "Successful"
+            },
+            "isTouch": true
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+    "player_name": "Ayoub El Kaabi",
+    "player_id": 919793,
+    "team": "home",
+    "position": "F",
+    "shirtNo": "9",
+    "height": 182,
+    "weight": null,
+    "age": 740966400,
+    "isFirstEleven": true,
+    "isManOfTheMatch": false,
+    "stats": {
+        "totalPass": 14,
+        "accuratePass": 10,
+        "totalLongBalls": 2,
+        "accurateLongBalls": 2,
+        "goalAssist": 0,
+        "totalCross": 2,
+        "accurateCross": 1,
+        "aerialLost": 2,
+        "aerialWon": 1,
+        "duelLost": 4,
+        "duelWon": 1,
+        "challengeLost": 1,
+        "bigChanceCreated": 1,
+        "shotOffTarget": 1,
+        "errorLeadToAShot": 1,
+        "fouls": 1,
+        "totalOffside": 1,
+        "minutesPlayed": 65,
+        "touches": 20,
+        "rating": 6.8,
+        "possessionLostCtrl": 7,
+        "keyPass": 1,
+        "ratingVersions": {
+            "original": 6.8,
+            "alternative": null
+        }
+    },
+    "events": []
+}
