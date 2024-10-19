@@ -16,7 +16,7 @@ from match_data_extractor import MatchDataExtractor
 
 
 class PlayerVisualizer:
-    def __init__(self, player_data_path, competition, color1, color2, match_name):
+    def __init__(self, player_data_path, competition, color1, color2, match_name,match_teams):
         self.player_data_path = player_data_path
         self.player_data = self._load_player_data()
 
@@ -25,6 +25,7 @@ class PlayerVisualizer:
         self.color1 = color1
         self.color2 = color2
         self.match_name = match_name
+        self.match_teams = match_teams
 
     def _load_player_data(self):
         with open(self.player_data_path, 'r') as file:
@@ -177,17 +178,24 @@ class PlayerVisualizer:
             f"{self.player_data['age']} ans - {self.player_data['height']}cm",
             f"{status_text} ",
             f"{self.match_name}",  # Add the match name here
+            f"{self.match_teams}",
             f"Temps de jeu: {playing_time} minutes",
             f"{len(goals)} but(s)" if len(goals) >= 1 else None,
-            #f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None,
+            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None, # TODO
             f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 
         # Loop through text items and display them if they are not None
         for text in text_items:
             if text:  # Only display non-None items
-                ax.text(0.23, y_position, text, fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+                # Check if the text is match_teams to apply a different fontsize
+                if text == self.match_teams:
+                    ax.text(0.23, y_position, text, fontsize=15, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+                else:
+                    ax.text(0.23, y_position, text, fontsize=19, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+
                 y_position -= y_step  # Update the Y position for the next line
+
 
         # Display your tag or source at a fixed position
         ax.text(0.425, 0.72, f"@TarbouchData", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
@@ -230,18 +238,29 @@ class PlayerVisualizer:
                     selected_stats.append(stat)
                     break
                 
-        # Ajouter des stats supplémentaires si certaines sont à 0 ou manquantes
-        for stat in all_stats:
-            if len(selected_stats) >= 4:  # Limite à 4 stats à afficher
-                break
-            if stat not in selected_stats and stat[1] > 0:  # Si la stat n'a pas été ajoutée et qu'elle est non nulle
-                selected_stats.append(stat)
+        # Filtrer les statistiques selon les priorités
+        non_zero_stats = [stat for stat in all_stats if stat[1] > 0]  # Statistiques avec value > 0
+        zero_value_non_zero_total_stats = [stat for stat in all_stats if stat[1] == 0 and stat[2] > 0]  # Statistiques avec value == 0 mais total > 0
+        zero_stats = [stat for stat in all_stats if stat[1] == 0 and stat[2] == 0]  # Statistiques avec value == 0 et total == 0
 
-        # Affichage des 4 premières stats non nulles
+        # Commence par les stats non nulles
+        selected_stats = non_zero_stats[:4]  # Prend jusqu'à 4 stats avec value > 0
+
+        # Complète avec des stats où value == 0 mais total > 0
+        if len(selected_stats) < 4:
+            selected_stats += zero_value_non_zero_total_stats[:4 - len(selected_stats)]
+
+        # Complète avec des stats totalement nulles si nécessaire
+        if len(selected_stats) < 4:
+            selected_stats += zero_stats[:4 - len(selected_stats)]
+
+        # Affichage des 4 stats selon l'ordre de priorité
         ax_bars = [ax_bar1, ax_bar2, ax_bar3, ax_bar4]  # Liste des axes pour afficher les barres
         for i in range(4):
             label, value, total = selected_stats[i]
             self._add_horizontal_bar(ax_bars[i], label, value, total)
+
+
 
 
         # 2. Plotting the pitches on the second row
@@ -1037,9 +1056,9 @@ class PlayerVisualizer:
             f"{self.player_data['age']} ans - {self.player_data['height']}cm",
             f"{status_text}",
             f"Temps de jeu: {stats['minutesPlayed']} minutes",
-            f"{goals} but(s)" if goals >= 1 else None,
-            f"{stats['goalAssist']} passe(s) décisive(s)" if stats['goalAssist'] >= 1 else None,
-            f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
+            f"{goals} but(s)" if goals >= 1 else "",
+            #f"{stats['goalAssist']} passe(s) décisive(s)" if stats['goalAssist'] >= 1 else "",
+            f"Man of the Match" if self.player_data['isManOfTheMatch'] else ""
         ]
 
         y_position = 0.96

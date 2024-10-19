@@ -34,10 +34,11 @@ def main(url, player_name, poste, nb_passe_d=0):
 
     # Obtenir la compétition et les couleurs
     competition, color1, color2 = extractor.get_competition_and_colors()
+    match_teams = extractor.extract_match_teams()
     match_name = extractor.get_competition_from_filename()
 
     # Initialize the visualizer with the extracted data
-    visualizer = PlayerVisualizer(player_data_file, competition, color1, color2, match_name)
+    visualizer = PlayerVisualizer(player_data_file, competition, color1, color2, match_name,match_teams)
     
     # Save paths for the various visualizations
     save_path_passes = os.path.join(match_folder, f'{player_name.replace(" ", "_")}_passes_and_pie_charts.png')

@@ -18,6 +18,15 @@ class MatchDataExtractor:
 
     def _extract_data_html(self):
         raise NotImplementedError("Cette méthode doit être implémentée dans les classes héritées.")
+    
+
+    def extract_match_teams(self):
+        # Expression régulière pour capturer tout ce qui vient après la date "yyyy-yyyy-"
+        match = re.search(r'\d{4}-\d{4}-(.+)', self.html_path)
+        if match:
+            # Récupérer tout ce qui est après la date "yyyy-yyyy-"
+            return match.group(1)
+        return None
 
     def get_competition_from_filename(self):
         """Extracts and formats the competition name from the HTML filename."""
