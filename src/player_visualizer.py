@@ -91,15 +91,15 @@ class PlayerVisualizer:
 
         # Filtrage des événements défensifs
         defensive_events = [
-            event for event in events if event['type']['displayName'] in ['BallRecovery', 'Challenge', 'Tackle', 'Foul']
+            event for event in events if event['type']['displayName'] in ['BallRecovery', 'Interception', 'Tackle', 'Foul']
         ]
 
         # Compter les événements défensifs par type
         ball_recoveries = [event for event in defensive_events if event['type']['displayName'] == 'BallRecovery']
         successful_ball_recoveries = [event for event in ball_recoveries if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
-        challenges = [event for event in defensive_events if event['type']['displayName'] == 'Challenge']
-        successful_challenges = [event for event in challenges if event.get('outcomeType', {}).get('displayName') == 'Successful']
+        interceptions = [event for event in defensive_events if event['type']['displayName'] == 'Interception']
+        successful_interceptions = [event for event in interceptions if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
         tackles = [event for event in defensive_events if event['type']['displayName'] == 'Tackle']
         successful_tackles = [event for event in tackles if event.get('outcomeType', {}).get('displayName') == 'Successful']
@@ -211,7 +211,7 @@ class PlayerVisualizer:
             ("Passes clés", len(key_passes_successful), len(key_passes)),
             ('Récuperations', len(successful_ball_recoveries), len(ball_recoveries)),
             ('Tacles réussis', len(successful_tackles), len(tackles)),
-            ('Duels gagnés', len(successful_challenges), len(challenges)),
+            ('Interceptions réussies', len(successful_interceptions), len(interceptions)),
             ('Passes réussies', len(successful_passes), total_passes),
             ('Dribbles réussis', len(successful_takeons), len(takeons)),
             ('Tirs cadrés', len(saved_shots) + len(goals), len(missed_shots) + len(saved_shots) + len(goals)),
@@ -221,7 +221,7 @@ class PlayerVisualizer:
 
         # Priorités par type de joueur
         priorities = {
-            'DEF': ['Récuperations', 'Tacles réussis', 'Duels gagnés', 'Fautes commises'],
+            'DEF': ['Récuperations', 'Tacles réussis', 'Interceptions réussies', 'Passes réussies'],
             'MIL': ['Dribbles réussis', 'Passes réussies', 'Passes clés', 'Récuperations'],
             'ATT': ['Dribbles réussis', 'Tirs cadrés', 'Passes clés', 'Récuperations']
         }
@@ -710,7 +710,7 @@ class PlayerVisualizer:
 
         # Filtrage des événements défensifs
         defensive_events = [
-            event for event in events if event['type']['displayName'] in ['BallRecovery', 'Challenge', 'Tackle', 'Foul']
+            event for event in events if event['type']['displayName'] in ['BallRecovery', 'Interception', 'Tackle', 'Foul']
         ]
 
         if not defensive_events:
@@ -721,8 +721,8 @@ class PlayerVisualizer:
         ball_recoveries = [event for event in defensive_events if event['type']['displayName'] == 'BallRecovery']
         successful_ball_recoveries = [event for event in ball_recoveries if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
-        challenges = [event for event in defensive_events if event['type']['displayName'] == 'Challenge']
-        successful_challenges = [event for event in challenges if event.get('outcomeType', {}).get('displayName') == 'Successful']
+        interceptions = [event for event in defensive_events if event['type']['displayName'] == 'Interception']
+        successful_interceptions = [event for event in interceptions if event.get('outcomeType', {}).get('displayName') == 'Successful']
 
         tackles = [event for event in defensive_events if event['type']['displayName'] == 'Tackle']
         successful_tackles = [event for event in tackles if event.get('outcomeType', {}).get('displayName') == 'Successful']
@@ -740,7 +740,7 @@ class PlayerVisualizer:
         # Définir les symboles et couleurs
         symbol_map = {
             'BallRecovery': 'o',  # Rond
-            'Challenge': 's',     # Carré
+            'Interception': 's',     # Carré
             'Tackle': '^',        # Triangle
             'Foul': '*'           # Étoile
         }
@@ -801,7 +801,7 @@ class PlayerVisualizer:
         # Création de la légende
         legend_handles = [
             plt.Line2D([0], [0], marker='o', color='w', label='Récupération', markerfacecolor='black', markersize=15),
-            plt.Line2D([0], [0], marker='s', color='w', label='Duel', markerfacecolor='black', markersize=15),
+            plt.Line2D([0], [0], marker='s', color='w', label='Interception', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], marker='^', color='w', label='Tacle', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], marker='*', color='w', label='Faute', markerfacecolor='black', markersize=15),
         ]
@@ -826,7 +826,7 @@ class PlayerVisualizer:
         ax_bar3 = fig.add_subplot(gs[5, 1])
 
         # Ajout des barres avec des pourcentages spécifiques à chaque type d'événement
-        self._add_horizontal_bar(ax_bar1, 'Duels réussis', len(committed_fouls), len(committed_fouls))
+        self._add_horizontal_bar(ax_bar1, 'Interceptions réussies', len(interceptions), len(successful_interceptions))
         self._add_horizontal_bar(ax_bar2, 'Tacles réussis', len(successful_tackles), len(tackles))
         self._add_horizontal_bar(ax_bar3, 'Récupérations réussies', len(successful_ball_recoveries), len(ball_recoveries))
 
@@ -1095,7 +1095,7 @@ class PlayerVisualizer:
             ('Passes réussies', accurate_passes, total_passes),
             ('Tirs cadrés', shots_on_target, shots_on_target + shots_off_target),
             ('But(s)', goals, goals),  # Goals stats
-            ('Possession perdue', stats.get("possessionLostCtrl", 0), stats.get("possessionLostCtrl", 0)),
+            #('Possession perdue', stats.get("possessionLostCtrl", 0), stats.get("possessionLostCtrl", 0)),
             ('Long balls réussis', accurate_long_balls, total_long_balls),  # Long ball stats
             ('Duels gagnés', duels_won, duels_won),  # Duels won stats
             ('Dribbles réussis', won_contests, total_contests),  # Contests won stats
