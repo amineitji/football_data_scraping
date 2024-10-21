@@ -826,7 +826,7 @@ class PlayerVisualizer:
         ax_bar3 = fig.add_subplot(gs[5, 1])
 
         # Ajout des barres avec des pourcentages spécifiques à chaque type d'événement
-        self._add_horizontal_bar(ax_bar1, 'Duels réussis', len(successful_challenges), len(challenges))
+        self._add_horizontal_bar(ax_bar1, 'Duels réussis', len(committed_fouls), len(committed_fouls))
         self._add_horizontal_bar(ax_bar2, 'Tacles réussis', len(successful_tackles), len(tackles))
         self._add_horizontal_bar(ax_bar3, 'Récupérations réussies', len(successful_ball_recoveries), len(ball_recoveries))
 
