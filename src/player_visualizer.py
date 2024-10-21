@@ -177,11 +177,11 @@ class PlayerVisualizer:
             f"{self.player_data['player_name']} - N°{self.player_data['shirtNo']}",
             f"{self.player_data['age']} ans - {self.player_data['height']}cm",
             f"{status_text} ",
-            f"{self.match_name}",  # Add the match name here
+            #f"{self.match_name}",  # Add the match name here
             f"{self.match_teams}",
             f"Temps de jeu: {playing_time} minutes",
             f"{len(goals)} but(s)" if len(goals) >= 1 else None,
-            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None, # TODO
+            #f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None, # TODO
             f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 
@@ -190,7 +190,7 @@ class PlayerVisualizer:
             if text:  # Only display non-None items
                 # Check if the text is match_teams to apply a different fontsize
                 if text == self.match_teams:
-                    ax.text(0.23, y_position, text, fontsize=15, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+                    ax.text(0.23, y_position, text, fontsize=16, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
                 else:
                     ax.text(0.23, y_position, text, fontsize=19, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
 
@@ -229,8 +229,10 @@ class PlayerVisualizer:
         # Récupère la liste des priorités pour le type de joueur
         priority_stats = priorities.get(type_data, [])
 
-        # Sélectionner les stats selon les priorités et vérifier s'il y a des valeurs non nulles
+        # Statistiques classées par priorité
         selected_stats = []
+
+        # 1. D'abord, on sélectionne les stats dans l'ordre de priorité pour les stats non nulles
         for priority in priority_stats:
             for stat in all_stats:
                 label, value, total = stat
@@ -238,15 +240,28 @@ class PlayerVisualizer:
                     selected_stats.append(stat)
                     break
                 
-        # Filtrer les statistiques selon les priorités
+        # 2. Si on n'a pas 4 statistiques, on complète avec des stats ayant la plus grande "total value" 
+        # tout en évitant les priorités déjà sélectionnées (y compris celles avec une valeur nulle).
+        if len(selected_stats) < 4:
+            # Statistiques non prioritaires mais avec des valeurs non nulles
+            remaining_stats = [stat for stat in all_stats if stat not in selected_stats]
+
+            # Classement des statistiques restantes par le total (pour avoir les plus grandes totales en premier)
+            remaining_stats = sorted(remaining_stats, key=lambda x: x[2], reverse=True)
+
+            # Ajouter ces stats jusqu'à atteindre 4
+            for stat in remaining_stats:
+                if len(selected_stats) >= 4:
+                    break
+                label, value, total = stat
+                selected_stats.append(stat)
+
+        # 3. Filtrer les statistiques selon les priorités
         non_zero_stats = [stat for stat in all_stats if stat[1] > 0]  # Statistiques avec value > 0
         zero_value_non_zero_total_stats = [stat for stat in all_stats if stat[1] == 0 and stat[2] > 0]  # Statistiques avec value == 0 mais total > 0
         zero_stats = [stat for stat in all_stats if stat[1] == 0 and stat[2] == 0]  # Statistiques avec value == 0 et total == 0
 
-        # Commence par les stats non nulles
-        selected_stats = non_zero_stats[:4]  # Prend jusqu'à 4 stats avec value > 0
-
-        # Complète avec des stats où value == 0 mais total > 0
+        # Complète avec des stats où value == 0 mais total > 0, si nécessaire
         if len(selected_stats) < 4:
             selected_stats += zero_value_non_zero_total_stats[:4 - len(selected_stats)]
 
@@ -259,6 +274,7 @@ class PlayerVisualizer:
         for i in range(4):
             label, value, total = selected_stats[i]
             self._add_horizontal_bar(ax_bars[i], label, value, total)
+
 
 
 
@@ -1038,7 +1054,7 @@ class PlayerVisualizer:
         ax.axis('off')
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
 
-        gs = GridSpec(7, 2, height_ratios=[1, 1, 1, 1, 4, 4, 4])
+        gs = GridSpec(11, 2, height_ratios=[1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4])
 
         # Load and display player photo
         PlayerProfileScraper(self.player_data['player_name']).save_player_profile()
@@ -1069,10 +1085,10 @@ class PlayerVisualizer:
                 y_position -= y_step
 
         # Horizontal bars for the stats
-        ax_bar1 = fig.add_subplot(gs[0, 1])
-        ax_bar2 = fig.add_subplot(gs[1, 1])
-        ax_bar3 = fig.add_subplot(gs[2, 1])
-        ax_bar4 = fig.add_subplot(gs[3, 1])
+        ax_bar1 = fig.add_subplot(gs[4, 0])
+        ax_bar2 = fig.add_subplot(gs[5, 0])
+        ax_bar3 = fig.add_subplot(gs[6, 0])
+        ax_bar4 = fig.add_subplot(gs[7, 0])
 
         # Select key stats for display based on player type (DEF, MIL, ATT)
         all_stats = [
@@ -1121,23 +1137,23 @@ class PlayerVisualizer:
 
         # Plot the pitch and shots visualization
         pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
-        pitch_2 = Pitch(half=True, pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
-        ax_pitch_left = fig.add_subplot(gs[4:, 0], aspect=1)
-        pitch.draw(ax=ax_pitch_left)
+        pitch_2 = VerticalPitch(half=True, pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
+        ax_pitch_left = fig.add_subplot(gs[6:, 0], aspect=1)
+        pitch_2.draw(ax=ax_pitch_left)
 
         # Plotting shots and goals with a point and an arrow for direction
         for event in events:
             if event['type']['displayName'] in ['Shot', 'Goal']:
-                y = 100 - event['x']  # Start position of the shot
-                x = 100 - event['y']  # Start position of the shot
+                x = 100 - event['x']  # Start position of the shot
+                y = 100 - event['y']  # Start position of the shot
                 event_type = event['type']['displayName']
                 color = '#6DF176' if event_type == 'Goal' else 'red'
 
                 # Draw the point (start of the shot)
                 pitch_2.scatter(x, y, s=200, marker='o', color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch_left)
 
-                end_x = 100 - event['endX']
-                end_y = 100 - event['endY']
+                end_y = 100 - event['endX']
+                end_x = 100 - event['endY']
                 # Draw the arrow from the start position to the goal mouth
                 pitch_2.arrows(x, y, end_x, end_y, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch_left)
 
@@ -1149,7 +1165,7 @@ class PlayerVisualizer:
         ax_pitch_left.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(0.97, 0.98), fontsize=12)
 
         # Heatmap on the right pitch
-        ax_pitch_right = fig.add_subplot(gs[4:, 1], aspect=1)
+        ax_pitch_right = fig.add_subplot(gs[0:, 1], aspect=1)
         pitch.draw(ax=ax_pitch_right)
 
         ball_touches = [event for event in events if event['type']['displayName'] == 'BallTouch']
@@ -1162,10 +1178,14 @@ class PlayerVisualizer:
         el_greco_transparent_orange_red = mcolors.LinearSegmentedColormap.from_list(
             "Transparent-Orange-Red",
             [(1, 1, 1, 0), (1, 0.65, 0, 1), (1, 0, 0, 1)],  # Transparent to orange to red
-            N=10
+            N=1000
         )
 
         pitch.heatmap(bin_statistic, ax=ax_pitch_right, cmap=el_greco_transparent_orange_red)
+        
+        # Display your tag or source at a fixed position
+        ax.text(0.35, 0.775, f"@TarbouchData", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+
 
         plt.tight_layout()
         plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
