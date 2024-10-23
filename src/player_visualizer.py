@@ -181,7 +181,7 @@ class PlayerVisualizer:
             f"{self.match_teams}",
             f"Temps de jeu: {playing_time} minutes",
             f"{len(goals)} but(s)" if len(goals) >= 1 else None,
-            #f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None, # TODO
+            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None, # TODO
             f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 
@@ -436,12 +436,6 @@ class PlayerVisualizer:
         ax_bar1 = fig.add_subplot(gs[3, 1])
         ax_bar2 = fig.add_subplot(gs[4, 1])
         ax_bar3 = fig.add_subplot(gs[5, 1])
-    
-
-        print("XXXXXXXXXXXXXXXXXXXXX")
-        print(forward_passes)
-        print(lateral_passes)
-        print(backward_passes)
 
         self._add_horizontal_bar(ax_bar1, 'Passes vers l\'avant', forward_passes, total_passes)
         self._add_horizontal_bar(ax_bar2, 'Passes latérales', lateral_passes, total_passes)
@@ -1037,6 +1031,7 @@ class PlayerVisualizer:
         # Additional stats you provided
         total_long_balls = stats.get("totalLongBalls", 0)
         accurate_long_balls = stats.get("accurateLongBalls", 0)
+        total_duels = stats.get("duelWon", 0) + stats.get("duelLost", 0)
         duels_won = stats.get("duelWon", 0)
         won_contests = stats.get("wonContest", 0)
         total_contests = stats.get("totalContest", 0)
@@ -1097,7 +1092,7 @@ class PlayerVisualizer:
             ('But(s)', goals, goals),  # Goals stats
             #('Possession perdue', stats.get("possessionLostCtrl", 0), stats.get("possessionLostCtrl", 0)),
             ('Long balls réussis', accurate_long_balls, total_long_balls),  # Long ball stats
-            ('Duels gagnés', duels_won, duels_won),  # Duels won stats
+            ('Duels gagnés', duels_won, total_duels),  # Duels won stats
             ('Dribbles réussis', won_contests, total_contests),  # Contests won stats
             ('Tacles', total_tackles, total_tackles),  # Tackles stats
             ('Touches de balle', touches, touches),  # Touches stats
