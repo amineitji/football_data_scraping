@@ -181,7 +181,7 @@ class PlayerVisualizer:
             f"{self.match_teams}",
             f"Temps de jeu: {playing_time} minutes",
             f"{len(goals)} but(s)" if len(goals) >= 1 else None,
-            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None, # TODO
+            #f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None, # TODO
             f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 
@@ -401,12 +401,12 @@ class PlayerVisualizer:
                 color = '#78ff00'  # Couleur pour les passes en avant
                 forward_passes = forward_passes+1
             elif -150 <= angle <= -30:
-                alpha_pass = 0.3
+                alpha_pass = 0.5
                 color = '#ff3600'  # Couleur pour les passes en arrière 
                 backward_passes = backward_passes+1
             else:
                 color = '#ffb200'  # Couleur pour les passes latérales 
-                alpha_pass = 0.5
+                alpha_pass = 0.8
                 lateral_passes = lateral_passes+1
 
             # Dessiner la flèche avec la couleur appropriée
@@ -696,8 +696,6 @@ class PlayerVisualizer:
         plt.tight_layout()
         plt.savefig(save_path)
         plt.close()
-
-
 
     def plot_defensive_activity(self, save_path):
         events = self.player_data.get('events', [])
@@ -1076,7 +1074,7 @@ class PlayerVisualizer:
         y_step = 0.03
         for text in text_items:
             if text:
-                ax.text(0.23, y_position, text, fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+                ax.text(0.2, y_position, text, fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
                 y_position -= y_step
 
         # Horizontal bars for the stats
@@ -1102,7 +1100,7 @@ class PlayerVisualizer:
         # Update priorities based on player type (DEF, MIL, ATT)
         priorities = {
             'DEF': ['Passes réussies', 'Tacles', 'Duels gagnés', 'Long balls réussis'],
-            'MIL': ['Passes réussies', 'Dribbles réussis', 'Touches de balle', 'Passes clés'],
+            'MIL': ['Passes réussies', 'Dribbles réussis', 'Duels gagnés', 'Passes clés'],
             'ATT': ['Tirs cadrés', 'But(s)', 'Passes clés', 'Dribbles réussis']
         }
 
@@ -1182,6 +1180,217 @@ class PlayerVisualizer:
         ax.text(0.35, 0.775, f"@TarbouchData", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
 
 
+        plt.tight_layout()
+        plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
+        plt.show()
+
+
+
+    def plot_goalkeeper_activity(self, save_path, type_data):
+        events = self.player_data.get('events', [])
+
+        # Filtrage des événements défensifs
+        gk_events = [
+            event for event in events if event['type']['displayName'] in ['BallRecovery', 'KeeperPickup', 'Save', 'CornerAwarded', 'Clearance']
+        ]
+
+        if not gk_events:
+            print(f"Aucune activité défensive trouvée pour {self.player_data['player_name']}. Aucun visuel généré.")
+            return
+
+        # Compter les événements défensifs par type
+        ball_recoveries = [event for event in gk_events if event['type']['displayName'] == 'BallRecovery']
+        successful_ball_recoveries = [event for event in ball_recoveries if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        keeper_pickup = [event for event in gk_events if event['type']['displayName'] == 'KeeperPickup']
+        successful_keeper_pickup = [event for event in keeper_pickup if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        save = [event for event in gk_events if event['type']['displayName'] == 'Save']
+        successful_save = [event for event in save if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        corner_awarded = [event for event in gk_events if event['type']['displayName'] == 'CornerAwarded']
+        successful_corner_awarded = [event for event in corner_awarded if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        clearance = [event for event in gk_events if event['type']['displayName'] == 'Clearance']
+        successful_clearance = [event for event in clearance if event.get('outcomeType', {}).get('displayName') == 'Successful']
+
+        passes = [event for event in events if event['type']['displayName'] == 'Pass']
+
+        forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
+        total_passes = len(passes)
+
+        # Définir les symboles et couleurs
+        symbol_map = {
+            'BallRecovery': 'o',
+            'KeeperPickup': 's',
+            'Save': '^',
+            'CornerAwarded': '*',
+            'Clearance': 'D'
+        }
+        color_map = {
+            'Successful': '#6DF176',
+            'Unsuccessful': 'red'
+        }
+
+        # Détection des passes décisives
+        assists = [
+            event for event in passes if any(
+                q['type']['displayName'] in ['IntentionalGoalAssist', 'BigChanceCreated']
+                for q in event.get('qualifiers', [])
+            )
+        ]
+        nb_passe_d = len(assists)
+
+        forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
+        total_passes = len(passes)
+
+        # Filtrage des événements offensifs
+        offensive_events = [
+            event for event in events if event['type']['displayName'] in ['TakeOn', 'MissedShots', 'SavedShot', 'Goal', 'Foul', 'Pass']
+        ]
+        goals = [event for event in offensive_events if event['type']['displayName'] == 'Goal']
+
+        # Filtrer les passes clés (KeyPass)
+        key_passes = [
+            event for event in offensive_events if event['type']['displayName'] == 'Pass' and
+            any(q['type']['displayName'] == 'KeyPass' for q in event.get('qualifiers', []))
+        ]
+        key_passes_successful = [
+            event for event in key_passes if event.get('outcomeType', {}).get('displayName') == 'Successful'
+        ]
+
+        # Créer un gradient vertical
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
+
+        # Créer une figure
+        fig = plt.figure(figsize=(16, 16))
+        ax = fig.add_axes([0, 0, 1, 1])
+        ax.axis('off')
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+
+        # Configuration de la grille
+        gs = GridSpec(8, 3, height_ratios=[1, 1, 1, 1, 4, 4, 4, 4], width_ratios=[1,1,2])
+
+        # Affichage de la photo du joueur
+        PlayerProfileScraper(self.player_data['player_name']).save_player_profile()
+        image_path = f"data/photo/{self.player_data['player_name'].replace(' ', '_')}_profile_image.jpg"
+        player_photo = mpimg.imread(image_path)
+
+        ax_image = fig.add_subplot(gs[:4, 0])
+        ax_image.imshow(player_photo, aspect='equal')
+        ax_image.set_anchor('W')
+        ax_image.axis('off')
+
+        # Statut du joueur et texte
+        if self.player_data["isFirstEleven"]:
+            status_text = "Titulaire"
+            start_minute = 0
+        else:
+            first_minute = min(self.player_data["stats"]["ratings"].keys())
+            status_text = f'Rentré {first_minute}"'
+            start_minute = first_minute
+
+        last_minute = list(self.player_data["stats"]["ratings"].keys())[-1]
+        playing_time = int(last_minute) - int(start_minute)
+        assists = sum(1 for event in self.player_data['events'] if any(qualifier['type']['displayName'] == 'IntentionalGoalAssist' for qualifier in event.get('qualifiers', [])))
+
+        y_position = 0.96
+        y_step = 0.03
+        text_items = [
+            f"{self.player_data['player_name']} - N°{self.player_data['shirtNo']}",
+            f"{self.player_data['age']} ans - {self.player_data['height']}cm",
+            f"{status_text} ",
+            f"{self.match_teams}",
+            f"Temps de jeu: {playing_time} minutes",
+            f"{len(goals)} but(s)" if len(goals) >= 1 else None,
+            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None,
+            f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
+        ]
+
+        for text in text_items:
+            if text:
+                fontsize = 16 if text == self.match_teams else 19
+                ax.text(0.23, y_position, text, fontsize=fontsize, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+                y_position -= y_step
+
+        ax.text(0.425, 0.72, "@TarbouchData", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+
+        # Configuration des axes pour les statistiques
+        ax_bars = [fig.add_subplot(gs[i, 2]) for i in range(4)]
+        all_stats = [
+            ("Passes clés", len(key_passes_successful), len(key_passes)),
+            ('Passes réussies', len(successful_passes), total_passes),
+            ('Récuperations', len(successful_ball_recoveries), len(ball_recoveries)),
+            ('Arrets', len(successful_save), len(save)),
+            ('Implications dans le jeu', len(successful_keeper_pickup), len(keeper_pickup)),
+            ('Corners concédés', len(successful_corner_awarded), len(corner_awarded)),
+            ('Dégagements', len(successful_clearance), len(clearance)),
+        ]
+
+        priorities = {'GK': ['Récuperations', 'Arrets', 'Passes réussies', "Ramassages de balle sécurisées"]}
+        priority_stats = priorities.get(type_data, [])
+        selected_stats = [stat for stat in all_stats if stat[0] in priority_stats and stat[1] > 0][:4]
+
+        if len(selected_stats) < 4:
+            remaining_stats = sorted([stat for stat in all_stats if stat not in selected_stats], key=lambda x: x[2], reverse=True)
+            selected_stats.extend(remaining_stats[:4 - len(selected_stats)])
+
+        for i, (label, value, total) in enumerate(selected_stats):
+            self._add_horizontal_bar(ax_bars[i], label, value, total)
+
+        # Premier terrain (passes)
+        pitch_1 = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
+        ax_pitch_left = fig.add_subplot(gs[4:, :2], aspect=1)
+        pitch_1.draw(ax=ax_pitch_left)
+        for pas in passes:
+            y_start, x_start, y_end, x_end = pas['x'], pas['y'], pas['endX'], pas['endY']
+            color = '#6DF176' if pas['outcomeType']['displayName'] == 'Successful' else 'red'
+            pitch_1.arrows(y_start, x_start, y_end, x_end, width=3, headwidth=3, headlength=3, color=color, ax=ax_pitch_left)
+
+        # Deuxième terrain inversé en bas à droite avec symboles pour les événements défensifs
+        pitch_bottom = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2, half=True)
+        ax_pitch_bottom = fig.add_subplot(gs[5:, 2])
+        pitch_bottom.draw(ax=ax_pitch_bottom)
+
+        # Ajouter les symboles pour les événements défensifs
+        for event in gk_events:
+            # Inversion des coordonnées pour correspondre à la rotation de 180 degrés
+            y = 100 - event['x']
+            x = 100 - event['y']
+            event_type = event['type']['displayName']
+            outcome = event.get('outcomeType', {}).get('displayName', 'Unsuccessful')
+
+            # Définir la couleur et le symbole de chaque type d'événement
+            color = color_map.get(outcome, 'red')
+            symbol = symbol_map.get(event_type, 'o')
+
+            # Si l'événement est une faute, définir la couleur en rouge et ignorer les fautes réussies
+            if event_type == 'Foul' and outcome == 'Successful':
+                continue
+            elif event_type == 'Foul':
+                color = 'red'
+
+            # Affichage des événements avec symboles et couleurs
+            ax_pitch_bottom.scatter(x, y, color=color, marker=symbol, s=300, edgecolor='white')
+
+                # Ajouter une légende pour les symboles
+        legend_handles = [
+            plt.Line2D([0], [0], marker='o', color='w', label='Récupération', markerfacecolor='black', markersize=20),
+            plt.Line2D([0], [0], marker='s', color='w', label='Implications dans le jeu', markerfacecolor='black', markersize=20),
+            plt.Line2D([0], [0], marker='^', color='w', label='Arrêt', markerfacecolor='black', markersize=20),
+            plt.Line2D([0], [0], marker='*', color='w', label='Corner concédé', markerfacecolor='black', markersize=20),
+            plt.Line2D([0], [0], marker='D', color='w', label='Dégagement', markerfacecolor='black', markersize=20)
+        ]
+        ax_pitch_bottom.legend(handles=legend_handles, loc='upper right', fontsize=20)
+
+        # Inverser les axes pour obtenir la rotation de 180 degrés
+        ax_pitch_bottom.invert_xaxis()
+        ax_pitch_bottom.invert_yaxis()
+
+
+        # Affichage final
         plt.tight_layout()
         plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
         plt.show()

@@ -50,10 +50,13 @@ def main(url, player_name, poste, nb_passe_d=0):
 
     # Call visualization functions only if the data source is WhoScored
     if isinstance(extractor, WhoScoredDataExtractor):
-        visualizer.plot_passes_and_bar_charts(save_path_passes)
-        visualizer.plot_defensive_activity(save_path_defensive)
-        visualizer.plot_offensive_activity(save_path_offensive_pitch, save_path_offensive_goal)
-        visualizer.plot_passes_heatmap_and_bar_charts(save_path_activity, poste, nb_passe_d)
+        if poste == "GK":
+            visualizer.plot_goalkeeper_activity(save_path_activity, poste)
+        else:
+            visualizer.plot_passes_and_bar_charts(save_path_passes)
+            visualizer.plot_defensive_activity(save_path_defensive)
+            visualizer.plot_offensive_activity(save_path_offensive_pitch, save_path_offensive_goal)
+            visualizer.plot_passes_heatmap_and_bar_charts(save_path_activity, poste, nb_passe_d)
     else:
         visualizer.plot_shots_heatmap_and_bar_charts(save_path_activity_sofascore, poste)
         print(f"Aucune visualisation disponible pour SofaScore pour {player_name}.")
