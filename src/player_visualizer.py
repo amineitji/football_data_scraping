@@ -177,11 +177,10 @@ class PlayerVisualizer:
             f"{self.player_data['player_name']} - N°{self.player_data['shirtNo']}",
             f"{self.player_data['age']} ans - {self.player_data['height']}cm",
             f"{status_text} ",
-            #f"{self.match_name}",  # Add the match name here
             f"{self.match_teams}",
             f"Temps de jeu: {playing_time} minutes",
             f"{len(goals)} but(s)" if len(goals) >= 1 else None,
-            #f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None, # TODO
+            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None, # TODO
             f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 
@@ -1324,8 +1323,8 @@ class PlayerVisualizer:
             ('Passes réussies', len(successful_passes), total_passes),
             ('Récuperations', len(successful_ball_recoveries), len(ball_recoveries)),
             ('Arrets', len(successful_save), len(save)),
-            ('Implications dans le jeu', len(successful_keeper_pickup), len(keeper_pickup)),
-            ('Corners concédés', len(successful_corner_awarded), len(corner_awarded)),
+            ('Recuperations à la main', len(successful_keeper_pickup), len(keeper_pickup)),
+            ('Corners gagnés', len(successful_corner_awarded), len(corner_awarded)),
             ('Dégagements', len(successful_clearance), len(clearance)),
         ]
 
@@ -1377,11 +1376,11 @@ class PlayerVisualizer:
 
                 # Ajouter une légende pour les symboles
         legend_handles = [
-            plt.Line2D([0], [0], marker='o', color='w', label='Récupération', markerfacecolor='black', markersize=20),
-            plt.Line2D([0], [0], marker='s', color='w', label='Implications dans le jeu', markerfacecolor='black', markersize=20),
-            plt.Line2D([0], [0], marker='^', color='w', label='Arrêt', markerfacecolor='black', markersize=20),
-            plt.Line2D([0], [0], marker='*', color='w', label='Corner concédé', markerfacecolor='black', markersize=20),
-            plt.Line2D([0], [0], marker='D', color='w', label='Dégagement', markerfacecolor='black', markersize=20)
+            plt.Line2D([0], [0], marker='o', color='w', label='Récupérations', markerfacecolor='black', markersize=20),
+            plt.Line2D([0], [0], marker='s', color='w', label='Recuperations à la main', markerfacecolor='black', markersize=20),
+            plt.Line2D([0], [0], marker='^', color='w', label='Arrêts', markerfacecolor='black', markersize=20),
+            plt.Line2D([0], [0], marker='*', color='w', label='Corners gagnés', markerfacecolor='black', markersize=20),
+            plt.Line2D([0], [0], marker='D', color='w', label='Dégagements', markerfacecolor='black', markersize=20)
         ]
         ax_pitch_bottom.legend(handles=legend_handles, loc='upper right', fontsize=20)
 
