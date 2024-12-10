@@ -14,6 +14,9 @@ from player_image_downloader import PlayerProfileScraper
 import re
 from match_data_extractor import MatchDataExtractor
 
+from matplotlib.animation import FuncAnimation
+import matplotlib.patches as mpatches
+
 
 class PlayerVisualizer:
     def __init__(self, player_data_path, competition, color1, color2, match_name,match_teams):
@@ -71,7 +74,7 @@ class PlayerVisualizer:
                 for q in event.get('qualifiers', [])
             )
         ]
-        nb_passe_d = len(assists)
+        #nb_passe_d = len(assists)
 
         forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
         total_passes = len(passes)
@@ -181,7 +184,7 @@ class PlayerVisualizer:
             f"Temps de jeu: {playing_time} minutes",
             f"{len(goals)} but(s)" if len(goals) >= 1 else None,
             f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None, # TODO
-            f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
+            #f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 
         # Loop through text items and display them if they are not None
@@ -385,7 +388,7 @@ class PlayerVisualizer:
         lateral_passes = 0 
         backward_passes = 0
 
-        for pas in passes:
+        for pas in successful_passes:
             y_start = pas['x']
             x_start = pas['y']
             y_end = pas['endX']
@@ -1390,6 +1393,126 @@ class PlayerVisualizer:
 
 
         # Affichage final
+        plt.tight_layout()
+        plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
+        plt.show()
+
+
+
+    def plot_passes_and_bar_charts_2(self, save_path):
+        events = self.player_data.get('events', [])
+        passes = [event for event in events if event['type']['displayName'] == 'Pass']
+        
+        # Filtrage des événements offensifs
+        offensive_events = [
+            event for event in events if event['type']['displayName'] in ['TakeOn', 'MissedShots', 'SavedShot', 'Goal', 'Foul', 'Pass']
+        ]
+    
+        if not passes:
+            print(f"Pas de passes trouvées pour {self.player_data['player_name']}. Aucun visuel généré.")
+            return
+    
+        forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
+        total_passes = len(passes)
+
+        # Filtrer les passes clés (KeyPass)
+        key_passes = [
+            event for event in offensive_events if event['type']['displayName'] == 'Pass' and
+            any(q['type']['displayName'] == 'KeyPass' for q in event.get('qualifiers', []))
+        ]
+
+        # Filtrer les passes clés réussies
+        key_passes_successful = [
+            event for event in key_passes if event.get('outcomeType', {}).get('displayName') == 'Successful'
+        ]
+    
+        # Créer un gradient vertical (de haut en bas)
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+    
+        # Créer un colormap personnalisé à partir des couleurs hexadécimales
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
+    
+        # Créer une figure
+        fig = plt.figure(figsize=(12, 9))
+    
+        # Ajouter un axe qui occupe toute la figure
+        ax = fig.add_axes([0, 0, 1, 1])
+    
+        # Désactiver les axes
+        ax.axis('off')
+    
+        # Appliquer le gradient vertical avec les couleurs choisies
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+    
+        # Creating a grid to place the pitch on the left and visualizations on the right
+        gs = GridSpec(6, 2, width_ratios=[2, 2])  # 6 rows, 2 columns (3:1 ratio)
+    
+        # 1. Plotting the pitch on the left side
+        pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
+        ax_pitch = fig.add_subplot(gs[:, 0])
+        pitch.draw(ax=ax_pitch)
+    
+        ax_pitch.annotate('', xy=(-0.05, 0.75), xytext=(-0.05, 0.25), xycoords='axes fraction',
+                          arrowprops=dict(edgecolor='white', facecolor='none', width=10, headwidth=25, headlength=25))
+
+        throughball_count = 0
+        other_passes_count = 0
+
+        for pas in successful_passes:
+            y_start = pas['x']
+            x_start = pas['y']
+            y_end = pas['endX']
+            x_end = pas['endY']
+            alpha_pass = 1
+
+            # Vérifier si le qualifier "Throughball" est présent
+            is_throughball = any(q['type']['displayName'] == 'Throughball' for q in pas.get('qualifiers', []))
+
+            # Définir la couleur et l'épaisseur selon le type de passe
+            if is_throughball:
+                color = '#78ff00'  # Couleur orange pour les Throughballs
+                arrow_width = 2
+                throughball_count += 1
+            else:
+                color = '#ffb200'  # Couleur verte pour les autres passes
+                arrow_width = 2
+                other_passes_count += 1
+
+            # Dessiner la flèche avec la couleur et l'épaisseur appropriées
+            pitch.arrows(
+                y_start, x_start, y_end, x_end,
+                width=arrow_width, headwidth=arrow_width * 1.5, headlength=arrow_width * 1.5,
+                color=color, ax=ax_pitch, alpha=alpha_pass )
+
+    
+        p_1 = mpatches.Patch(color='#78ff00', label='Passes en profondeur')
+        p_2 = mpatches.Patch(color='#ffb200', label='Passes dans les pieds')
+        ax_pitch.legend(handles=[p_1, p_2], loc='upper right', bbox_to_anchor=(1.425, 1), fontsize=12)
+        ax_pitch.set_title("@MaData_fr", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
+
+        # Ajoutez cette ligne à la place
+        ax.text(0.5, 0.96, f"Passes de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
+
+        # Display your tag or source at a fixed position
+        ax.text(0.425, 0.77, f"@TarbouchData", fontsize=14, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+
+
+        # 2. Plotting data visualizations on the right side
+    
+        # Move the semi-circular gauge lower (closer to the first bar plot)
+        ax_gauge = fig.add_subplot(gs[1:5, 1], polar=True)  # Now taking up only the third row, right above the bar chart
+        self._plot_semi_circular_gauge(ax_gauge, "Taux de passes réussies", len(successful_passes), total_passes)
+    
+
+        # 2. Modifier les visualisations en barres
+        ax_bar1 = fig.add_subplot(gs[3, 1])
+        ax_bar2 = fig.add_subplot(gs[4, 1])
+
+        self._add_horizontal_bar(ax_bar1, 'Passes en profondeur', throughball_count, total_passes)
+        self._add_horizontal_bar(ax_bar2, 'Passes dans les pieds', other_passes_count, total_passes)
+
+    
         plt.tight_layout()
         plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
         plt.show()
