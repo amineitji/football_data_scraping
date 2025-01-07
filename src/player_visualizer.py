@@ -184,7 +184,6 @@ class PlayerVisualizer:
             f"Temps de jeu: {playing_time} minutes",
             f"{len(goals)} but(s)" if len(goals) >= 1 else None,
             f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None, # TODO
-            #f"Man of the Match" if self.player_data['isManOfTheMatch'] else None
         ]
 
         # Loop through text items and display them if they are not None
@@ -1015,7 +1014,7 @@ class PlayerVisualizer:
             'ratings_over_time': ratings_over_time
         }
 
-    def plot_shots_heatmap_and_bar_charts(self, save_path, type_data):
+    def plot_shots_heatmap_and_bar_charts(self, save_path, type_data, nb_passe_d):
         """Visualize shots and heatmap for a player's match performance, with bar plots for key stats."""
 
         events = self.player_data.get('events', [])
@@ -1068,7 +1067,7 @@ class PlayerVisualizer:
             f"{status_text}",
             f"Temps de jeu: {stats['minutesPlayed']} minutes",
             f"{goals} but(s)" if goals >= 1 else "",
-            #f"{stats['goalAssist']} passe(s) décisive(s)" if stats['goalAssist'] >= 1 else "",
+            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else "",
             f"Man of the Match" if self.player_data['isManOfTheMatch'] else ""
         ]
 
@@ -1090,8 +1089,8 @@ class PlayerVisualizer:
             ('Passes réussies', accurate_passes, total_passes),
             ('Tirs cadrés', shots_on_target, shots_on_target + shots_off_target),
             ('But(s)', goals, goals),  # Goals stats
-            #('Possession perdue', stats.get("possessionLostCtrl", 0), stats.get("possessionLostCtrl", 0)),
-            ('Long balls réussis', accurate_long_balls, total_long_balls),  # Long ball stats
+            ('Possession perdue', stats.get("possessionLostCtrl", 0), stats.get("possessionLostCtrl", 0)),
+            ('Longs ballons réussis', accurate_long_balls, total_long_balls),  # Long ball stats
             ('Duels gagnés', duels_won, total_duels),  # Duels won stats
             ('Dribbles réussis', won_contests, total_contests),  # Contests won stats
             ('Tacles', total_tackles, total_tackles),  # Tackles stats
@@ -1510,7 +1509,7 @@ class PlayerVisualizer:
         ax_bar2 = fig.add_subplot(gs[4, 1])
 
         self._add_horizontal_bar(ax_bar1, 'Passes en profondeur', throughball_count, total_passes)
-        self._add_horizontal_bar(ax_bar2, 'Passes dans les pieds', other_passes_count, total_passes)
+        self._add_horizontal_bar(ax_bar2, 'Passes dans les pieds', total_passes-throughball_count, total_passes)
 
     
         plt.tight_layout()

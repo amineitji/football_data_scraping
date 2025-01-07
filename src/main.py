@@ -60,7 +60,7 @@ def main(url, player_name, poste, nb_passe_d):
             visualizer.plot_offensive_activity(save_path_offensive_pitch, save_path_offensive_goal)
             visualizer.plot_passes_heatmap_and_bar_charts(save_path_activity, poste, nb_passe_d)
     else:
-        visualizer.plot_shots_heatmap_and_bar_charts(save_path_activity_sofascore, poste)
+        visualizer.plot_shots_heatmap_and_bar_charts(save_path_activity_sofascore, poste, nb_passe_d)
         print(f"Aucune visualisation disponible pour SofaScore pour {player_name}.")
 
 if __name__ == "__main__":
