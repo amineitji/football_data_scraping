@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/home/amine/Bureau/TARBOUCH DATA/football_data_scraping/env/bin/python3" "$0" "$@"
-' '''
+#!/home/amine/Bureau/TD/football_data_scraping/env/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

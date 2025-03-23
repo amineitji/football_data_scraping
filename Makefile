@@ -35,6 +35,7 @@ clean:
 
 # Install the required Python dependencies
 install:
+	sudo apt install chromium-chromedriver
 	bash -c 'source $(VENV_ACTIVATE) && pip install -r requirements.txt'
 	@echo "Installed required dependencies from requirements.txt."
 

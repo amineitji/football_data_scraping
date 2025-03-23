@@ -68,7 +68,7 @@ class PlayerProfileScraper:
         image_url = og_image_meta['content'] if og_image_meta else None
         
         # Vérification que l'image commence bien par l'URL demandée
-        if image_url and image_url.startswith("https://img.a.transfermarkt.technology/portrait/big"):
+        if image_url:
             # Télécharger et sauvegarder l'image
             self.download_image(image_url, f"data/photo/{self.full_name.replace(' ', '_')}_profile_image.jpg")
         else:

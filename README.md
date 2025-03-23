@@ -47,6 +47,8 @@ Ce projet fournit un outil pour extraire et visualiser les statistiques des joue
 
 4. **Installer les dépendances requises** :
    ```
+   sudo apt install chromium-chromedriver
+
    make install
    ```
 
