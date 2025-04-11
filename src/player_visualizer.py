@@ -13,7 +13,6 @@ import cmasher as cmr
 from player_image_downloader import PlayerProfileScraper
 import re
 from match_data_extractor import MatchDataExtractor
-
 from matplotlib.animation import FuncAnimation
 import matplotlib.patches as mpatches
 

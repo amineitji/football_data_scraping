@@ -14,7 +14,6 @@ class MatchDataExtractor:
     def __init__(self, html_path, color_json_path="data/color_template.json"):
         self.html_path = html_path
         self.color_json_path = color_json_path
-        self.data = self._extract_data_html()
 
     def _extract_data_html(self):
         raise NotImplementedError("Cette méthode doit être implémentée dans les classes héritées.")
