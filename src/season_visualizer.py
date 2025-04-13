@@ -194,9 +194,9 @@ class SeasonVisualizer(PlayerVisualizer):
             ("Passes clés", len(key_passes_successful), len(key_passes)),
             ('Récuperations', len(successful_ball_recoveries), len(ball_recoveries)),
             ('Tacles réussis', len(successful_tackles), len(tackles)),
-            ('Interceptions réussies', len(successful_interceptions), len(interceptions)),
+            ('Interceptions', len(successful_interceptions), len(interceptions)),
             ('Passes réussies', len(successful_passes), total_passes),
-            ('Dribbles réussis', len(successful_takeons), len(takeons)),
+            ('Dribbles', len(successful_takeons), len(takeons)),
             ('Tirs cadrés', len(saved_shots) + len(goals), len(missed_shots) + len(saved_shots) + len(goals)),
             ('Fautes commises', len(committed_fouls), len(committed_fouls)),
             ('Fautes subies', len(submitted_fouls), len(submitted_fouls))
@@ -204,9 +204,9 @@ class SeasonVisualizer(PlayerVisualizer):
 
         # Priorités par type de joueur
         priorities = {
-            'DEF': ['Récuperations', 'Tacles réussis', 'Interceptions réussies', 'Passes réussies'],
-            'MIL': ['Dribbles réussis', 'Passes réussies', 'Passes clés', 'Récuperations'],
-            'ATT': ['Dribbles réussis', 'Tirs cadrés', 'Passes clés', 'Récuperations']
+            'DEF': ['Dribbles', 'Interceptions', 'Passes clés', 'Récuperations'],
+            'MIL': ['Dribbles', 'Interceptions', 'Passes clés', 'Récuperations'],
+            'ATT': ['Dribbles', 'Interceptions', 'Passes clés', 'Récuperations'],
         }
 
         # Récupère la liste des priorités pour le type de joueur
@@ -296,14 +296,14 @@ class SeasonVisualizer(PlayerVisualizer):
                 if event_type == 'TakeOn':
                     # Carré pour les dribbles
                     marker = 's'
-                    pitch.scatter(x, y, s=200, marker=marker, color="#78ff00", edgecolor='white', linewidth=1.5, ax=ax_pitch)
+                    pitch.scatter(x, y, s=250, marker=marker, color="#78ff00", edgecolor='white', linewidth=2, ax=ax_pitch)
 
                 elif event_type == 'Goal':
                     # Ronds pour les tirs et les buts
                     marker = 'o'
 
                     # Ajouter le point de tir
-                    pitch.scatter(x, y, s=200, marker=marker, color="#78ff00", edgecolor='white', linewidth=1.5, ax=ax_pitch)
+                    pitch.scatter(x, y, s=250, marker=marker, color="#78ff00", edgecolor='white', linewidth=2, ax=ax_pitch)
 
                     # Trajectoire du tir avec une flèche
                     goalmouth_y = next((float(q['value']) for q in event['qualifiers'] if q['type']['displayName'] == 'GoalMouthY'), None)
@@ -313,12 +313,26 @@ class SeasonVisualizer(PlayerVisualizer):
                         end_y = (goalmouth_y / 100) * pitch.dim.pitch_length
                         pitch.arrows(x, y, end_x, end_y, width=2, headwidth=3, headlength=3, color="#78ff00", ax=ax_pitch)
 
-                elif event_type == 'Foul':
-                    # Étoiles pour les fautes subies
+
+        for event in defensive_events:
+            x, y = event['x'], event['y']
+            event_type = event['type']['displayName']
+            outcome = event['outcomeType']['displayName']
+            
+            if outcome == "Successful":
+                color = '#6DF176'
+
+                if event_type == 'Interception':
                     marker = '*'
-                    color = '#ffffff'
+                    color = '#ff0000'
                     if outcome == 'Successful':
-                        pitch.scatter(x, y, s=200, marker=marker, color=color, edgecolor='white', linewidth=1.5, ax=ax_pitch)
+                        pitch.scatter(x, y, s=250, marker=marker, color=color, edgecolor='white', linewidth=2, ax=ax_pitch)
+                        
+                elif event_type == 'BallRecovery':
+                    marker = '^'
+                    color = '#ffa900'
+                    if outcome == 'Successful':
+                        pitch.scatter(x, y, s=250, marker=marker, color=color, edgecolor='white', linewidth=2, ax=ax_pitch)
 
         # Affichage des passes clés en vert
         for pass_event in key_passes_successful:
@@ -334,7 +348,8 @@ class SeasonVisualizer(PlayerVisualizer):
         legend_handles = [
             plt.Line2D([0], [0], marker='s', color='black', label='Dribble', markerfacecolor='#78ff00', markersize=15, linestyle='None'),
             plt.Line2D([0], [0], marker='o', color='black', label='But', markerfacecolor='#78ff00', markersize=15, linestyle='None'),
-            plt.Line2D([0], [0], marker='*', color='black', label='Faute subie', markerfacecolor='#ffffff', markersize=15, linestyle='None'),
+            plt.Line2D([0], [0], marker='*', color='black', label='Interception', markerfacecolor='#ff0000', markersize=15, linestyle='None'),
+            plt.Line2D([0], [0], marker='^', color='black', label='Récuperation', markerfacecolor='#ffa900', markersize=15, linestyle='None'),
             plt.Line2D([0], [0], color='#fff600', lw=4, label='Passe clé')
         ]
 

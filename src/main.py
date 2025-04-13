@@ -39,7 +39,7 @@ def main(url, player_name, poste, nb_passe_d):
         player_data_file = extractor.extract_player_aggregate_stats(player_name)
 
         # Initialize the visualizer with the extracted data
-        visualizer = SeasonVisualizer(player_data_file, None, "#000000", "#5a5403", "2024/2025","PSG")
+        visualizer = SeasonVisualizer(player_data_file, None, "#000000", "#5a5403", "2024/2025","(WhoScored)")
 
         # Save paths for the various visualizations
         save_path_passes = os.path.join(match_folder, f'{player_name.replace(" ", "_")}_passes_and_pie_charts.png')
