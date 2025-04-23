@@ -47,6 +47,7 @@ def main(url, player_name, poste, nb_passe_d):
         save_path_offensive_pitch = os.path.join(match_folder, f'{player_name.replace(" ", "_")}_offensive_activity_pitch.png')
         save_path_offensive_goal = os.path.join(match_folder, f'{player_name.replace(" ", "_")}_offensive_activity_goal.png')
         save_path_activity = os.path.join(match_folder, f'{player_name.replace(" ", "_")}_activity_{poste}.png')
+        save_path_activity_hate = os.path.join(match_folder, f'{player_name.replace(" ", "_")}_activity_HATE_{poste}.png')
 
         if poste == "GK":
             visualizer.plot_goalkeeper_activity(save_path_activity, poste)
@@ -55,6 +56,7 @@ def main(url, player_name, poste, nb_passe_d):
             visualizer.plot_defensive_activity(save_path_defensive)
             visualizer.plot_offensive_activity(save_path_offensive_pitch, save_path_offensive_goal)
             visualizer.plot_passes_heatmap_and_bar_charts(save_path_activity, poste, nb_passe_d)
+            visualizer.hate_plot_passes_heatmap_and_bar_charts(save_path_activity_hate, poste, nb_passe_d)
     else:
         player_data_file = extractor.extract_player_stats_and_events(player_name)
 

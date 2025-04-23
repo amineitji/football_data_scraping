@@ -63,6 +63,8 @@ class SeasonVisualizer(PlayerVisualizer):
 
 
     def plot_passes_heatmap_and_bar_charts(self, save_path, type_data, nb_passe_d): #type_data = DEF,MIL,ATT
+        
+        total_matches = sum(self.player_data["position"].values())
             
         events = self.player_data.get('events', [])
         passes = [event for event in events if event['type']['displayName'] == 'Pass']
@@ -165,7 +167,8 @@ class SeasonVisualizer(PlayerVisualizer):
             f"{self.player_data['age']} ans - {self.player_data['height']}cm",
             f"{self.match_teams}",
             f"{len(goals)} but(s)" if len(goals) >= 1 else None,
-            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None, # TODO
+            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None,
+            f"{total_matches} match(s) joué(s)",
         ]
 
         # Loop through text items and display them if they are not None
@@ -366,6 +369,285 @@ class SeasonVisualizer(PlayerVisualizer):
         plt.tight_layout()
         plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
         plt.show()
+        
+        
+    def hate_plot_passes_heatmap_and_bar_charts(self, save_path, type_data, nb_passe_d): #type_data = DEF,MIL,ATT
+            
+        total_matches = sum(self.player_data["position"].values())
+        
+        events = self.player_data.get('events', [])
+        passes = [event for event in events if event['type']['displayName'] == 'Pass']
+
+        # Détection des passes décisives (IntentionalGoalAssist ou BigChanceCreated)
+        assists = [
+            event for event in passes if any(
+                q['type']['displayName'] in ['IntentionalGoalAssist', 'BigChanceCreated']
+                for q in event.get('qualifiers', [])
+            )
+        ]
+        #nb_passe_d = len(assists)
+
+        forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes = self._classify_passes(passes)
+        total_passes = len(passes)
+
+        # Filtrage des événements offensifs
+        offensive_events = [
+            event for event in events if event['type']['displayName'] in ['TakeOn', 'MissedShots', 'SavedShot', 'Goal', 'Foul', 'Pass']
+        ]
+
+        # Compter les événements offensifs par type
+        takeons = [event for event in offensive_events if event['type']['displayName'] == 'TakeOn']
+        successful_takeons = [event for event in takeons if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
+
+        missed_shots = [event for event in offensive_events if event['type']['displayName'] == 'MissedShots']
+        saved_shots = [event for event in offensive_events if event['type']['displayName'] == 'SavedShot']
+        goals = [event for event in offensive_events if event['type']['displayName'] == 'Goal']
+
+        # Filtrage des événements défensifs
+        defensive_events = [
+            event for event in events if event['type']['displayName'] in ['BallRecovery', 'Interception', 'Tackle', 'Foul']
+        ]
+
+        # Compter les événements défensifs par type
+        ball_recoveries = [event for event in defensive_events if event['type']['displayName'] == 'BallRecovery']
+        successful_ball_recoveries = [event for event in ball_recoveries if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
+
+        interceptions = [event for event in defensive_events if event['type']['displayName'] == 'Interception']
+        successful_interceptions = [event for event in interceptions if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
+
+        tackles = [event for event in defensive_events if event['type']['displayName'] == 'Tackle']
+        successful_tackles = [event for event in tackles if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
+
+        fouls = [event for event in defensive_events if event['type']['displayName'] == 'Foul']
+        committed_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
+        submitted_fouls = [event for event in fouls if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful']
+
+        # Filtrer les passes clés (KeyPass)
+        key_passes = [
+            event for event in offensive_events if event['type']['displayName'] == 'Pass' and
+            any(q['type']['displayName'] == 'KeyPass' for q in event.get('qualifiers', []))
+        ]
+
+        # Filtrer les passes clés réussies
+        key_passes_successful = [
+            event for event in key_passes if event.get('outcomeType', {}).get('displayName') == 'Unsuccessful'
+        ]
+    
+        # Créer un gradient vertical (de haut en bas)
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+
+        # Créer un colormap personnalisé à partir des couleurs hexadécimales
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
+
+        # Créer une figure
+        fig = plt.figure(figsize=(20, 16))
+
+        # Ajouter un axe qui occupe toute la figure
+        ax = fig.add_axes([0, 0, 1, 1])
+
+        # Désactiver les axes
+        ax.axis('off')
+
+        # Appliquer le gradient vertical avec les couleurs choisies
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+
+        # Creating a grid to place data visualizations on the first line and pitches on the second line
+        gs = GridSpec(7, 2,  height_ratios=[1,1,1,1,4,4,4])
+
+        # Load the player photo
+        PlayerProfileScraper(self.player_data['player_name']).save_player_profile()
+        image_path = f"data/photo/{self.player_data['player_name'].replace(' ', '_')}_profile_image.jpg"
+        player_photo = mpimg.imread(image_path)
+
+        # Display player photo in the (0,0) position
+        ax_image = fig.add_subplot(gs[:4, 0])
+        ax_image.imshow(player_photo, aspect='equal')  # Ensure the aspect ratio of the image is maintained
+        ax_image.set_anchor('W')  # Align the image to the left side
+        ax_image.axis('off')  # Hide the axes for the image
+
+        # Initial Y position for the first text line
+        y_position = 0.96
+        y_step = 0.03  # Step between text lines
+
+        # List of text items to display
+        text_items = [
+            f"{self.player_data['player_name']}",
+            f"{self.player_data['age']} ans - {self.player_data['height']}cm",
+            f"{self.match_teams}",
+            f"{len(goals)} but(s)" if len(goals) >= 1 else None,
+            f"{nb_passe_d} passe(s) décisive(s)" if nb_passe_d >= 1 else None,
+            f"{total_matches} match(s) joué(s)",
+            
+        ]
+
+        # Loop through text items and display them if they are not None
+        for text in text_items:
+            if text:  # Only display non-None items
+                # Check if the text is match_teams to apply a different fontsize
+                if text == self.match_teams:
+                    ax.text(0.23, y_position, text, fontsize=16, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+                else:
+                    ax.text(0.23, y_position, text, fontsize=19, color='white', fontweight='bold', ha='left', transform=ax.transAxes)
+
+                y_position -= y_step  # Update the Y position for the next line
+
+
+        # Display your tag or source at a fixed position
+        ax.text(0.425, 0.72, f"@TarbouchData", fontsize=20, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+
+        # Horizontal bars for forward, lateral, and backward passes
+        ax_bar1 = fig.add_subplot(gs[0, 1])
+        ax_bar2 = fig.add_subplot(gs[1, 1])
+        ax_bar3 = fig.add_subplot(gs[2, 1])
+        ax_bar4 = fig.add_subplot(gs[3, 1])
+
+        # Liste des statistiques avec leur ordre de priorité
+        all_stats = [
+            ("Passes clés", len(key_passes_successful), len(key_passes)),
+            ('Récuperations', len(successful_ball_recoveries), len(ball_recoveries)),
+            ('Tacles ratés', len(successful_tackles), len(tackles)),
+            ('Interceptions', len(successful_interceptions), len(interceptions)),
+            ('Passes réussies', len(successful_passes), total_passes),
+            ('Dribbles ratés', len(successful_takeons), len(takeons)),
+            ('Tirs hors cadre', len(missed_shots), len(missed_shots) + len(saved_shots) + len(goals)),
+            ('Fautes commises', len(committed_fouls), len(committed_fouls)),
+            ('Fautes subies', len(submitted_fouls), len(submitted_fouls))
+        ]
+
+        # Priorités par type de joueur
+        priorities = {
+            'DEF': ['Dribbles ratés', 'Tirs hors cadre', 'Fautes commises', 'Tacles ratés'],
+            'MIL': ['Dribbles ratés', 'Tirs hors cadre', 'Fautes commises', 'Tacles ratés'],
+            'ATT': ['Dribbles ratés', 'Tirs hors cadre', 'Fautes commises', 'Tacles ratés'],
+        }
+
+        # Récupère la liste des priorités pour le type de joueur
+        priority_stats = priorities.get(type_data, [])
+
+        # Statistiques classées par priorité
+        selected_stats = []
+
+        # 1. D'abord, on sélectionne les stats dans l'ordre de priorité pour les stats non nulles
+        for priority in priority_stats:
+            for stat in all_stats:
+                label, value, total = stat
+                if label == priority and value > 0:  # Si la stat correspond à la priorité et qu'elle n'est pas à 0
+                    selected_stats.append(stat)
+                    break
+                
+        # 2. Si on n'a pas 4 statistiques, on complète avec des stats ayant la plus grande "total value" 
+        # tout en évitant les priorités déjà sélectionnées (y compris celles avec une valeur nulle).
+        if len(selected_stats) < 4:
+            # Statistiques non prioritaires mais avec des valeurs non nulles
+            remaining_stats = [stat for stat in all_stats if stat not in selected_stats]
+
+            # Classement des statistiques restantes par le total (pour avoir les plus grandes totales en premier)
+            remaining_stats = sorted(remaining_stats, key=lambda x: x[2], reverse=True)
+
+            # Ajouter ces stats jusqu'à atteindre 4
+            for stat in remaining_stats:
+                if len(selected_stats) >= 4:
+                    break
+                label, value, total = stat
+                selected_stats.append(stat)
+
+        # 3. Filtrer les statistiques selon les priorités
+        non_zero_stats = [stat for stat in all_stats if stat[1] > 0]  # Statistiques avec value > 0
+        zero_value_non_zero_total_stats = [stat for stat in all_stats if stat[1] == 0 and stat[2] > 0]  # Statistiques avec value == 0 mais total > 0
+        zero_stats = [stat for stat in all_stats if stat[1] == 0 and stat[2] == 0]  # Statistiques avec value == 0 et total == 0
+
+        # Complète avec des stats où value == 0 mais total > 0, si nécessaire
+        if len(selected_stats) < 4:
+            selected_stats += zero_value_non_zero_total_stats[:4 - len(selected_stats)]
+
+        # Complète avec des stats totalement nulles si nécessaire
+        if len(selected_stats) < 4:
+            selected_stats += zero_stats[:4 - len(selected_stats)]
+
+        # Affichage des 4 stats selon l'ordre de priorité
+        ax_bars = [ax_bar1, ax_bar2, ax_bar3, ax_bar4]  # Liste des axes pour afficher les barres
+        for i in range(4):
+            label, value, total = selected_stats[i]
+            self._add_horizontal_bar(ax_bars[i], label, value, total)
+
+
+        pitch = Pitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=2)
+        ax_pitch = fig.add_subplot(gs[4:, :])  # Étend sur les 2 colonnes
+        pitch.draw(ax=ax_pitch)
+        
+        # Ajouter une flèche pour le sens du jeu
+        ax_pitch.annotate('', xy=(0.75, 0.01), xytext=(0.25, 0.01), xycoords='axes fraction',
+                          arrowprops=dict(edgecolor='white', facecolor='none', width=10, headwidth=25, headlength=25))
+
+        # Parcours des événements offensifs
+        for event in offensive_events:
+            x, y = event['x'], event['y']
+            event_type = event['type']['displayName']
+            outcome = event['outcomeType']['displayName']
+            
+            if outcome == "Unsuccessful":
+    
+                if event_type == 'TakeOn':
+                    # Carré pour les dribbles
+                    marker = 's'
+                    pitch.scatter(x, y, s=250, marker=marker, color="#ffab00", edgecolor='white', linewidth=2, ax=ax_pitch)
+
+            if event_type == 'MissedShots':
+                # Ronds pour les tirs et les buts
+                marker = 'o'
+                # Ajouter le point de tir
+                pitch.scatter(x, y, s=250, marker=marker, color="#ff0000", edgecolor='white', linewidth=2, ax=ax_pitch)
+                # Trajectoire du tir avec une flèche
+                goalmouth_y = next((float(q['value']) for q in event['qualifiers'] if q['type']['displayName'] == 'GoalMouthY'), None)
+                if goalmouth_y is not None:
+                    end_x = 100  # Les tirs se terminent à la ligne de but
+                    end_y = (goalmouth_y / 100) * pitch.dim.pitch_length
+                    pitch.arrows(x, y, end_x, end_y, width=2, headwidth=3, headlength=3, color="#ff0000", ax=ax_pitch)
+
+
+        for event in defensive_events:
+            x, y = event['x'], event['y']
+            event_type = event['type']['displayName']
+            outcome = event['outcomeType']['displayName']
+            
+            if outcome == "Unsuccessful":
+                color = '#6DF176'
+
+                if event_type == 'Foul':
+                    marker = '*'
+                    color = '#ff0000'
+                    if outcome != 'Successful':
+                        pitch.scatter(x, y, s=250, marker=marker, color=color, edgecolor='white', linewidth=2, ax=ax_pitch)
+                        
+                elif event_type == 'Tackle':
+                    marker = '^'
+                    color = '#ffdc00'
+                    if outcome == 'Unsuccessful':
+                        pitch.scatter(x, y, s=250, marker=marker, color=color, edgecolor='white', linewidth=2, ax=ax_pitch)
+                
+
+        # Création de la légende sur une seule ligne
+        legend_handles = [
+            plt.Line2D([0], [0], marker='s', color='black', label='Dribble raté', markerfacecolor='#ffab00', markersize=15, linestyle='None'),
+            plt.Line2D([0], [0], marker='o', color='black', label='Tir hors cadre', markerfacecolor='#ff0000', markersize=15, linestyle='None'),
+            plt.Line2D([0], [0], marker='*', color='black', label='Faute commise', markerfacecolor='#ff0000', markersize=15, linestyle='None'),
+            plt.Line2D([0], [0], marker='^', color='black', label='Tacle raté', markerfacecolor='#ffdc00', markersize=15, linestyle='None'),
+        ]
+
+        # Affichage horizontal de la légende
+        ax_pitch.legend(
+            handles=legend_handles,
+            loc='upper center',
+            bbox_to_anchor=(0.5, 0.96),  # Centré juste au-dessus du terrain
+            ncol=len(legend_handles),   # Tout sur une ligne
+            fontsize=12,
+        )
+
+                
+        plt.tight_layout()
+        plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
+        plt.show()
 
 
     def plot_passes_and_bar_charts(self, save_path):
@@ -425,9 +707,8 @@ class SeasonVisualizer(PlayerVisualizer):
         ax_pitch.annotate('', xy=(-0.05, 0.75), xytext=(-0.05, 0.25), xycoords='axes fraction',
                           arrowprops=dict(edgecolor='white', facecolor='none', width=10, headwidth=25, headlength=25))
 
-        forward_passes = 0 
-        lateral_passes = 0 
-        backward_passes = 0
+        throughball_count = 0
+        other_passes_count = 0
 
         for pas in successful_passes:
             y_start = pas['x']
@@ -435,25 +716,30 @@ class SeasonVisualizer(PlayerVisualizer):
             y_end = pas['endX']
             x_end = pas['endY']
             alpha_pass = 1
-            
-            # Calcul de l'angle
-            angle = np.degrees(np.arctan2(y_end - y_start, x_end - x_start))
-    
-            # Définir les couleurs selon le type de passe
-            if 30 <= angle <= 150:
-                color = '#78ff00'  # Couleur pour les passes en avant
-                pitch.arrows(y_start, x_start, y_end, x_end, width=2, headwidth=3, headlength=3, color=color, ax=ax_pitch, alpha=alpha_pass)
-                forward_passes = forward_passes+1
-            elif -150 <= angle <= -30:
-                backward_passes = backward_passes+1
+
+            # Vérifier si le qualifier "Throughball" est présent
+            is_throughball = any(q['type']['displayName'] == 'Throughball' for q in pas.get('qualifiers', []))
+
+            # Définir la couleur et l'épaisseur selon le type de passe
+            if is_throughball:
+                color = '#78ff00'  # Couleur orange pour les Throughballs
+                arrow_width = 2
+                throughball_count += 1
+                            # Dessiner la flèche avec la couleur et l'épaisseur appropriées
+                pitch.arrows(
+                    y_start, x_start, y_end, x_end,
+                    width=arrow_width, headwidth=arrow_width * 1.5, headlength=arrow_width * 1.5,
+                    color=color, ax=ax_pitch, alpha=alpha_pass )
+                
             else:
-                lateral_passes = lateral_passes+1
+                color = '#ffb200'  # Couleur verte pour les autres passes
+                arrow_width = 2
+                other_passes_count += 1
 
     
-        p_1 = mpatches.Patch(color='#78ff00', label='Passes vers l\'avant')
-        p_2 = mpatches.Patch(color='#ffb200', label='Passes latérales')
-        p_3 = mpatches.Patch(color='#ff3600', label='Passes vers l\'arrière')
-        ax_pitch.legend(handles=[p_1, p_2, p_3], loc='upper right', bbox_to_anchor=(1.425, 1), fontsize=12)
+        p_1 = mpatches.Patch(color='#78ff00', label='Passes en profondeur')
+        p_2 = mpatches.Patch(color='#ffb200', label='Passes dans les pieds')
+        ax_pitch.legend(handles=[p_1, p_2], loc='upper right', bbox_to_anchor=(1.425, 1), fontsize=12)
         ax_pitch.set_title("@MaData_fr", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
 
         # Ajoutez cette ligne à la place
@@ -469,14 +755,14 @@ class SeasonVisualizer(PlayerVisualizer):
         ax_gauge = fig.add_subplot(gs[1:5, 1], polar=True)  # Now taking up only the third row, right above the bar chart
         self._plot_semi_circular_gauge(ax_gauge, "Taux de passes réussies", len(successful_passes), total_passes)
     
-        # Horizontal bars for forward, lateral, and backward passes
+
+        # 2. Modifier les visualisations en barres
         ax_bar1 = fig.add_subplot(gs[3, 1])
         ax_bar2 = fig.add_subplot(gs[4, 1])
-        ax_bar3 = fig.add_subplot(gs[5, 1])
 
-        self._add_horizontal_bar(ax_bar1, 'Passes vers l\'avant', forward_passes, len(successful_passes))
-        self._add_horizontal_bar(ax_bar2, 'Passes latérales', lateral_passes, len(successful_passes))
-        self._add_horizontal_bar(ax_bar3, 'Passes vers l\'arrière', backward_passes, len(successful_passes))
+        self._add_horizontal_bar(ax_bar1, 'Passes en profondeur', throughball_count, total_passes)
+        self._add_horizontal_bar(ax_bar2, 'Passes dans les pieds', total_passes-throughball_count, total_passes)
+
     
         plt.tight_layout()
         plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
@@ -527,7 +813,7 @@ class SeasonVisualizer(PlayerVisualizer):
             filled_length = value / max_value
 
         # Vérifier si la barre concerne les fautes commises
-        if 'Fautes commises' in label:
+        if label in ['Dribbles ratés', 'Tirs hors cadre', 'Fautes commises', 'Tacles ratés']:
             # Palette de couleurs pour les fautes (toujours rouge)
             cmap = mcolors.LinearSegmentedColormap.from_list('red', ['#FF0000', '#FF0000'])  # Palette entièrement rouge
         else:
