@@ -721,24 +721,29 @@ class SeasonVisualizer(PlayerVisualizer):
             is_throughball = any(q['type']['displayName'] == 'Throughball' for q in pas.get('qualifiers', []))
 
             # Définir la couleur et l'épaisseur selon le type de passe
-            if is_throughball:
-                color = '#78ff00'  # Couleur orange pour les Throughballs
+            if is_throughball and pas.get('outcomeType', {}).get('displayName') == 'Successful':
+                color = '#78ff00'  
                 arrow_width = 2
                 throughball_count += 1
-                            # Dessiner la flèche avec la couleur et l'épaisseur appropriées
+                            
                 pitch.arrows(
                     y_start, x_start, y_end, x_end,
                     width=arrow_width, headwidth=arrow_width * 1.5, headlength=arrow_width * 1.5,
                     color=color, ax=ax_pitch, alpha=alpha_pass )
-                
-            else:
-                color = '#ffb200'  # Couleur verte pour les autres passes
+            
+            if is_throughball and pas.get('outcomeType', {}).get('displayName') == 'Unsuccessful':
+                color = '#FF0000' 
                 arrow_width = 2
                 other_passes_count += 1
+                
+                pitch.arrows(
+                    y_start, x_start, y_end, x_end,
+                    width=arrow_width, headwidth=arrow_width * 1.5, headlength=arrow_width * 1.5,
+                    color=color, ax=ax_pitch, alpha=alpha_pass )
 
     
-        p_1 = mpatches.Patch(color='#78ff00', label='Passes en profondeur')
-        p_2 = mpatches.Patch(color='#ffb200', label='Passes dans les pieds')
+        p_1 = mpatches.Patch(color='#78ff00', label='Passes en profondeur réussies')
+        p_2 = mpatches.Patch(color='#FF0000', label='Passes en profondeur ratées')
         ax_pitch.legend(handles=[p_1, p_2], loc='upper right', bbox_to_anchor=(1.425, 1), fontsize=12)
         ax_pitch.set_title("@MaData_fr", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
 
@@ -760,8 +765,8 @@ class SeasonVisualizer(PlayerVisualizer):
         ax_bar1 = fig.add_subplot(gs[3, 1])
         ax_bar2 = fig.add_subplot(gs[4, 1])
 
-        self._add_horizontal_bar(ax_bar1, 'Passes en profondeur', throughball_count, total_passes)
-        self._add_horizontal_bar(ax_bar2, 'Passes dans les pieds', total_passes-throughball_count, total_passes)
+        self._add_horizontal_bar(ax_bar1, 'En profondeur', throughball_count, total_passes)
+        self._add_horizontal_bar(ax_bar2, 'Dans les pieds', total_passes-throughball_count, total_passes)
 
     
         plt.tight_layout()
