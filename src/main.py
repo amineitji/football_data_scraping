@@ -61,6 +61,42 @@ def main(url, player_name, poste, nb_passe_d, advanced_analysis=False):
             visualizer.plot_offensive_activity(save_path_offensive_pitch, save_path_offensive_goal)
             visualizer.plot_passes_heatmap_and_bar_charts(save_path_activity, poste, nb_passe_d)
             visualizer.hate_plot_passes_heatmap_and_bar_charts(save_path_activity_hate, poste, nb_passe_d)
+            
+                        # ➕ Ajouter ici les analyses avancées si demandées
+            if advanced_analysis:
+                try:
+                    print("\n🚀 Génération des analyses avancées pour les données agrégées...")
+                    advanced_folder = os.path.join(match_folder, "advanced_analysis")
+                    os.makedirs(advanced_folder, exist_ok=True)
+
+                    player_name_clean = player_name.replace(" ", "_")
+
+                    print("🧠 Génération de l'analyse spatiale intelligente...")
+                    save_path_spatial = os.path.join(advanced_folder, f'{player_name_clean}_spatial_intelligence.png')
+                    visualizer.plot_positional_intelligence(save_path_spatial)
+                    print("✅ Analyse spatiale générée")
+
+                    print("⚡ Génération de l'analyse de pression...")
+                    save_path_pressure = os.path.join(advanced_folder, f'{player_name_clean}_pressure_analysis.png')
+                    visualizer.plot_pressure_analysis(save_path_pressure)
+                    print("✅ Analyse de pression générée")
+
+                    print("🔮 Génération de l'analyse prédictive...")
+                    save_path_prediction = os.path.join(advanced_folder, f'{player_name_clean}_predictive_analysis.png')
+                    visualizer.plot_next_action_prediction(save_path_prediction)
+                    print("✅ Analyse prédictive générée")
+
+                    print(f"\n🎉 Toutes les analyses avancées ont été générées dans: {advanced_folder}")
+                    print("\n📊 RÉSUMÉ DES ANALYSES GÉNÉRÉES:")
+                    print(f"   🧠 Intelligence Spatiale: {save_path_spatial}")
+                    print(f"   ⚡ Analyse de Pression: {save_path_pressure}")
+                    print(f"   🔮 Analyse Prédictive: {save_path_prediction}")
+
+                except Exception as e:
+                    print(f"\n❌ ERREUR lors des analyses avancées (agrégées): {type(e).__name__} - {str(e)}")
+                    traceback.print_exc()
+            
+            
     else:
         # NOUVEAU: Génération d'un seul JSON unifié avec toutes les données
         if isinstance(extractor, WhoScoredDataExtractor):

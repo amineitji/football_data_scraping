@@ -1633,3 +1633,1489 @@ class SeasonVisualizer(PlayerVisualizer):
         plt.tight_layout()
         plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none')
         plt.show()
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+    def plot_positional_intelligence(self, save_path):
+        """Analyse du positionnement tactique et de l'intelligence spatiale - Version améliorée"""
+        events = self.player_data.get('events', [])
+        
+        if not events:
+            print(f"Aucun événement trouvé pour {self.player_data['player_name']}.")
+            return
+    
+        # Séparer les phases de jeu
+        possession_events = []
+        defensive_events = []
+        
+        for event in events:
+            event_type = event['type']['displayName']
+            if event_type in ['Pass', 'TakeOn', 'Goal', 'MissedShots', 'SavedShot']:
+                possession_events.append(event)
+            elif event_type in ['Tackle', 'Interception', 'BallRecovery', 'Clearance']:
+                defensive_events.append(event)
+    
+        # Analyse des zones de prédilection
+        all_positions = [(e['x'], e['y']) for e in events if 'x' in e and 'y' in e]
+        possession_positions = [(e['x'], e['y']) for e in possession_events if 'x' in e and 'y' in e]
+        defensive_positions = [(e['x'], e['y']) for e in defensive_events if 'x' in e and 'y' in e]
+    
+        # Calcul des centres de gravité
+        def calculate_center_of_gravity(positions):
+            if not positions:
+                return None, None
+            avg_x = sum(pos[0] for pos in positions) / len(positions)
+            avg_y = sum(pos[1] for pos in positions) / len(positions)
+            return avg_x, avg_y
+    
+        cog_all = calculate_center_of_gravity(all_positions)
+        cog_possession = calculate_center_of_gravity(possession_positions)
+        cog_defensive = calculate_center_of_gravity(defensive_positions)
+    
+        # Analyse de la mobilité
+        def calculate_mobility_metrics(positions):
+            if len(positions) < 2:
+                return 0, 0, 0
+            
+            x_coords = [pos[0] for pos in positions]
+            y_coords = [pos[1] for pos in positions]
+            
+            x_range = max(x_coords) - min(x_coords)
+            y_range = max(y_coords) - min(y_coords)
+            area_covered = x_range * y_range
+            
+            # Calcul de la variance pour mesurer la dispersion
+            x_var = np.var(x_coords)
+            y_var = np.var(y_coords)
+            mobility_score = np.sqrt(x_var + y_var)
+            
+            return x_range, y_range, mobility_score
+    
+        x_range, y_range, mobility_score = calculate_mobility_metrics(all_positions)
+    
+        # Création de la visualisation
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
+    
+        fig = plt.figure(figsize=(18, 12))
+        ax = fig.add_axes([0, 0, 1, 1])
+        ax.axis('off')
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+    
+        gs = GridSpec(2, 3, height_ratios=[3, 1], width_ratios=[1, 1, 1])
+    
+        # Titre principal avec style amélioré
+        ax.text(0.5, 0.96, f"INTELLIGENCE POSITIONNELLE - {self.player_data['player_name']}", 
+                fontsize=30, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
+    
+        # ===== TERRAIN 1: HEATMAP GLOBALE =====
+        pitch1 = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=3)
+        ax_pitch1 = fig.add_subplot(gs[0, 0])
+        pitch1.draw(ax=ax_pitch1)
+    
+        if all_positions:
+            x_coords = [pos[0] for pos in all_positions]
+            y_coords = [pos[1] for pos in all_positions]
+            
+            bin_statistic = pitch1.bin_statistic(x_coords, y_coords, statistic='count', bins=(15, 20))
+            bin_statistic['statistic'] = gaussian_filter(bin_statistic['statistic'], 1.5)
+            
+            # Heatmap avec dégradé stylisé amélioré
+            heatmap_cmap = mcolors.LinearSegmentedColormap.from_list(
+                "custom_heat", [(0, 0, 0, 0), (0.1, 0.2, 1, 0.4), (0.8, 0.9, 0.1, 0.7), (1, 0.1, 0.1, 1)], N=100)
+            pitch1.heatmap(bin_statistic, ax=ax_pitch1, cmap=heatmap_cmap)
+    
+            # Centre de gravité global avec style VERT et plus grand
+            if cog_all[0] is not None:
+                pitch1.scatter(cog_all[0], cog_all[1], s=1000, marker='*', 
+                            color='#00FF00', edgecolor='white', linewidth=6, ax=ax_pitch1)
+    
+        # Légende terrain 1 avec couleurs en blanc
+        legend_elements1 = [
+            plt.Line2D([0], [0], marker='*', color='w', label='Centre de Gravité Global', 
+                    markerfacecolor='#00FF00', markersize=25, markeredgecolor='white', markeredgewidth=3),
+            plt.Rectangle((0, 0), 1, 1, facecolor='red', alpha=0.9, label='Zones d\'Activité Maximale'),
+            plt.Rectangle((0, 0), 1, 1, facecolor='yellow', alpha=0.7, label='Zones d\'Activité Élevée'),
+            plt.Rectangle((0, 0), 1, 1, facecolor='blue', alpha=0.4, label='Zones d\'Activité Modérée')
+        ]
+        legend1 = ax_pitch1.legend(handles=legend_elements1, loc='upper right', bbox_to_anchor=(1.3, 1), 
+                        fontsize=12, frameon=True, facecolor='black', edgecolor='white')
+        # Texte des légendes en blanc
+        for text in legend1.get_texts():
+            text.set_color('white')
+    
+        ax_pitch1.set_title("Heatmap Globale", fontsize=22, color='white', fontweight='bold', pad=20)
+    
+        # ===== TERRAIN 2: PHASES DE JEU =====
+        pitch2 = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=3)
+        ax_pitch2 = fig.add_subplot(gs[0, 1])
+        pitch2.draw(ax=ax_pitch2)
+    
+        # Positions en possession avec couleurs distinctes
+        if possession_positions:
+            x_poss = [pos[0] for pos in possession_positions]
+            y_poss = [pos[1] for pos in possession_positions]
+            pitch2.scatter(x_poss, y_poss, s=150, alpha=0.8, color='#00BFFF', 
+                        edgecolor='white', linewidth=2.5, ax=ax_pitch2)
+            
+            if cog_possession[0] is not None:
+                pitch2.scatter(cog_possession[0], cog_possession[1], s=800, marker='o', 
+                            color='#00BFFF', edgecolor='white', linewidth=5, ax=ax_pitch2)
+    
+        # Positions défensives avec couleurs distinctes
+        if defensive_positions:
+            x_def = [pos[0] for pos in defensive_positions]
+            y_def = [pos[1] for pos in defensive_positions]
+            pitch2.scatter(x_def, y_def, s=150, alpha=0.8, color='#FF1493', 
+                        edgecolor='white', linewidth=2.5, ax=ax_pitch2)
+            
+            if cog_defensive[0] is not None:
+                pitch2.scatter(cog_defensive[0], cog_defensive[1], s=800, marker='s', 
+                            color='#FF1493', edgecolor='white', linewidth=5, ax=ax_pitch2)
+    
+        # Légende terrain 2 avec couleurs distinctes
+        legend_elements2 = [
+            plt.Line2D([0], [0], marker='o', color='w', label='Actions Offensives', 
+                    markerfacecolor='#00BFFF', markersize=16, markeredgecolor='white', markeredgewidth=2),
+            plt.Line2D([0], [0], marker='o', color='w', label='Centre Gravité Offensif', 
+                    markerfacecolor='#00BFFF', markersize=20, markeredgecolor='white', markeredgewidth=3),
+            plt.Line2D([0], [0], marker='o', color='w', label='Actions Défensives', 
+                    markerfacecolor='#FF1493', markersize=16, markeredgecolor='white', markeredgewidth=2),
+            plt.Line2D([0], [0], marker='s', color='w', label='Centre Gravité Défensif', 
+                    markerfacecolor='#FF1493', markersize=18, markeredgecolor='white', markeredgewidth=3)
+        ]
+        legend2 = ax_pitch2.legend(handles=legend_elements2, loc='upper right', bbox_to_anchor=(1.35, 1), 
+                        fontsize=12, frameon=True, facecolor='black', edgecolor='white')
+        # Texte des légendes en blanc
+        for text in legend2.get_texts():
+            text.set_color('white')
+    
+        ax_pitch2.set_title("Phases de Jeu", fontsize=22, color='white', fontweight='bold', pad=20)
+    
+        # ===== TERRAIN 3: ZONES TACTIQUES (CORRIGÉ POUR VERTICAL PITCH) =====
+        pitch3 = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=3)
+        ax_pitch3 = fig.add_subplot(gs[0, 2])
+        pitch3.draw(ax=ax_pitch3)
+    
+        # Compter les actions par zone tactique - CORRIGÉ pour vertical pitch avec rotation 90°
+        zone_counts = {}
+        zone_colors = {
+            'Zone de finition': '#FF0080',      # Rose vif
+            'Milieu offensif': '#00FF80',       # Vert lime
+            'Milieu défensif': '#FFD700',       # Or
+            'Défense centrale': '#0080FF',      # Bleu vif
+            'Couloirs': '#FF8000',              # Orange
+            'Défense latérale': '#8000FF'       # Violet
+        }
+    
+        for event in events:
+            if 'x' not in event or 'y' not in event:
+                continue
+            x, y = event['x'], event['y']
+            
+            # Classification des zones CORRIGÉE avec rotation 90° - Zone finition à DROITE
+            if 80 <= x <= 100 and 30 <= y <= 70:  # Zone de finition à DROITE
+                zone = 'Zone de finition'
+            elif 60 <= x < 80 and 30 <= y <= 70:  # Milieu offensif
+                zone = 'Milieu offensif'
+            elif 40 <= x < 60 and 30 <= y <= 70:  # Milieu défensif
+                zone = 'Milieu défensif'
+            elif 0 <= x < 40 and 30 <= y <= 70:   # Défense centrale à GAUCHE
+                zone = 'Défense centrale'
+            elif x >= 40 and (0 <= y < 30 or 70 < y <= 100):  # Couloirs haut et bas
+                zone = 'Couloirs'
+            else:
+                zone = 'Défense latérale'
+                
+            zone_counts[zone] = zone_counts.get(zone, 0) + 1
+    
+        # Affichage avec code couleur par zone - ROTATION 90°
+        for event in events:
+            if 'x' not in event or 'y' not in event:
+                continue
+            x, y = event['x'], event['y']
+            
+            # Déterminer la zone CORRIGÉE avec rotation 90°
+            if 80 <= x <= 100 and 30 <= y <= 70:
+                color = zone_colors['Zone de finition']
+            elif 60 <= x < 80 and 30 <= y <= 70:
+                color = zone_colors['Milieu offensif']
+            elif 40 <= x < 60 and 30 <= y <= 70:
+                color = zone_colors['Milieu défensif']
+            elif 0 <= x < 40 and 30 <= y <= 70:
+                color = zone_colors['Défense centrale']
+            elif x >= 40 and (0 <= y < 30 or 70 < y <= 100):
+                color = zone_colors['Couloirs']
+            else:
+                color = zone_colors['Défense latérale']
+            
+            pitch3.scatter(x, y, s=120, alpha=0.8, color=color, 
+                        edgecolor='white', linewidth=1.5, ax=ax_pitch3)
+    
+        # Légende terrain 3 avec couleurs très variées
+        legend_elements3 = [
+            plt.Line2D([0], [0], marker='o', color='w', label='Zone de Finition', 
+                    markerfacecolor='#FF0080', markersize=14),
+            plt.Line2D([0], [0], marker='o', color='w', label='Milieu Offensif', 
+                    markerfacecolor='#00FF80', markersize=14),
+            plt.Line2D([0], [0], marker='o', color='w', label='Milieu Défensif', 
+                    markerfacecolor='#FFD700', markersize=14),
+            plt.Line2D([0], [0], marker='o', color='w', label='Défense Centrale', 
+                    markerfacecolor='#0080FF', markersize=14),
+            plt.Line2D([0], [0], marker='o', color='w', label='Couloirs', 
+                    markerfacecolor='#FF8000', markersize=14),
+            plt.Line2D([0], [0], marker='o', color='w', label='Défense Latérale', 
+                    markerfacecolor='#8000FF', markersize=14)
+        ]
+        legend3 = ax_pitch3.legend(handles=legend_elements3, loc='upper right', bbox_to_anchor=(1.4, 1), 
+                        fontsize=11, frameon=True, facecolor='black', edgecolor='white', ncol=1)
+        # Texte des légendes en blanc
+        for text in legend3.get_texts():
+            text.set_color('white')
+    
+        ax_pitch3.set_title("Répartition Tactique", fontsize=22, color='white', fontweight='bold', pad=20)
+    
+        # ===== MÉTRIQUES TEXTUELLES STYLISÉES =====
+        ax_metrics = fig.add_subplot(gs[1, :])
+        ax_metrics.axis('off')
+    
+        # Calculs des métriques avancées
+        total_events = len(events)
+        
+        # Zone dominante
+        if zone_counts:
+            dominant_zone = max(zone_counts.items(), key=lambda x: x[1])
+            dominant_percentage = (dominant_zone[1] / total_events) * 100
+        else:
+            dominant_zone = ("Aucune", 0)
+            dominant_percentage = 0
+    
+        # Analyse du profil tactique
+        if zone_counts:
+            defensive_actions = zone_counts.get('Défense centrale', 0) + zone_counts.get('Défense latérale', 0)
+            midfield_actions = zone_counts.get('Milieu défensif', 0) + zone_counts.get('Milieu offensif', 0)
+            attacking_actions = zone_counts.get('Zone de finition', 0) + zone_counts.get('Couloirs', 0)
+            
+            defensive_pct = (defensive_actions / total_events) * 100
+            midfield_pct = (midfield_actions / total_events) * 100
+            attacking_pct = (attacking_actions / total_events) * 100
+        else:
+            defensive_pct = midfield_pct = attacking_pct = 0
+    
+        # Évaluation du profil
+        if attacking_pct > 40:
+            profil_tactique = "ATTAQUANT PUR"
+            profil_color = '#FF0080'
+        elif defensive_pct > 40:
+            profil_tactique = "DÉFENSEUR SOLIDE"
+            profil_color = '#0080FF'
+        else:
+            profil_tactique = "JOUEUR COMPLET"
+            profil_color = '#00FF80'
+    
+        # Métriques de mobilité
+        if mobility_score > 25:
+            mobilite_evaluation = "ULTRA MOBILE"
+            mobilite_color = '#FF0080'
+        elif mobility_score > 15:    
+            mobilite_evaluation = "MOBILE"
+            mobilite_color = '#FFD700'
+        else:
+            mobilite_evaluation = "POSITIONNEL"
+            mobilite_color = '#0080FF'
+    
+        # Création des boîtes stylisées pour le texte
+        def create_text_box(ax, x, y, width, height, title, content, title_color, bg_color='black'):
+            # Rectangle de fond
+            rect = plt.Rectangle((x, y), width, height, facecolor=bg_color, alpha=0.8, 
+                            edgecolor='white', linewidth=2, transform=ax.transAxes)
+            ax.add_patch(rect)
+            
+            # Titre coloré
+            ax.text(x + width/2, y + height - 0.05, title, fontsize=18, color=title_color, 
+                fontweight='bold', ha='center', va='top', transform=ax.transAxes)
+            
+            # Contenu
+            ax.text(x + width/2, y + height/2 - 0.02, content, fontsize=16, color='white', 
+                fontweight='bold', ha='center', va='center', transform=ax.transAxes)
+    
+        # Boîte 1: Positionnement
+        content1 = f"""Centre de Gravité Global:
+    X: {cog_all[0]:.1f}m  |  Y: {cog_all[1]:.1f}m
+    
+    Couverture Terrain:
+    {x_range:.1f}m × {y_range:.1f}m
+    
+    {mobilite_evaluation}
+    Score: {mobility_score:.1f}"""
+    
+        create_text_box(ax_metrics, 0.02, 0.1, 0.28, 0.8, "POSITIONNEMENT", content1, '#00FF80')
+    
+        # Boîte 2: Profil tactique
+        content2 = f"""{profil_tactique}
+    
+    Défense: {defensive_pct:.0f}%
+    Milieu: {midfield_pct:.0f}%
+    Attaque: {attacking_pct:.0f}%
+    
+    Zone Dominante:
+    {dominant_zone[0]} ({dominant_percentage:.0f}%)"""
+    
+        create_text_box(ax_metrics, 0.36, 0.1, 0.28, 0.8, "PROFIL TACTIQUE", content2, profil_color)
+    
+        # Boîte 3: Intelligence spatiale
+        content3 = f"""Actions Totales Analysées:
+    {total_events} événements
+    
+    Répartition des Actions:
+    Possession: {len(possession_events)}
+    Défense: {len(defensive_events)}
+    
+    Intelligence Spatiale:
+    Score Global: {mobility_score:.1f}/50"""
+    
+        create_text_box(ax_metrics, 0.7, 0.1, 0.28, 0.8, "INTELLIGENCE", content3, '#FFD700')
+    
+        # Tag et source stylisé
+        ax.text(0.5, 0.02, "@TarbouchData - Intelligence Positionnelle Avancée", 
+                fontsize=22, color='white', fontweight='bold', ha='center', 
+                transform=ax.transAxes, alpha=0.9,
+                bbox=dict(boxstyle='round,pad=0.5', facecolor='black', alpha=0.8, edgecolor='white'))
+    
+        plt.tight_layout()
+        plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none', dpi=300)
+        plt.show()
+    
+    def plot_pressure_analysis(self, save_path):
+        """Analyse de la gestion de la pression adverse et intensité - Version améliorée"""
+        events = self.player_data.get('events', [])
+        
+        if not events:
+            print(f"Aucun événement trouvé pour {self.player_data['player_name']}.")
+            return
+    
+        # Analyser la pression temporelle (actions rapprochées dans le temps)
+        pressure_events = []
+        normal_events = []
+        
+        for i, event in enumerate(events):
+            # Vérifier s'il y a une action dans les 3 secondes précédentes
+            under_pressure = False
+            current_time = event['minute'] * 60 + event.get('second', 0)
+            
+            # Chercher dans les événements précédents
+            for j in range(max(0, i-5), i):
+                prev_time = events[j]['minute'] * 60 + events[j].get('second', 0)
+                if current_time - prev_time <= 3:
+                    under_pressure = True
+                    break
+            
+            if under_pressure:
+                pressure_events.append(event)
+            else:
+                normal_events.append(event)
+    
+        # Analyser l'efficacité sous pression
+        def analyze_efficiency(event_list):
+            if not event_list:
+                return 0, 0, 0
+            
+            total = len(event_list)
+            successful = len([e for e in event_list if e.get('outcomeType', {}).get('displayName') == 'Successful'])
+            failed = total - successful
+            efficiency = (successful / total * 100) if total > 0 else 0
+            
+            return total, successful, efficiency
+    
+        pressure_total, pressure_success, pressure_efficiency = analyze_efficiency(pressure_events)
+        normal_total, normal_success, normal_efficiency = analyze_efficiency(normal_events)
+    
+        # Analyser les types d'actions sous pression
+        pressure_types = {}
+        for event in pressure_events:
+            event_type = event['type']['displayName']
+            pressure_types[event_type] = pressure_types.get(event_type, 0) + 1
+    
+        # Analyse spatiale de la pression
+        pressure_positions = [(e['x'], e['y']) for e in pressure_events if 'x' in e and 'y' in e]
+        normal_positions = [(e['x'], e['y']) for e in normal_events if 'x' in e and 'y' in e]
+    
+        # Création de la visualisation améliorée
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
+    
+        fig = plt.figure(figsize=(18, 12))
+        ax = fig.add_axes([0, 0, 1, 1])
+        ax.axis('off')
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+    
+        gs = GridSpec(2, 3, height_ratios=[3, 1], width_ratios=[1, 1, 1])
+    
+        # Titre principal stylisé
+        ax.text(0.5, 0.96, f"ANALYSE DE PRESSION - {self.player_data['player_name']}", 
+                fontsize=30, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
+    
+        # ===== TERRAIN 1: ACTIONS SOUS PRESSION =====
+        pitch1 = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=3)
+        ax_pitch1 = fig.add_subplot(gs[0, 0])
+        pitch1.draw(ax=ax_pitch1)
+    
+        # Actions sous pression avec couleurs très distinctes
+        for event in pressure_events:
+            if 'x' not in event or 'y' not in event:
+                continue
+            x, y = event['x'], event['y']
+            is_successful = event.get('outcomeType', {}).get('displayName') == 'Successful'
+            
+            color = '#00FF00' if is_successful else '#FF0000'  # Vert vif vs Rouge vif
+            size = 180 if is_successful else 120
+            alpha = 0.9 if is_successful else 0.7
+            
+            pitch1.scatter(x, y, s=size, alpha=alpha, color=color, 
+                        edgecolor='white', linewidth=3, ax=ax_pitch1)
+    
+        # Légende terrain 1 avec couleurs distinctes
+        legend_elements1 = [
+            plt.Line2D([0], [0], marker='o', color='w', label='Action Réussie sous Pression', 
+                    markerfacecolor='#00FF00', markersize=20, markeredgecolor='white', markeredgewidth=2),
+            plt.Line2D([0], [0], marker='o', color='w', label='Action Ratée sous Pression', 
+                    markerfacecolor='#FF0000', markersize=18, markeredgecolor='white', markeredgewidth=2)
+        ]
+        legend1 = ax_pitch1.legend(handles=legend_elements1, loc='upper right', bbox_to_anchor=(1.35, 1), 
+                        fontsize=12, frameon=True, facecolor='black', edgecolor='white')
+        for text in legend1.get_texts():
+            text.set_color('white')
+    
+        ax_pitch1.set_title(f"Sous Pression ({len(pressure_events)} actions)", 
+                        fontsize=22, color='#FF6B35', fontweight='bold', pad=20)
+    
+        # ===== TERRAIN 2: ACTIONS NORMALES =====
+        pitch2 = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=3)
+        ax_pitch2 = fig.add_subplot(gs[0, 1])
+        pitch2.draw(ax=ax_pitch2)
+    
+        # Actions normales avec couleurs très distinctes
+        for event in normal_events:
+            if 'x' not in event or 'y' not in event:
+                continue
+            x, y = event['x'], event['y']
+            is_successful = event.get('outcomeType', {}).get('displayName') == 'Successful'
+            
+            color = '#00BFFF' if is_successful else '#FF8C00'  # Bleu ciel vs Orange
+            size = 130 if is_successful else 90
+            alpha = 0.8 if is_successful else 0.6
+            
+            pitch2.scatter(x, y, s=size, alpha=alpha, color=color, 
+                        edgecolor='white', linewidth=2.2, ax=ax_pitch2)
+    
+        # Légende terrain 2 avec couleurs distinctes
+        legend_elements2 = [
+            plt.Line2D([0], [0], marker='o', color='w', label='Action Réussie Normale', 
+                    markerfacecolor='#00BFFF', markersize=18, markeredgecolor='white', markeredgewidth=2),
+            plt.Line2D([0], [0], marker='o', color='w', label='Action Ratée Normale', 
+                    markerfacecolor='#FF8C00', markersize=16, markeredgecolor='white', markeredgewidth=2)
+        ]
+        legend2 = ax_pitch2.legend(handles=legend_elements2, loc='upper right', bbox_to_anchor=(1.32, 1), 
+                        fontsize=12, frameon=True, facecolor='black', edgecolor='white')
+        for text in legend2.get_texts():
+            text.set_color('white')
+    
+        ax_pitch2.set_title(f"Conditions Normales ({len(normal_events)} actions)", 
+                        fontsize=22, color='#32CD32', fontweight='bold', pad=20)
+    
+        # ===== TERRAIN 3: HEATMAP COMPARATIVE =====
+        pitch3 = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=3)
+        ax_pitch3 = fig.add_subplot(gs[0, 2])
+        pitch3.draw(ax=ax_pitch3)
+    
+        # Heatmap des zones de haute pression
+        if pressure_positions:
+            x_pressure = [pos[0] for pos in pressure_positions]
+            y_pressure = [pos[1] for pos in pressure_positions]
+            
+            bin_stat_pressure = pitch3.bin_statistic(x_pressure, y_pressure, 
+                                                    statistic='count', bins=(12, 16))
+            bin_stat_pressure['statistic'] = gaussian_filter(bin_stat_pressure['statistic'], 1.2)
+            
+            # Heatmap stylisée pour la pression avec couleurs plus vives
+            pressure_cmap = mcolors.LinearSegmentedColormap.from_list(
+                "pressure_heat", [(0, 0, 0, 0), (1, 1, 0, 0.6), (1, 0.3, 0, 0.8), (1, 0, 0, 1)], N=100)
+            pitch3.heatmap(bin_stat_pressure, ax=ax_pitch3, cmap=pressure_cmap)
+    
+        # Légende terrain 3 avec couleurs distinctes
+        legend_elements3 = [
+            plt.Rectangle((0, 0), 1, 1, facecolor='#FF0000', alpha=0.9, label='Pression Maximale'),
+            plt.Rectangle((0, 0), 1, 1, facecolor='#FF6B00', alpha=0.8, label='Pression Élevée'),
+            plt.Rectangle((0, 0), 1, 1, facecolor='#FFFF00', alpha=0.6, label='Pression Modérée')
+        ]
+        legend3 = ax_pitch3.legend(handles=legend_elements3, loc='upper right', bbox_to_anchor=(1.3, 1), 
+                        fontsize=12, frameon=True, facecolor='black', edgecolor='white')
+        for text in legend3.get_texts():
+            text.set_color('white')
+    
+        ax_pitch3.set_title("Zones de Haute Pression", fontsize=22, color='#FFD700', fontweight='bold', pad=20)
+    
+        # ===== MÉTRIQUES TEXTUELLES STYLISÉES =====
+        ax_metrics = fig.add_subplot(gs[1, :])
+        ax_metrics.axis('off')
+    
+        # Calculs des métriques avancées
+        pressure_ratio = (len(pressure_events) / len(events) * 100) if events else 0
+        efficiency_diff = pressure_efficiency - normal_efficiency
+    
+        # Évaluation de la réaction à la pression avec emojis
+        if efficiency_diff < -10:
+            reaction_grade = "CRITIQUE"
+            reaction_color = '#FF0000'
+        elif efficiency_diff < -5:
+            reaction_grade = "DIFFICILE"
+            reaction_color = '#FF6B00'
+        elif efficiency_diff < 5:
+            reaction_grade = "CORRECT"
+            reaction_color = '#FFD700'
+        else:
+            reaction_grade = "EXCEPTIONNEL"
+            reaction_color = '#00FF00'
+    
+        # Zones de pression maximale
+        pressure_zones = {'Défense': 0, 'Milieu': 0, 'Attaque': 0}
+        for x, y in pressure_positions:
+            if y < 33:
+                pressure_zones['Défense'] += 1
+            elif y < 66:
+                pressure_zones['Milieu'] += 1
+            else:
+                pressure_zones['Attaque'] += 1
+    
+        max_pressure_zone = max(pressure_zones.items(), key=lambda x: x[1]) if pressure_zones else ("Aucune", 0)
+    
+        # Évaluation du niveau de pression
+        if pressure_ratio > 60:
+            pressure_level = "TRÈS SOLLICITÉ"
+            pressure_color = '#FF0000'
+        elif pressure_ratio > 40:
+            pressure_level = "SOLLICITÉ"
+            pressure_color = '#FF6B00'
+        else:
+            pressure_level = "PEU PRESSÉ"
+            pressure_color = '#00FF00'
+    
+        # Création des boîtes stylisées pour le texte
+        def create_pressure_box(ax, x, y, width, height, title, content, title_color, bg_color='black'):
+            # Rectangle de fond avec bordure colorée
+            rect = plt.Rectangle((x, y), width, height, facecolor=bg_color, alpha=0.85, 
+                            edgecolor=title_color, linewidth=3, transform=ax.transAxes)
+            ax.add_patch(rect)
+            
+            # Titre coloré avec fond
+            title_rect = plt.Rectangle((x, y + height - 0.15), width, 0.15, 
+                                    facecolor=title_color, alpha=0.3, transform=ax.transAxes)
+            ax.add_patch(title_rect)
+            
+            ax.text(x + width/2, y + height - 0.075, title, fontsize=18, color=title_color, 
+                fontweight='bold', ha='center', va='center', transform=ax.transAxes)
+            
+            # Contenu
+            ax.text(x + width/2, y + height/2 - 0.05, content, fontsize=16, color='white', 
+                fontweight='bold', ha='center', va='center', transform=ax.transAxes)
+    
+        # Boîte 1: Pression globale
+        content1 = f"""{pressure_level}
+    {pressure_ratio:.0f}% des actions
+    
+    Efficacité Comparative:
+    Sous pression: {pressure_efficiency:.0f}%
+    Conditions normales: {normal_efficiency:.0f}%
+    
+    {reaction_grade}"""
+    
+        create_pressure_box(ax_metrics, 0.02, 0.1, 0.3, 0.8, "NIVEAU DE PRESSION", content1, pressure_color)
+    
+        # Boîte 2: Comportement
+        content2 = f"""Volume d'Actions Analysées:
+    Sous pression: {pressure_total}
+    Normales: {normal_total}
+    
+    Zone de Plus Forte Pression:
+    {max_pressure_zone[0]}
+    {max_pressure_zone[1]} actions
+    
+    Ratio Actions: {pressure_total}/{normal_total}"""
+    
+        create_pressure_box(ax_metrics, 0.35, 0.1, 0.3, 0.8, "COMPORTEMENT", content2, '#00BFFF')
+    
+        # Boîte 3: Performance
+        adaptability_color = '#00FF00' if efficiency_diff > 0 else '#FF6B00' if efficiency_diff > -5 else '#FF0000'
+        adaptability_text = 'ÉLEVÉE' if efficiency_diff > 0 else 'MOYENNE' if efficiency_diff > -5 else 'FAIBLE'
+    
+        content3 = f"""Différence d'Efficacité:
+    {efficiency_diff:+.0f} points
+    
+    Actions Réussies:
+    Sous pression: {pressure_success}
+    Normales: {normal_success}
+    
+    Adaptabilité: {adaptability_text}
+    Mental: {'Fort' if efficiency_diff > -5 else 'Fragile'}"""
+    
+        create_pressure_box(ax_metrics, 0.68, 0.1, 0.3, 0.8, "PERFORMANCE", content3, adaptability_color)
+    
+        # Tag et source stylisé
+        ax.text(0.5, 0.02, "@TarbouchData - Analyse de Pression Avancée", 
+                fontsize=22, color='white', fontweight='bold', ha='center', 
+                transform=ax.transAxes, alpha=0.9,
+                bbox=dict(boxstyle='round,pad=0.5', facecolor='black', alpha=0.8, edgecolor='#FF6B35'))
+    
+        plt.tight_layout()
+        plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none', dpi=300)
+        plt.show()
+    
+    def plot_next_action_prediction(self, save_path):
+        """Analyse des patterns et prévisibilité du joueur - Version ultra-améliorée"""
+        events = self.player_data.get('events', [])
+        
+        if len(events) < 10:
+            print(f"Pas assez d'événements pour l'analyse prédictive de {self.player_data['player_name']}.")
+            return
+    
+        # Analyser les préférences directionnelles
+        directional_preferences = {'forward': 0, 'lateral': 0, 'backward': 0}
+        pass_events = [e for e in events if e['type']['displayName'] == 'Pass']
+        
+        for pass_event in pass_events:
+            if 'endX' in pass_event and 'endY' in pass_event:
+                start_y = pass_event['y']
+                end_y = pass_event['endY']
+                
+                if end_y > start_y + 5:
+                    directional_preferences['forward'] += 1
+                elif end_y < start_y - 5:
+                    directional_preferences['backward'] += 1
+                else:
+                    directional_preferences['lateral'] += 1
+    
+        # Analyser les zones de confort
+        from collections import defaultdict
+        zone_actions = defaultdict(list)
+        for event in events:
+            if 'x' in event and 'y' in event:
+                x, y = event['x'], event['y']
+                
+                # Définir la zone
+                if y < 33:
+                    zone = 'Défensive'
+                elif y < 66:
+                    zone = 'Milieu'
+                else:
+                    zone = 'Offensive'
+                
+                zone_actions[zone].append(event)
+    
+        # Calculer l'efficacité par zone
+        zone_efficiency = {}
+        for zone, zone_events in zone_actions.items():
+            if zone_events:
+                successful = len([e for e in zone_events if e.get('outcomeType', {}).get('displayName') == 'Successful'])
+                zone_efficiency[zone] = (successful / len(zone_events)) * 100
+    
+        # Analyser les séquences d'actions pour la prévisibilité
+        action_sequences = []
+        for i in range(len(events) - 1):
+            current_action = events[i]['type']['displayName']
+            next_action = events[i + 1]['type']['displayName']
+            action_sequences.append((current_action, next_action))
+    
+        # Calculer la prévisibilité
+        from collections import defaultdict, Counter
+        transition_matrix = defaultdict(Counter)
+        
+        for current, next_action in action_sequences:
+            transition_matrix[current][next_action] += 1
+    
+        predictability_score = 0
+        for current_action, next_actions in transition_matrix.items():
+            if next_actions:
+                max_prob = max(next_actions.values()) / sum(next_actions.values())
+                predictability_score += max_prob
+        
+        predictability_score = (predictability_score / len(transition_matrix)) * 100 if transition_matrix else 0
+    
+        # Créer la visualisation ultra-stylisée
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
+    
+        fig = plt.figure(figsize=(16, 12))
+        ax = fig.add_axes([0, 0, 1, 1])
+        ax.axis('off')
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+    
+        gs = GridSpec(2, 3, height_ratios=[3, 1], width_ratios=[1.5, 1, 1.5])
+    
+        # Titre principal ultra-stylisé
+        ax.text(0.5, 0.96, f"ANALYSE PRÉDICTIVE - {self.player_data['player_name']}", 
+                fontsize=28, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
+    
+        # ===== TERRAIN: ZONES DE CONFORT =====
+        pitch = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=3)
+        ax_pitch = fig.add_subplot(gs[0, 0])
+        pitch.draw(ax=ax_pitch)
+    
+        # Afficher les actions avec code couleur selon l'efficacité de la zone
+        for event in events:
+            if 'x' not in event or 'y' not in event:
+                continue
+            
+            x, y = event['x'], event['y']
+            
+            # Déterminer la zone et sa couleur
+            if y < 33:
+                zone_eff = zone_efficiency.get('Défensive', 50)
+                zone_name = 'Défensive'
+            elif y < 66:
+                zone_eff = zone_efficiency.get('Milieu', 50)
+                zone_name = 'Milieu'
+            else:
+                zone_eff = zone_efficiency.get('Offensive', 50)
+                zone_name = 'Offensive'
+            
+            # Couleurs très distinctes basées sur l'efficacité
+            if zone_eff > 80:
+                color = '#00FF00'  # Vert vif - zone de confort maximale
+            elif zone_eff > 60:
+                color = '#00BFFF'  # Bleu ciel - bonne zone
+            elif zone_eff > 40:
+                color = '#FFD700'  # Or - zone moyenne
+            else:
+                color = '#FF4500'  # Rouge orangé - zone de défi
+            
+            pitch.scatter(x, y, s=100, alpha=0.8, color=color, 
+                        edgecolor='white', linewidth=1.5, ax=ax_pitch)
+    
+        # Ajouter les labels des zones avec leur efficacité - STYLE AMÉLIORÉ
+        zone_positions = {'Défensive': 16.5, 'Milieu': 49.5, 'Offensive': 82.5}
+        for zone, efficiency in zone_efficiency.items():
+            y_pos = zone_positions[zone]
+            
+            if efficiency > 80:
+                bg_color = '#00FF00'
+                emoji = ''
+            elif efficiency > 60:
+                bg_color = '#00BFFF'
+                emoji = ''
+            elif efficiency > 40:
+                bg_color = '#FFD700'
+                emoji = ''
+            else:
+                bg_color = '#FF4500'
+                emoji = ''
+            
+            ax_pitch.text(50, y_pos, f'{emoji} {zone}\n{efficiency:.0f}%', 
+                        ha='center', va='center', fontsize=14, color='white', 
+                        fontweight='bold', bbox=dict(boxstyle='round,pad=0.6', 
+                        facecolor=bg_color, alpha=0.9, edgecolor='white', linewidth=2))
+    
+        # Légende terrain zones de confort avec emojis
+        legend_elements_zones = [
+            plt.Line2D([0], [0], marker='o', color='w', label='Zone Confort Max (>80%)', 
+                    markerfacecolor='#00FF00', markersize=18),
+            plt.Line2D([0], [0], marker='o', color='w', label='Bonne Zone (60-80%)', 
+                    markerfacecolor='#00BFFF', markersize=18),
+            plt.Line2D([0], [0], marker='o', color='w', label='Zone Moyenne (40-60%)', 
+                    markerfacecolor='#FFD700', markersize=18),
+            plt.Line2D([0], [0], marker='o', color='w', label='Zone Défi (<40%)', 
+                    markerfacecolor='#FF4500', markersize=18)
+        ]
+        legend_zones = ax_pitch.legend(handles=legend_elements_zones, loc='upper right', bbox_to_anchor=(1.32, 1), 
+                        fontsize=11, frameon=True, facecolor='black', edgecolor='white')
+        for text in legend_zones.get_texts():
+            text.set_color('white')
+    
+        ax_pitch.set_title('Zones de Confort', fontsize=22, color='#00FF80', fontweight='bold', pad=20)
+    
+        # ===== GRAPHIQUE DIRECTIONNEL DES PASSES =====
+        ax_directions = fig.add_subplot(gs[0, 1])
+        ax_directions.set_facecolor('none')
+        
+        # Graphique en secteurs ultra-stylisé pour les préférences directionnelles
+        total_passes = sum(directional_preferences.values())
+        if total_passes > 0:
+            labels = ['Progression', 'Latérales', 'Conservation']
+            sizes = [directional_preferences['forward'], 
+                    directional_preferences['lateral'], 
+                    directional_preferences['backward']]
+            colors = ['#00FF80', '#FFD700', '#FF6B35']  # Couleurs très distinctes
+            explode = (0.08, 0.05, 0.05)  # Mettre en avant la progression
+            
+            # Créer le graphique en secteurs avec style ultra-amélioré
+            wedges, texts, autotexts = ax_directions.pie(sizes, labels=labels, colors=colors, 
+                                                        autopct='%1.1f%%', startangle=90, explode=explode,
+                                                        textprops={'color': 'white', 'fontsize': 15, 'fontweight': 'bold'},
+                                                        wedgeprops=dict(edgecolor='white', linewidth=4))
+            
+            # Style ultra-amélioré des pourcentages
+            for autotext in autotexts:
+                autotext.set_color('white')
+                autotext.set_fontweight('bold')
+                autotext.set_fontsize(14)
+                autotext.set_bbox(dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.7))
+            
+            # Style des labels
+            for text in texts:
+                text.set_fontsize(13)
+                text.set_fontweight('bold')
+            
+            ax_directions.set_title('Préférences Directionnelles', 
+                                fontsize=22, color='#FFD700', fontweight='bold', pad=20)
+    
+        # ===== ANALYSE DES PATTERNS DE MOUVEMENT AMÉLIORÉE =====
+        ax_patterns = fig.add_subplot(gs[0, 2])
+        ax_patterns.set_facecolor('none')
+        
+        # Analyse ultra-développée des préférences tactiques avec nouveaux termes
+        pass_distances = {'courtes': 0, 'moyennes': 0, 'longues': 0}
+        pass_sides = {'gauche': 0, 'centre': 0, 'droite': 0}
+        pass_directions_detailed = {'progression': 0, 'conservation': 0, 'ouverture': 0}
+        
+        for pass_event in pass_events:
+            if 'endX' in pass_event and 'endY' in pass_event:
+                start_x, start_y = pass_event['x'], pass_event['y']
+                end_x, end_y = pass_event['endX'], pass_event['endY']
+                
+                # Distance euclidienne
+                distance = np.sqrt((end_x - start_x)**2 + (end_y - start_y)**2)
+                
+                # Classification des distances
+                if distance < 15:
+                    pass_distances['courtes'] += 1
+                elif distance < 35:
+                    pass_distances['moyennes'] += 1
+                else:
+                    pass_distances['longues'] += 1
+                
+                # Analyse latérale (côtés du terrain)
+                if start_x < 33:
+                    pass_sides['gauche'] += 1
+                elif start_x > 67:
+                    pass_sides['droite'] += 1
+                else:
+                    pass_sides['centre'] += 1
+                
+                # Analyse tactique avancée
+                y_diff = end_y - start_y
+                x_diff = abs(end_x - start_x)
+                
+                if y_diff > 10:
+                    pass_directions_detailed['progression'] += 1
+                elif y_diff < -5:
+                    pass_directions_detailed['conservation'] += 1
+                elif x_diff > 20:
+                    pass_directions_detailed['ouverture'] += 1
+    
+        # Analyse des mouvements préférentiels avec nouveaux termes
+        movement_patterns = {
+            'centre_vers_aile': 0,
+            'aile_vers_centre': 0,
+            'changement_aile': 0,
+            'percee_axiale': 0  # Remplace "penetration"
+        }
+        
+        for pass_event in pass_events:
+            if 'endX' in pass_event and 'endY' in pass_event:
+                start_x, start_y = pass_event['x'], pass_event['y']
+                end_x, end_y = pass_event['endX'], pass_event['endY']
+                
+                # Du centre vers l'aile
+                if 33 <= start_x <= 67 and (end_x < 25 or end_x > 75):
+                    movement_patterns['centre_vers_aile'] += 1
+                
+                # De l'aile vers le centre
+                elif (start_x < 25 or start_x > 75) and 33 <= end_x <= 67:
+                    movement_patterns['aile_vers_centre'] += 1
+                
+                # Changement d'aile
+                elif (start_x < 33 and end_x > 67) or (start_x > 67 and end_x < 33):
+                    movement_patterns['changement_aile'] += 1
+                
+                # Percée dans l'axe (nouveau terme)
+                elif abs(start_x - end_x) < 15 and end_y > start_y + 15:
+                    movement_patterns['percee_axiale'] += 1
+    
+        # Graphique des patterns avec nouveaux termes et couleurs distinctes
+        pattern_labels = ['Centre→Aile', 'Aile→Centre', 'Chang. Aile', 'Percée Axiale']
+        pattern_values = list(movement_patterns.values())
+        pattern_colors = ['#FF6B35', '#00FF80', '#FFD700', '#FF0080']  # Couleurs très distinctes
+        
+        bars = ax_patterns.bar(pattern_labels, pattern_values, color=pattern_colors, 
+                            alpha=0.9, edgecolor='white', linewidth=3)
+        
+        # Ajouter les valeurs et pourcentages avec style amélioré
+        total_patterns = sum(pattern_values) if sum(pattern_values) > 0 else 1
+        for bar, value in zip(bars, pattern_values):
+            percentage = (value / total_patterns) * 100
+            ax_patterns.text(bar.get_x() + bar.get_width()/2, bar.get_height() + max(pattern_values)*0.05,
+                        f'{value}\n({percentage:.1f}%)', ha='center', va='bottom', 
+                        color='white', fontweight='bold', fontsize=12,
+                        bbox=dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.8))
+        
+        ax_patterns.set_ylabel('Occurrences', fontsize=14, color='white', fontweight='bold')
+        ax_patterns.set_title('Patterns de Mouvement', fontsize=22, color='#FF6B35', fontweight='bold')
+        ax_patterns.tick_params(colors='white', labelsize=11)
+        ax_patterns.set_xticklabels(pattern_labels, rotation=15, fontweight='bold')
+        ax_patterns.grid(True, alpha=0.3, color='white')
+    
+        # ===== ANALYSE TEXTUELLE ULTRA-STYLISÉE =====
+        ax_text = fig.add_subplot(gs[1, :])
+        ax_text.axis('off')
+    
+        # Calculs avancés
+        action_diversity = len(set([e['type']['displayName'] for e in events]))
+        comfort_zone = max(zone_efficiency.items(), key=lambda x: x[1]) if zone_efficiency else ("Aucune", 0)
+        forward_pct = (directional_preferences['forward'] / total_passes * 100) if total_passes > 0 else 0
+    
+        # Évaluation du profil de joueur avec emojis
+        if predictability_score > 70:
+            player_profile = "TRÈS PRÉVISIBLE"
+            profile_color = "#FF4500"
+        elif predictability_score > 50:
+            player_profile = "ÉQUILIBRÉ"
+            profile_color = "#FFD700"
+        else:
+            player_profile = "CRÉATIF"
+            profile_color = "#00FF80"
+    
+        # Style de jeu avec emojis
+        if forward_pct > 60:
+            style_jeu = "PROGRESSISTE"
+            style_color = "#00FF80"
+        elif forward_pct < 30:
+            style_jeu = "SÉCURITAIRE"
+            style_color = "#FFD700"
+        else:
+            style_jeu = "ÉQUILIBRÉ"
+            style_color = "#00BFFF"
+    
+        # Polyvalence avec emojis
+        if action_diversity > 8:
+            polyvalence = "TRÈS POLYVALENT"
+            poly_color = "#FF0080"
+        elif action_diversity > 5:
+            polyvalence = "POLYVALENT"
+            poly_color = "#00FF80"
+        else:
+            polyvalence = "SPÉCIALISÉ"
+            poly_color = "#FFD700"
+    
+        # Calculs détaillés pour les boîtes
+        total_passes_analysis = sum(pass_distances.values()) if sum(pass_distances.values()) > 0 else 1
+        total_patterns = sum(movement_patterns.values()) if sum(movement_patterns.values()) > 0 else 1
+        
+        courtes_pct = (pass_distances['courtes'] / total_passes_analysis) * 100
+        moyennes_pct = (pass_distances['moyennes'] / total_passes_analysis) * 100
+        longues_pct = (pass_distances['longues'] / total_passes_analysis) * 100
+        
+        total_sides = sum(pass_sides.values()) if sum(pass_sides.values()) > 0 else 1
+        gauche_pct = (pass_sides['gauche'] / total_sides) * 100
+        centre_pct = (pass_sides['centre'] / total_sides) * 100
+        droite_pct = (pass_sides['droite'] / total_sides) * 100
+        
+        centre_aile_pct = (movement_patterns['centre_vers_aile'] / total_patterns) * 100
+        aile_centre_pct = (movement_patterns['aile_vers_centre'] / total_patterns) * 100
+        changement_aile_pct = (movement_patterns['changement_aile'] / total_patterns) * 100
+        percee_pct = (movement_patterns['percee_axiale'] / total_patterns) * 100
+    
+        # Fonction pour créer des boîtes ultra-stylisées
+        def create_prediction_box(ax, x, y, width, height, title, content, title_color, bg_color='black'):
+            # Rectangle de fond avec dégradé simulé
+            rect = plt.Rectangle((x, y), width, height, facecolor=bg_color, alpha=0.9, 
+                            edgecolor=title_color, linewidth=4, transform=ax.transAxes)
+            ax.add_patch(rect)
+            
+            # Barre de titre colorée
+            title_rect = plt.Rectangle((x, y + height - 0.18), width, 0.18, 
+                                    facecolor=title_color, alpha=0.4, transform=ax.transAxes)
+            ax.add_patch(title_rect)
+            
+            ax.text(x + width/2, y + height - 0.09, title, fontsize=18, color=title_color, 
+                fontweight='bold', ha='center', va='center', transform=ax.transAxes)
+            
+            # Contenu avec meilleur espacement
+            ax.text(x + width/2, y + (height-0.18)/2, content, fontsize=15, color='white', 
+                fontweight='bold', ha='center', va='center', transform=ax.transAxes,
+                linespacing=1.5)
+    
+        # Boîte 1: Style de jeu
+        content1 = f"""{style_jeu}
+    
+    Distance des Passes:
+    Courtes: {courtes_pct:.0f}%
+    Moyennes: {moyennes_pct:.0f}%
+    Longues: {longues_pct:.0f}%
+    
+    {player_profile}
+    Score: {predictability_score:.0f}%"""
+    
+        create_prediction_box(ax_text, 0.02, 0.1, 0.3, 0.8, "STYLE DE JEU", content1, style_color)
+    
+        # Boîte 2: Préférences spatiales
+        if gauche_pct > 45:
+            preference_laterale = "CÔTÉ GAUCHE"
+            pref_color = "#00FF80"
+        elif droite_pct > 45:
+            preference_laterale = "CÔTÉ DROIT"
+            pref_color = "#FF6B35"
+        else:
+            preference_laterale = "POLYVALENT"
+            pref_color = "#FFD700"
+    
+        content2 = f"""{preference_laterale}
+    
+    Répartition Spatiale:
+    Gauche: {gauche_pct:.0f}%
+    Centre: {centre_pct:.0f}%
+    Droite: {droite_pct:.0f}%
+    
+    {polyvalence}
+    Diversité: {action_diversity} types"""
+    
+        create_prediction_box(ax_text, 0.35, 0.1, 0.3, 0.8, "PRÉFÉRENCES", content2, pref_color)
+    
+        # Boîte 3: Patterns tactiques
+        max_pattern = max(movement_patterns.items(), key=lambda x: x[1])
+        if max_pattern[0] == 'centre_vers_aile':
+            pattern_dominant = "OUVREUR"
+            pattern_color = "#FF6B35"
+        elif max_pattern[0] == 'aile_vers_centre':
+            pattern_dominant = "RECENTREUR"  
+            pattern_color = "#00FF80"
+        elif max_pattern[0] == 'changement_aile':
+            pattern_dominant = "RETOURNEUR"
+            pattern_color = "#FFD700"
+        else:
+            pattern_dominant = "PERCUTANT"  # Remplace "PÉNÉTRATEUR"
+            pattern_color = "#FF0080"
+    
+        content3 = f"""{pattern_dominant}
+    
+    Patterns de Mouvement:
+    Centre→Aile: {centre_aile_pct:.0f}%
+    Aile→Centre: {aile_centre_pct:.0f}%
+    Chang. Aile: {changement_aile_pct:.0f}%
+    Percée: {percee_pct:.0f}%
+    
+    Actions: {len(events)} analysées"""
+    
+        create_prediction_box(ax_text, 0.68, 0.1, 0.3, 0.8, "PATTERNS", content3, pattern_color)
+    
+        # Tag et source ultra-stylisé
+        ax.text(0.5, 0.02, "@TarbouchData - Analyse Prédictive Avancée", 
+                fontsize=22, color='white', fontweight='bold', ha='center', 
+                transform=ax.transAxes, alpha=0.9,
+                bbox=dict(boxstyle='round,pad=0.6', facecolor='black', alpha=0.8, edgecolor='#FF0080', linewidth=3))
+    
+        plt.tight_layout()
+        plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none', dpi=300)
+        plt.show()
+    
+    # ===== FONCTION UTILITAIRE AMÉLIORÉE =====
+    
+    def generate_advanced_analysis_suite(self, save_dir="advanced_analysis"):
+        """Génère toutes les analyses avancées d'un coup - Version améliorée"""
+        import os
+        
+        os.makedirs(save_dir, exist_ok=True)
+        player_name_clean = self.player_data['player_name'].replace(' ', '_')
+        
+        print(f"Génération de la suite d'analyses avancées pour {self.player_data['player_name']}...")
+        
+        try:
+            # 1. Analyse spatiale
+            spatial_path = os.path.join(save_dir, f"{player_name_clean}_spatial_intelligence.png")
+            self.plot_positional_intelligence(spatial_path)
+            print("Analyse spatiale générée")
+            
+            # 2. Analyse de pression
+            pressure_path = os.path.join(save_dir, f"{player_name_clean}_pressure_analysis.png")
+            self.plot_pressure_analysis(pressure_path)
+            print("Analyse de pression générée")
+            
+            # 3. Analyse prédictive
+            prediction_path = os.path.join(save_dir, f"{player_name_clean}_predictive_analysis.png")
+            self.plot_next_action_prediction(prediction_path)
+            print("Analyse prédictive générée")
+            
+            print(f"Suite d'analyses complète disponible dans: {save_dir}")
+            
+            return {
+                "spatial": spatial_path,
+                "pressure": pressure_path, 
+                "predictive": prediction_path
+            }
+            
+        except Exception as e:
+            print(f"Erreur lors de la génération: {e}")
+            return None
+    
+    # ===== FONCTION BONUS AMÉLIORÉE =====
+    
+    def compare_players_advanced_metrics(self, other_players_data, save_path):
+        """Compare les métriques avancées entre plusieurs joueurs - Version ultra-stylisée"""
+        
+        def extract_player_metrics(player_data):
+            """Extrait les métriques clés d'un joueur"""
+            events = player_data.get('events', [])
+            if not events:
+                return None
+                
+            # Métriques de base
+            total_actions = len(events)
+            successful_actions = len([e for e in events if e.get('outcomeType', {}).get('displayName') == 'Successful'])
+            success_rate = (successful_actions / total_actions * 100) if total_actions > 0 else 0
+            
+            # Analyse de pression (simplifié)
+            pressure_events = 0
+            for i, event in enumerate(events):
+                current_time = event['minute'] * 60 + event.get('second', 0)
+                for j in range(max(0, i-5), i):
+                    prev_time = events[j]['minute'] * 60 + events[j].get('second', 0)
+                    if current_time - prev_time <= 3:
+                        pressure_events += 1
+                        break
+            
+            pressure_ratio = (pressure_events / total_actions * 100) if total_actions > 0 else 0
+            
+            # Diversité d'actions
+            action_diversity = len(set([e['type']['displayName'] for e in events]))
+            
+            # Zone de confort (efficacité par zone)
+            zones = {'Défensive': [], 'Milieu': [], 'Offensive': []}
+            for event in events:
+                if 'x' in event and 'y' in event:
+                    y = event['y']
+                    zone = 'Défensive' if y < 33 else 'Milieu' if y < 66 else 'Offensive'
+                    zones[zone].append(event)
+            
+            zone_efficiencies = {}
+            for zone, zone_events in zones.items():
+                if zone_events:
+                    successful = len([e for e in zone_events if e.get('outcomeType', {}).get('displayName') == 'Successful'])
+                    zone_efficiencies[zone] = (successful / len(zone_events)) * 100
+                else:
+                    zone_efficiencies[zone] = 0
+            
+            best_zone_efficiency = max(zone_efficiencies.values()) if zone_efficiencies else 0
+            
+            return {
+                'name': player_data.get('player_name', 'Unknown'),
+                'total_actions': total_actions,
+                'success_rate': success_rate,
+                'pressure_ratio': pressure_ratio,
+                'action_diversity': action_diversity,
+                'best_zone_efficiency': best_zone_efficiency
+            }
+        
+        # Extraire les métriques pour tous les joueurs
+        all_players = [self.player_data] + other_players_data
+        players_metrics = []
+        
+        for player_data in all_players:
+            metrics = extract_player_metrics(player_data)
+            if metrics:
+                players_metrics.append(metrics)
+        
+        if len(players_metrics) < 2:
+            print("Pas assez de joueurs pour la comparaison")
+            return
+        
+        # Créer la visualisation comparative ultra-stylisée
+        gradient = np.linspace(0, 1, 256).reshape(-1, 1)
+        gradient = np.hstack((gradient, gradient))
+        cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
+    
+        fig = plt.figure(figsize=(18, 12))
+        ax = fig.add_axes([0, 0, 1, 1])
+        ax.axis('off')
+        ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
+    
+        gs = GridSpec(3, 2, height_ratios=[1, 2, 2])
+    
+        # Titre ultra-stylisé
+        ax.text(0.5, 0.95, "COMPARAISON MULTI-JOUEURS AVANCÉE", 
+                fontsize=28, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
+    
+        # ===== RADAR CHART COMPARATIF AMÉLIORÉ =====
+        ax_radar = fig.add_subplot(gs[1, 0], projection='polar')
+        ax_radar.set_facecolor('none')
+        
+        # Préparer les données du radar
+        metrics_names = ['Efficacité', 'Résistance', 'Diversité', 'Zone Max', 'Volume']
+        angles = np.linspace(0, 2 * np.pi, len(metrics_names), endpoint=False).tolist()
+        angles += angles[:1]  # Fermer le cercle
+        
+        colors = ['#FF6B35', '#00FF80', '#FFD700', '#FF0080', '#00BFFF']
+        
+        for i, player_metrics in enumerate(players_metrics[:5]):  # Max 5 joueurs
+            # Normaliser les métriques (0-100)
+            values = [
+                player_metrics['success_rate'],
+                100 - player_metrics['pressure_ratio'],  # Inverser car moins de pression = mieux
+                min(100, player_metrics['action_diversity'] * 10),  # Normaliser diversité
+                player_metrics['best_zone_efficiency'],
+                min(100, player_metrics['total_actions'] / 2)  # Normaliser volume
+            ]
+            values += values[:1]  # Fermer le cercle
+            
+            ax_radar.plot(angles, values, 'o-', linewidth=4, label=player_metrics['name'], 
+                        color=colors[i], markersize=8)
+            ax_radar.fill(angles, values, alpha=0.25, color=colors[i])
+        
+        ax_radar.set_xticks(angles[:-1])
+        ax_radar.set_xticklabels(metrics_names, color='white', fontsize=12, fontweight='bold')
+        ax_radar.set_ylim(0, 100)
+        ax_radar.grid(True, alpha=0.3, color='white')
+        
+        # Légende avec fond noir
+        legend_radar = ax_radar.legend(loc='upper right', bbox_to_anchor=(1.4, 1.0), fontsize=12,
+                                    frameon=True, facecolor='black', edgecolor='white')
+        for text in legend_radar.get_texts():
+            text.set_color('white')
+        
+        ax_radar.set_title('Profils Comparatifs', color='white', fontsize=20, fontweight='bold', pad=30)
+    
+        # ===== GRAPHIQUES EN BARRES STYLISÉS =====
+        metrics_to_compare = [
+            ('Taux de Réussite (%)', 'success_rate', '#00FF80'),
+            ('Ratio Pression (%)', 'pressure_ratio', '#FF6B35'),
+            ('Diversité Actions', 'action_diversity', '#FFD700'),
+            ('Meilleure Zone (%)', 'best_zone_efficiency', '#FF0080')
+        ]
+        
+        for idx, (metric_title, metric_key, metric_color) in enumerate(metrics_to_compare):
+            if idx < 2:
+                ax_bar = fig.add_subplot(gs[1, 1])
+            else:
+                ax_bar = fig.add_subplot(gs[2, idx-2])
+            
+            ax_bar.set_facecolor('none')
+            
+            names = [p['name'][:10] for p in players_metrics]
+            values = [p[metric_key] for p in players_metrics]
+            
+            # Créer des barres avec dégradé de couleurs
+            bar_colors = [colors[i] for i in range(len(players_metrics))]
+            bars = ax_bar.bar(names, values, color=bar_colors, alpha=0.9, 
+                            edgecolor='white', linewidth=3)
+            
+            ax_bar.set_title(metric_title, fontsize=18, color=metric_color, fontweight='bold')
+            ax_bar.tick_params(colors='white', labelsize=11)
+            ax_bar.grid(True, alpha=0.3, color='white')
+            
+            # Ajouter les valeurs sur les barres avec style
+            for bar, value in zip(bars, values):
+                ax_bar.text(bar.get_x() + bar.get_width()/2, bar.get_height() + max(values)*0.02,
+                        f'{value:.1f}', ha='center', va='bottom', color='white', 
+                        fontweight='bold', fontsize=12,
+                        bbox=dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.8))
+    
+        # ===== CLASSEMENT GÉNÉRAL STYLISÉ =====
+        ax_ranking = fig.add_subplot(gs[2, :])
+        ax_ranking.axis('off')
+        
+        # Calculer un score composite
+        for player_metrics in players_metrics:
+            composite_score = (
+                player_metrics['success_rate'] * 0.3 +
+                (100 - player_metrics['pressure_ratio']) * 0.2 +
+                min(100, player_metrics['action_diversity'] * 10) * 0.2 +
+                player_metrics['best_zone_efficiency'] * 0.2 +
+                min(100, player_metrics['total_actions'] / 2) * 0.1
+            )
+            player_metrics['composite_score'] = composite_score
+        
+        # Trier par score composite
+        players_metrics.sort(key=lambda x: x['composite_score'], reverse=True)
+        
+        # Créer le classement avec style ultra-amélioré
+        ranking_text = "CLASSEMENT GÉNÉRAL (Score Composite)\n" + "="*60 + "\n\n"
+        medals = ["1er", "2ème", "3ème", "4ème", "5ème"]
+        
+        for i, player in enumerate(players_metrics):
+            medal = medals[i] if i < 5 else f"{i+1}ème"
+            
+            # Évaluation du score
+            score = player['composite_score']
+            if score > 85:
+                grade = "EXCEPTIONNEL"
+            elif score > 75:
+                grade = "EXCELLENT"
+            elif score > 65:
+                grade = "TRÈS BON"
+            elif score > 55:
+                grade = "BON"
+            else:
+                grade = "MOYEN"
+            
+            ranking_text += f"{medal} {player['name']} - Score: {score:.1f}/100 - {grade}\n"
+            ranking_text += f"     Efficacité: {player['success_rate']:.1f}% | "
+            ranking_text += f"Actions: {player['total_actions']} | "
+            ranking_text += f"Diversité: {player['action_diversity']}\n\n"
+    
+        # Créer une boîte stylisée pour le classement
+        ranking_box = plt.Rectangle((0.05, 0.1), 0.9, 0.8, facecolor='black', alpha=0.9, 
+                                edgecolor='white', linewidth=3, transform=ax_ranking.transAxes)
+        ax_ranking.add_patch(ranking_box)
+    
+        ax_ranking.text(0.5, 0.5, ranking_text, fontsize=14, color='white', 
+                    fontweight='bold', ha='center', va='center', transform=ax_ranking.transAxes,
+                    linespacing=1.3)
+    
+        # Tag et source ultra-stylisé
+        ax.text(0.5, 0.02, "@TarbouchData - Comparaison Multi-Joueurs Avancée", 
+                fontsize=22, color='white', fontweight='bold', ha='center', 
+                transform=ax.transAxes, alpha=0.9,
+                bbox=dict(boxstyle='round,pad=0.6', facecolor='black', alpha=0.8, 
+                        edgecolor='#FFD700', linewidth=4))
+    
+        plt.tight_layout()
+        plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none', dpi=300)
+        plt.show()
+    
+        return players_metrics
