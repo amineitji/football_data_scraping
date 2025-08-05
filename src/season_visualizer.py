@@ -16,6 +16,7 @@ from match_data_extractor import MatchDataExtractor
 from matplotlib.animation import FuncAnimation
 import matplotlib.patches as mpatches
 from player_visualizer import PlayerVisualizer
+from collections import defaultdict, Counter
 
 
 class SeasonVisualizer(PlayerVisualizer):
@@ -1957,7 +1958,7 @@ class SeasonVisualizer(PlayerVisualizer):
         else:
             style = "SÉCURITAIRE"
             color = "#FF6B35"
-            interpretation = f"Joue très prudemment ({backward_pct:.0f}% vers l'arrière). Défenseur ou milieu défensif qui sécurise le jeu. Très peu de pertes de balle."
+            interpretation = f"Joue très prudemment ({backward_pct:.0f}% vers l'arrière). Joueur qui sécurise le jeu. Très peu de pertes de balle."
 
         return style, color, interpretation
 

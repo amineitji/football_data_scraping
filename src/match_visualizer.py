@@ -61,7 +61,567 @@ class MatchVisualizer(PlayerVisualizer):
 
         return forward_passes, lateral_passes, backward_passes, successful_passes, failed_passes
 
+    # ===== SYSTÈME D'ÉVALUATION SCIENTIFIQUE DES STYLES DE JOUEUR =====
 
+    def _evaluate_player_style_by_position(self, player_data):
+        """Analyse scientifique du profil de joueur selon métriques objectives et contexte"""
+        position = player_data.get('position', 'Unknown')
+        advanced_metrics = player_data.get('advanced_metrics', {})
+        age = player_data.get('age', 25)
+        match_info = player_data.get('match_info', {})
+        basic_info = player_data.get('player_basic_info', {})
+
+        # Variables contextuelles pour l'analyse
+        context = {
+            'age': age,
+            'is_motm': basic_info.get('isManOfTheMatch', False),
+            'is_starter': basic_info.get('isFirstEleven', True),
+            'team_score': match_info.get('home_score', 0) if basic_info.get('team') == 'home' else match_info.get('away_score', 0),
+            'opponent_score': match_info.get('away_score', 0) if basic_info.get('team') == 'home' else match_info.get('home_score', 0),
+            'match_result': None
+        }
+
+        context['match_result'] = 'victory' if context['team_score'] > context['opponent_score'] else 'defeat' if context['team_score'] < context['opponent_score'] else 'draw'
+
+        # Distribution par poste
+        position_mapping = {
+            'GK': self._analyze_goalkeeper_profile,
+            'CB': self._analyze_centerback_profile, 'LCB': self._analyze_centerback_profile, 'RCB': self._analyze_centerback_profile,
+            'LB': self._analyze_fullback_profile, 'RB': self._analyze_fullback_profile, 'LWB': self._analyze_fullback_profile, 'RWB': self._analyze_fullback_profile,
+            'DMC': self._analyze_defensive_midfielder_profile, 'DM': self._analyze_defensive_midfielder_profile,
+            'MC': self._analyze_central_midfielder_profile, 'CM': self._analyze_central_midfielder_profile,
+            'AMC': self._analyze_attacking_midfielder_profile, 'CAM': self._analyze_attacking_midfielder_profile,
+            'LM': self._analyze_winger_profile, 'RM': self._analyze_winger_profile, 'LW': self._analyze_winger_profile, 'RW': self._analyze_winger_profile,
+            'CF': self._analyze_forward_profile, 'ST': self._analyze_forward_profile, 'LF': self._analyze_forward_profile, 'RF': self._analyze_forward_profile
+        }
+
+        analyzer = position_mapping.get(position, self._analyze_generic_profile)
+        return analyzer(advanced_metrics, context)
+
+    def _analyze_goalkeeper_profile(self, metrics, context):
+        """Analyse scientifique du profil gardien de but"""
+        defensive = metrics.get('defensive', {})
+        passing = metrics.get('passing', {})
+        pressure = metrics.get('pressure', {})
+
+        # Métriques clés
+        clearances = defensive.get('clearances', 0)
+        pass_accuracy = passing.get('pass_accuracy', 50)
+        pressure_success = pressure.get('pressure_success_rate', 50)
+        distribution_style = passing.get('risk_analysis', {})
+        long_balls = passing.get('long_balls', 0)
+
+        age = context['age']
+
+        # Analyse scientifique basée sur les métriques
+        if clearances > 8 and pressure_success > 80:
+            profile = "PROFIL RÉACTIF SOUS CONTRAINTE"
+            color = "#FF0000"
+            analysis = f"{clearances} interventions, {pressure_success:.1f}% réussies sous pression — profil réactif et stable à {age} ans."
+
+        elif pass_accuracy > 85 and long_balls > 3:
+            profile = "PROFIL DISTRIBUTEUR LONGUE DISTANCE"
+            color = "#00FF80"
+            backward_pct = distribution_style.get('backward_percentage', 0)
+            analysis = f"{pass_accuracy:.1f}% de précision, {long_balls} longs ballons — relance directe maîtrisée, profil moderne."
+
+        elif pass_accuracy > 85 and long_balls <= 2:
+            profile = "PROFIL CONSTRUCTEUR COURT"
+            color = "#00BFFF"
+            analysis = f"{pass_accuracy:.1f}% de précision — profil adapté à la construction courte et aux systèmes modernes."
+
+        elif pressure_success < 65 and age > 32:
+            profile = "PROFIL EN DÉCLIN RÉACTIONNEL"
+            color = "#FF6B35"
+            analysis = f"{pressure_success:.1f}% sous pression à {age} ans — signe de déclin réactionnel, compensable par le placement."
+
+        else:
+            profile = "PROFIL ÉQUILIBRÉ STANDARD"
+            color = "#FFD700"
+            analysis = f"Métriques stables à {age} ans — profil standard sans biais notable, adapté aux exigences du poste."
+
+        return profile, color, analysis
+
+    def _analyze_centerback_profile(self, metrics, context):
+        """Analyse scientifique du profil défenseur central"""
+        defensive = metrics.get('defensive', {})
+        passing = metrics.get('passing', {})
+        pressure = metrics.get('pressure', {})
+        spatial = metrics.get('spatial', {})
+
+        # Extraction métriques
+        tackles_won = defensive.get('tackles_won', 0)
+        tackle_success = defensive.get('tackle_success_rate', 0)
+        interceptions = defensive.get('interceptions', 0)
+        ball_recoveries = defensive.get('ball_recoveries', 0)
+        pass_accuracy = passing.get('pass_accuracy', 50)
+        risk_analysis = passing.get('risk_analysis', {})
+        forward_pct = risk_analysis.get('forward_percentage', 0)
+        pressure_success = pressure.get('pressure_success_rate', 50)
+        zones_coverage = spatial.get('zones_coverage', {})
+
+        age = context['age']
+        total_defensive = tackles_won + interceptions + ball_recoveries
+        intervention_ratio = interceptions / max(tackles_won, 1)  # Éviter division par zéro
+
+        if total_defensive > 12 and tackle_success > 75:
+            profile = "PROFIL INTERVENTIONNISTE HAUTE EFFICACITÉ"
+            color = "#FF0000"
+            analysis = f"{total_defensive} actions défensives, {tackle_success:.1f}% de succès au duel — défenseur performant à {age} ans."
+
+        elif pass_accuracy > 90 and forward_pct > 35:
+            profile = "PROFIL CONSTRUCTEUR PROGRESSIF"
+            color = "#00FF80"
+            analysis = f"{pass_accuracy:.1f}% de passes précises, {forward_pct:.1f}% progressives — défenseur à relance moderne."
+
+        elif intervention_ratio > 2.0:
+            profile = "PROFIL ANTICIPATEUR PRÉVENTIF"
+            color = "#00BFFF"
+            analysis = f"Ratio interceptions/tacles {intervention_ratio:.1f} — profil intelligent, basé sur l’anticipation."
+
+        elif pressure_success < 70 and age > 32:
+            profile = "PROFIL EN ADAPTATION PHYSIOLOGIQUE"
+            color = "#FF6B35"
+            analysis = f"{pressure_success:.1f}% d’efficacité sous pression — adaptation tactique nécessaire à {age} ans."
+
+        else:
+            profile = "PROFIL DÉFENSIF POLYVALENT"
+            color = "#FFD700"
+            analysis = f"Profil polyvalent, sans spécialisation nette — {age} ans, en phase {'d’apprentissage' if age < 25 else 'd’optimisation' if age < 30 else 'de maintien'}."
+
+        return profile, color, analysis
+
+    def _analyze_fullback_profile(self, metrics, context):
+        """Analyse scientifique du profil latéral"""
+        offensive = metrics.get('offensive', {})
+        defensive = metrics.get('defensive', {})
+        spatial = metrics.get('spatial', {})
+        passing = metrics.get('passing', {})
+
+        dribble_success = offensive.get('dribble_success_rate', 0)
+        crosses = passing.get('crosses', 0)
+        defensive_actions = defensive.get('total_defensive_actions', 0)
+        zones = spatial.get('zones_coverage', {})
+        attacking_third = zones.get('attacking_third', 0)
+        own_third = zones.get('own_third', 0)
+        mobility_score = spatial.get('mobility_score', 0)
+
+        age = context['age']
+        offensive_engagement = attacking_third / max(own_third, 1)
+
+        if attacking_third > 30 and crosses > 5:
+            profile = "PROFIL OFFENSIF SPÉCIALISÉ CENTRES"
+            color = "#FF0080"
+            analysis = f"{attacking_third} actions offensives, {crosses} centres — profil offensif moderne, exigeant physiquement."
+
+        elif mobility_score > 25 and offensive_engagement > 1.5:
+            profile = "PROFIL HYBRIDE HAUTE MOBILITÉ"
+            color = "#FFD700"
+            analysis = f"Mobilité {mobility_score:.1f}, ratio off/déf {offensive_engagement:.1f} — profil bi-phasique à haute intensité à {age} ans."
+
+        elif defensive_actions > 8 and attacking_third < 20:
+            profile = "PROFIL DÉFENSIF CONSERVATEUR"
+            color = "#00FF80"
+            analysis = f"{defensive_actions} actions défensives, peu de présence offensive — latéral axé sur la stabilité tactique."
+
+        else:
+            profile = "PROFIL LATÉRAL ÉQUILIBRÉ"
+            color = "#00BFFF"
+            analysis = f"Profil équilibré à {age} ans — contributions régulières sur les deux phases, sans spécialisation marquée."
+
+        return profile, color, analysis
+
+    def _analyze_defensive_midfielder_profile(self, metrics, context):
+        """Analyse scientifique du profil milieu défensif"""
+        defensive = metrics.get('defensive', {})
+        passing = metrics.get('passing', {})
+        spatial = metrics.get('spatial', {})
+        pressure = metrics.get('pressure', {})
+
+        ball_recoveries = defensive.get('ball_recoveries', 0)
+        interceptions = defensive.get('interceptions', 0)
+        pass_accuracy = passing.get('pass_accuracy', 50)
+        risk_analysis = passing.get('risk_analysis', {})
+        backward_pct = risk_analysis.get('backward_percentage', 0)
+        forward_pct = risk_analysis.get('forward_percentage', 0)
+        pressure_success = pressure.get('pressure_success_rate', 50)
+        field_coverage = spatial.get('field_coverage_percentage', 0)
+
+        age = context['age']
+        recovery_efficiency = ball_recoveries + interceptions
+
+        if recovery_efficiency > 10 and pressure_success > 85:
+            profile = "PROFIL RÉCUPÉRATEUR HAUTE PERFORMANCE"
+            color = "#FF0000"
+            analysis = f"{recovery_efficiency} récupérations, {pressure_success:.1f}% sous pression — récupérateur réactif à {age} ans."
+
+        elif pass_accuracy > 90 and forward_pct > 40:
+            profile = "PROFIL DISTRIBUTEUR PROGRESSIF"
+            color = "#00FF80"
+            analysis = f"{pass_accuracy:.1f}% de passes, {forward_pct:.1f}% vers l’avant — relanceur technique moderne."
+
+        elif backward_pct > 55 and pass_accuracy > 88:
+            profile = "PROFIL SÉCURITAIRE TECHNIQUE"
+            color = "#00BFFF"
+            analysis = f"{backward_pct:.1f}% de passes sécurisées à {pass_accuracy:.1f}% — profil discipliné, gestion du risque."
+
+        elif field_coverage > 35:
+            profile = "PROFIL COUVREUR SPATIAL"
+            color = "#FFD700"
+            analysis = f"Couverture de {field_coverage:.1f}% du terrain — gros volume de jeu, exigeant physiquement à {age} ans."
+
+        else:
+            profile = "PROFIL MILIEU DÉFENSIF STANDARD"
+            color = "#FF6B35"
+            analysis = f"Profil stable à {age} ans — métriques équilibrées sans dominance claire, rôle de soutien tactique."
+
+        return profile, color, analysis
+
+    def _analyze_central_midfielder_profile(self, metrics, context):
+        """Analyse scientifique du profil milieu central"""
+        passing = metrics.get('passing', {})
+        spatial = metrics.get('spatial', {})
+        temporal = metrics.get('temporal', {})
+        basic = metrics.get('basic', {})
+        pressure = metrics.get('pressure', {})
+
+        total_passes = passing.get('total_passes', 0)
+        pass_accuracy = passing.get('pass_accuracy', 50)
+        mobility_score = spatial.get('mobility_score', 0)
+        field_coverage = spatial.get('field_coverage_percentage', 0)
+        success_rate = basic.get('success_rate', 50)
+        risk_analysis = passing.get('risk_analysis', {})
+        forward_pct = risk_analysis.get('forward_percentage', 0)
+        endurance_assessment = temporal.get('endurance_assessment', '')
+
+        age = context['age']
+        passing_volume = total_passes / 90 * 100  # Normalisé sur 90 minutes
+
+        if mobility_score > 25 and field_coverage > 35:
+            profile = "PROFIL BOX-TO-BOX HAUTE INTENSITÉ"
+            color = "#FF0080"
+            analysis = (f"Mobilité {mobility_score:.1f}, couverture terrain {field_coverage:.1f}%. "
+                        f"Profil cardio-vasculaire exigeant. À {age} ans, "
+                        f"{'potentiel maximal' if age < 28 else 'phase critique' if age < 32 else 'adaptation vers moins mobile'}.")
+
+        elif total_passes > 60 and pass_accuracy > 90:
+            profile = "PROFIL MÉTRONOME TECHNIQUE"
+            color = "#00FF80"
+            analysis = (f"{total_passes} passes avec {pass_accuracy:.1f}% de précision. "
+                        f"Spécialiste de la circulation du ballon. Capacités "
+                        f"{'en développement' if age < 25 else 'optimales' if age < 30 else 'stabilisées par expérience'}.")
+
+        elif forward_pct > 45 and success_rate > 85:
+            profile = "PROFIL CRÉATEUR PROGRESSIF"
+            color = "#FFD700"
+            analysis = (f"{forward_pct:.1f}% passes progressives, {success_rate:.1f}% d'efficacité. "
+                        f"Profil rupture de lignes, prise de risque calculée, "
+                        f"évolution cognitive avec l'expérience.")
+
+        else:
+            profile = "PROFIL MILIEU POLYVALENT"
+            color = "#00BFFF"
+            analysis = (f"Métriques équilibrées, profil flexible. À {age} ans, "
+                        f"{'spécialisations en développement' if age < 26 else 'optimisation polyvalence' if age < 31 else 'maintien efficacité généraliste'}.")
+
+        return profile, color, analysis
+
+    def _analyze_attacking_midfielder_profile(self, metrics, context):
+        """Analyse scientifique du profil milieu offensif - Optimisé type Neymar"""
+        offensive = metrics.get('offensive', {})
+        passing = metrics.get('passing', {})
+        spatial = metrics.get('spatial', {})
+        pressure = metrics.get('pressure', {})
+        basic = metrics.get('basic', {})
+
+        goals = offensive.get('goals', 0)
+        key_passes = offensive.get('key_passes', 0)
+        dribble_success = offensive.get('dribble_success_rate', 0)
+        dribbles_attempted = offensive.get('dribbles_attempted', 0)
+        shooting_accuracy = offensive.get('shooting_accuracy', 0)
+        shots_total = offensive.get('shots_total', 0)
+        mobility_score = spatial.get('mobility_score', 0)
+        total_actions = basic.get('total_actions', 0)
+        success_rate = basic.get('success_rate', 50)
+        pressure_success = pressure.get('pressure_success_rate', 50)
+
+        age = context['age']
+        is_motm = context['is_motm']
+
+        # Analyse spécifique cas Neymar: 33 ans, 3 buts, 6 tirs, 50% précision
+        if goals >= 2 and age > 30:
+            profile = "PROFIL FINISSEUR MATURE À HAUTE EFFICACITÉ"
+            color = "#FF0000"
+            xG_efficiency = (goals / max(shots_total, 1)) * 100
+            analysis = (f"{goals} buts sur {shots_total} tirs ({xG_efficiency:.1f}%). "
+                        f"À {age} ans, prise de décision optimisée en zone de finition, "
+                        f"compensation du déclin des dribbles ({dribbles_attempted} tent., {dribble_success:.1f}%).")
+
+        elif total_actions > 80 and success_rate > 80:
+            profile = "PROFIL HYPERACTIF TECHNIQUE"
+            color = "#00FF80"
+            action_density = total_actions / 90
+            analysis = (f"{total_actions} actions ({action_density:.1f}/min) avec {success_rate:.1f}% d'efficacité. "
+                        f"Capacité cognitive et résistance à la fatigue décisionnelle maintenues à {age} ans.")
+
+        elif mobility_score > 25 and age > 32:
+            profile = "PROFIL MOBILE RÉSISTANT AU VIEILLISSEMENT"
+            color = "#FFD700"
+            analysis = (f"Mobilité {mobility_score:.1f} à {age} ans, "
+                        f"résistance au déclin moteur et maintien de patterns complexes - "
+                        f"indicateur de condition physique/génétique favorable.")
+
+        elif pressure_success > 85:
+            profile = "PROFIL RÉSISTANT AU STRESS SITUATIONNEL"
+            color = "#FF0080"
+            analysis = (f"{pressure_success:.1f}% d'efficacité sous pression temporelle. "
+                        f"Gestion du stress optimisée, capacité de traitement rapide "
+                        f"{'consolidée par expérience' if age > 28 else 'en développement'}.")
+
+        else:
+            profile = "PROFIL OFFENSIF EN TRANSITION ADAPTATIVE"
+            color = "#00BFFF"
+            analysis = (f"Métriques en phase de transition offensive. À {age} ans, "
+                        f"adaptation aux changements physiologiques naturels - "
+                        f"évolution {'normale' if age < 28 else 'attendue dans gestion du déclin'}.")
+
+
+        return profile, color, analysis
+
+    def _analyze_winger_profile(self, metrics, context):
+        """Analyse scientifique du profil ailier"""
+        offensive = metrics.get('offensive', {})
+        passing = metrics.get('passing', {})
+        spatial = metrics.get('spatial', {})
+
+        dribble_success = offensive.get('dribble_success_rate', 0)
+        dribbles_attempted = offensive.get('dribbles_attempted', 0)
+        crosses = passing.get('crosses', 0)
+        goals = offensive.get('goals', 0)
+        zones = spatial.get('zones_coverage', {})
+        wing_actions = zones.get('left_wing', 0) + zones.get('right_wing', 0)
+        center_actions = zones.get('center', 0)
+
+        age = context['age']
+        lateral_specialization = wing_actions / max(center_actions, 1)
+
+        if dribble_success > 70 and dribbles_attempted > 5:
+            profile = "PROFIL DRIBBLEUR TECHNIQUE SPÉCIALISÉ"
+            color = "#FF0080"
+            analysis = (f"{dribbles_attempted} tentatives avec {dribble_success:.1f}% de réussite, "
+                        f"spécialiste de l'élimination individuelle. Nécessite coordination motrice fine "
+                        f"et accélération - qualités neuromusculaires "
+                        f"{'en développement' if age < 26 else 'au pic' if age < 29 else 'en déclin physiologique'}.")
+
+        elif crosses > 8 and lateral_specialization > 2:
+            profile = "PROFIL CENTREUR LATÉRAL SPÉCIALISÉ"
+            color = "#00FF80"
+            analysis = (f"{crosses} centres avec latéralité {lateral_specialization:.1f}. "
+                        f"Spécialisation offensive depuis les couloirs, technique stable, "
+                        f"peu dépendante de l'âge.")
+
+        elif goals > 3 and center_actions > wing_actions:
+            profile = "PROFIL AILIER RENTRANT FINISSEUR"
+            color = "#FF0000"
+            analysis = (f"{goals} buts avec prédominance d'actions centrales "
+                        f"({center_actions} vs {wing_actions} latérales). "
+                        f"Profil moderne favorisant la finition sur l'apport latéral.")
+
+        else:
+            profile = "PROFIL AILIER POLYVALENT"
+            color = "#00BFFF"
+            analysis = (f"Répartition équilibrée actions latérales et centrales. "
+                        f"Profil adaptable aux variations tactiques. "
+                        f"À {age} ans, capacité "
+                        f"{'en développement' if age < 25 else 'optimisée' if age < 30 else 'maintenue par adaptation'}.")
+
+        return profile, color, analysis
+
+    def _analyze_forward_profile(self, metrics, context):
+        """Analyse scientifique du profil attaquant"""
+        offensive = metrics.get('offensive', {})
+        spatial = metrics.get('spatial', {})
+        passing = metrics.get('passing', {})
+
+        goals = offensive.get('goals', 0)
+        shots_total = offensive.get('shots_total', 0)
+        shooting_accuracy = offensive.get('shooting_accuracy', 0)
+        key_passes = offensive.get('key_passes', 0)
+        zones = spatial.get('zones_coverage', {})
+        attacking_third = zones.get('attacking_third', 0)
+
+        age = context['age']
+        conversion_rate = (goals / max(shots_total, 1)) * 100
+
+        if goals > 2 and shooting_accuracy > 70:
+            profile = "PROFIL FINISSEUR HAUTE PRÉCISION"
+            color = "#FF0000"
+            analysis = (f"{goals} buts sur {shots_total} tentatives ({conversion_rate:.1f}% conversion) "
+                        f"avec {shooting_accuracy:.1f}% précision. Optimisation cognitive de la sélection des tirs. "
+                        f"À {age} ans, ce profil {'se stabilise par expérience' if age > 26 else 'révèle une précocité'}.")
+
+        elif shots_total > 8 and conversion_rate < 25:
+            profile = "PROFIL ATTAQUANT VOLUME À FAIBLE CONVERSION"
+            color = "#FF6B35"
+            analysis = (f"{shots_total} tentatives avec {conversion_rate:.1f}% conversion révèle approche quantitative "
+                        f"plutôt que qualitative. Pattern comportemental "
+                        f"{'à optimiser par expérience' if age < 28 else 'stabilisé dans cette approche'}.")
+
+        elif key_passes > 5:
+            profile = "PROFIL ATTAQUANT CRÉATEUR"
+            color = "#00FF80"
+            analysis = (f"{key_passes} passes décisives, spécialisation dans la création plus que la finition. "
+                        f"Profil moderne nécessitant vision spatiale et technique. Cohérent avec systèmes tactiques contemporains.")
+
+        elif attacking_third > 40 and goals > 1:
+            profile = "PROFIL SPÉCIALISTE SURFACE DE RÉPARATION"
+            color = "#00BFFF"
+            analysis = (f"{attacking_third} actions en zone offensive avec {goals} buts marqués. "
+                        f"Concentration sur zone de finalisation, profil classique d’attaquant de surface. "
+                        f"Efficacité liée au placement et qualité des services reçus.")
+
+        else:
+            profile = "PROFIL ATTAQUANT POLYVALENT"
+            color = "#FFD700"
+            analysis = (f"Métriques équilibrées sans spécialisation marquée. Profil adaptatif aux besoins d’équipe. "
+                        f"À {age} ans, {'développement des spécialités en cours' if age < 24 else 'optimisation polyvalente' if age < 29 else 'maintien par expérience'}.")
+
+        return profile, color, analysis
+
+    def _analyze_generic_profile(self, metrics, context):
+        """Analyse scientifique générique pour postes non spécifiés"""
+        basic = metrics.get('basic', {})
+        temporal = metrics.get('temporal', {})
+        pressure = metrics.get('pressure', {})
+
+        success_rate = basic.get('success_rate', 50)
+        total_actions = basic.get('total_actions', 0)
+        endurance_assessment = temporal.get('endurance_assessment', '')
+        pressure_success = pressure.get('pressure_success_rate', 50)
+
+        age = context['age']
+        action_density = total_actions / 90 if total_actions > 0 else 0
+
+        if success_rate > 85 and pressure_success > 80:
+            profile = "PROFIL HAUTE FIABILITÉ TECHNIQUE"
+            color = "#00FF80"
+            analysis = (
+                f"Analyse de performance: {success_rate:.1f}% d'efficacité globale avec {pressure_success:.1f}% sous contrainte. "
+                f"Profil caractérisé par stabilité technique et résistance au stress situationnel. "
+                f"À {age} ans, ces capacités {'se consolident par l\'expérience' if age > 26 else 'révèlent une maturité précoce'}."
+            )
+
+        elif total_actions > 80:
+            profile = "PROFIL HAUTE DENSITÉ D'ACTIONS"
+            color = "#FF0080"
+            analysis = (
+                f"Analyse quantitative: {total_actions} actions ({action_density:.1f}/minute) révèle une implication exceptionnelle dans le jeu. "
+                f"Profil physiquement et cognitivement exigeant nécessitant endurance et traitement de l'information développés. "
+                f"Soutenabilité {'optimale' if age < 28 else 'à surveiller' if age < 32 else 'nécessitant adaptation'} selon l'âge."
+            )
+
+        elif success_rate < 65 and age < 23:
+            profile = "PROFIL EN DÉVELOPPEMENT TECHNIQUE"
+            color = "#FFD700"
+            analysis = (
+                f"Analyse développementale: {success_rate:.1f}% d'efficacité à {age} ans indique une phase normale d'apprentissage. "
+                f"Capacités techniques et décisionnelles en maturation - potentiel significatif d'amélioration par expérience et entraînement."
+            )
+
+        elif success_rate < 65 and age > 30:
+            profile = "PROFIL EN DÉCLIN TECHNIQUE"
+            color = "#FF6B35"
+            analysis = (
+                f"Analyse dégénérative: {success_rate:.1f}% d'efficacité à {age} ans révèle un déclin des capacités techniques. "
+                f"Phénomène neurophysiologique attendu lié à la diminution des temps de réaction et de la précision gestuelle. "
+                f"Compensation possible par optimisation tactique et réduction du volume d'actions."
+            )
+
+        else:
+            profile = "PROFIL STANDARD ÉQUILIBRÉ"
+            color = "#00BFFF"
+            analysis = (
+                f"Analyse comparative: Performance dans les moyennes statistiques avec {success_rate:.1f}% d'efficacité. "
+                f"Profil sans déviations significatives. À {age} ans, "
+                f"{'phase de stabilisation en cours' if age < 27 else 'maintien des capacités dans la norme' if age < 32 else 'adaptation aux modifications physiologiques'}."
+            )
+
+        return profile, color, analysis
+
+    # ===== FONCTIONS D'INTÉGRATION DANS LES ANALYSES EXISTANTES =====
+
+    def _get_position_adapted_creativity_analysis(self, player_data, creativity_ratio):
+        """Analyse adaptée de la créativité selon le poste"""
+        position = player_data.get('position', 'Unknown')
+        age = player_data.get('age', 25)
+
+        # Seuils adaptatifs selon le poste
+        position_creativity_thresholds = {
+            'GK': {'low': 15, 'high': 35},
+            'CB': {'low': 20, 'high': 40}, 'LCB': {'low': 20, 'high': 40}, 'RCB': {'low': 20, 'high': 40},
+            'LB': {'low': 35, 'high': 55}, 'RB': {'low': 35, 'high': 55}, 'LWB': {'low': 40, 'high': 65}, 'RWB': {'low': 40, 'high': 65},
+            'DMC': {'low': 25, 'high': 45}, 'DM': {'low': 25, 'high': 45},
+            'MC': {'low': 35, 'high': 55}, 'CM': {'low': 35, 'high': 55},
+            'AMC': {'low': 45, 'high': 70}, 'CAM': {'low': 45, 'high': 70},
+            'LM': {'low': 50, 'high': 75}, 'RM': {'low': 50, 'high': 75}, 'LW': {'low': 55, 'high': 80}, 'RW': {'low': 55, 'high': 80},
+            'CF': {'low': 40, 'high': 65}, 'ST': {'low': 40, 'high': 65}, 'LF': {'low': 45, 'high': 70}, 'RF': {'low': 45, 'high': 70}
+        }
+
+        thresholds = position_creativity_thresholds.get(position, {'low': 35, 'high': 55})
+
+        if creativity_ratio > thresholds['high']:
+            level = "CRÉATIVITÉ ÉLEVÉE POUR LE POSTE"
+            color = "#FF0080"
+            interpretation = (
+                f"Analyse positionnelle: {creativity_ratio:.0f}% d'actions créatives dépassent les standards du poste {position} "
+                f"(seuil optimal: {thresholds['high']}%). À {age} ans, cette propension au risque créatif "
+                f"{'peut être canalisée par l\'expérience' if age > 28 else 'révèle un potentiel offensif à exploiter'}. "
+                "Pattern comportemental atypique pour la fonction mais potentiellement différenciant."
+            )
+
+        elif creativity_ratio < thresholds['low']:
+            level = "CRÉATIVITÉ CONSERVATRICE ADAPTÉE"
+            color = "#00FF80"
+            interpretation = (
+                f"Analyse positionnelle: {creativity_ratio:.0f}% d'actions créatives correspondent aux exigences sécuritaires "
+                f"du poste {position}. Profil discipliné tactiquement privilégiant l'efficacité sur le spectacle. "
+                f"À {age} ans, cette approche "
+                f"{'révèle une maturité tactique précoce' if age < 26 else 'est optimisée par l\'expérience' if age > 28 else 'correspond aux standards professionnels'}."
+            )
+
+        else:
+            level = "CRÉATIVITÉ ÉQUILIBRÉE POSITIONNELLE"
+            color = "#FFD700"
+            interpretation = (
+                f"Analyse positionnelle: {creativity_ratio:.0f}% d'actions créatives dans la fourchette optimale pour le poste {position} "
+                f"({thresholds['low']}-{thresholds['high']}%). Équilibre adaptatif entre sécurité technique et apport créatif selon les phases de jeu. "
+                "Profil tactiquement mature et adapté aux exigences modernes du poste."
+            )
+        
+        return level, color, interpretation
+
+    def _get_position_adapted_efficiency_thresholds(self, position, age):
+        """Retourne les seuils d'efficacité adaptés au poste et à l'âge"""
+        base_thresholds = {
+            'GK': [95, 85, 75, 65, 55],
+            'CB': [90, 80, 70, 60, 50], 'LCB': [90, 80, 70, 60, 50], 'RCB': [90, 80, 70, 60, 50],
+            'LB': [80, 70, 60, 50, 40], 'RB': [80, 70, 60, 50, 40], 'LWB': [75, 65, 55, 45, 35], 'RWB': [75, 65, 55, 45, 35],
+            'DMC': [85, 75, 65, 55, 45], 'DM': [85, 75, 65, 55, 45],
+            'MC': [80, 70, 60, 50, 40], 'CM': [80, 70, 60, 50, 40],
+            'AMC': [70, 60, 50, 40, 30], 'CAM': [70, 60, 50, 40, 30],
+            'LM': [75, 65, 55, 45, 35], 'RM': [75, 65, 55, 45, 35], 'LW': [70, 60, 50, 40, 30], 'RW': [70, 60, 50, 40, 30],
+            'CF': [65, 55, 45, 35, 25], 'ST': [65, 55, 45, 35, 25], 'LF': [70, 60, 50, 40, 30], 'RF': [70, 60, 50, 40, 30]
+        }
+
+        thresholds = base_thresholds.get(position, [80, 70, 60, 50, 40])
+
+        # Ajustement selon l'âge
+        if age > 32:
+            thresholds = [t - 5 for t in thresholds]  # Seuils plus indulgents pour les joueurs âgés
+        elif age < 23:
+            thresholds = [t - 3 for t in thresholds]  # Seuils plus indulgents pour les jeunes
+
+        return thresholds
 
     def plot_passes_heatmap_and_bar_charts(self, save_path, type_data, nb_passe_d): #type_data = DEF,MIL,ATT
             
@@ -418,14 +978,14 @@ class MatchVisualizer(PlayerVisualizer):
         p_1 = mpatches.Patch(color='#78ff00', label='Passes vers l\'avant')
         p_2 = mpatches.Patch(color='#ffb200', label='Passes latérales')
         p_3 = mpatches.Patch(color='#ff3600', label='Passes vers l\'arrière')
-        ax_pitch.legend(handles=[p_1, p_2, p_3], loc='upper right', bbox_to_anchor=(1, 1), fontsize=12)
+        ax_pitch.legend(handles=[p_1, p_2, p_3], loc='upper right', bbox_to_anchor=(1.5, 1), fontsize=12)
         ax_pitch.set_title("@MaData_fr", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
 
         # Ajoutez cette ligne à la place
         ax.text(0.5, 0.96, f"Passes de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
 
         # Display your tag or source at a fixed position
-        ax.text(0.425, 0.77, f"@TarbouchData", fontsize=14, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+        ax.text(0.42,0.7, f"@TarbouchData", fontsize=18, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
 
 
         # 2. Plotting data visualizations on the right side
@@ -799,14 +1359,14 @@ class MatchVisualizer(PlayerVisualizer):
             plt.Line2D([0], [0], marker='^', color='w', label='Tacle', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], marker='*', color='w', label='Faute', markerfacecolor='black', markersize=15),
         ]
-        ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1, 1), fontsize=12)
+        ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.35, 1), fontsize=12)
         ax_pitch.set_title("@TarbouchData", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
 
         # Ajoutez cette ligne à la place
         ax.text(0.5, 0.96, f"Activité défensive de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
 
         # Display your tag or source at a fixed position
-        ax.text(0.445, 0.76, f"@TarbouchData", fontsize=14, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+        ax.text(0.44,0.75, f"@TarbouchData", fontsize=18, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
 
         # 2. Visualisation des données sur le côté droit
 
@@ -951,14 +1511,14 @@ class MatchVisualizer(PlayerVisualizer):
             plt.Line2D([0], [0], marker='*', color='w', label='Faute subie', markerfacecolor='black', markersize=15),
             plt.Line2D([0], [0], color='#6DF176', lw=2, label='Passe clé')
         ]
-        ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1, 1), fontsize=12)
+        ax_pitch.legend(handles=legend_handles, loc='upper right', bbox_to_anchor=(1.3, 1), fontsize=12)
         ax_pitch.set_title("@MaData_fr", fontsize=20, color=(1, 1, 1, 0), fontweight='bold', loc='center')
     
         # Ajoutez cette ligne à la place
         ax.text(0.5, 0.96, f"Activité offensive de {self.player_data['player_name']}", fontsize=20, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
     
         # Display your tag or source at a fixed position
-        ax.text(0.45, 0.76, f"@TarbouchData", fontsize=14, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+        ax.text(0.45,0.75, f"@TarbouchData", fontsize=18, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
 
         # 2. Visualisation des données sur le côté droit
     
@@ -1530,12 +2090,11 @@ class MatchVisualizer(PlayerVisualizer):
 
 
 
-
     # ===== SYSTÈME DE BOÎTES EXPLICATIVES ULTRA-FLEXIBLE =====
 
     def create_explanation_box(self, ax, x, y, width, height, title, main_stat, explanation, color):
         """
-        Fonction optimisée pour créer des boîtes explicatives ultra-flexibles
+        Fonction optimisée pour créer des boîtes explicatives ultra-flexibles - VERSION AGRANDIE
 
         Paramètres:
         - ax: axe matplotlib
@@ -1552,56 +2111,54 @@ class MatchVisualizer(PlayerVisualizer):
                         edgecolor=color, linewidth=3, transform=ax.transAxes)
         ax.add_patch(rect)
 
-        # EN-TÊTE COLORÉ en haut de la boîte
-        header_height = 0.16  # Optimisé pour plus d'espace au contenu
+        # EN-TÊTE COLORÉ en haut de la boîte (proportionnellement plus petit)
+        header_height = 0.12  # Réduit pour donner plus d'espace au contenu
         title_rect = plt.Rectangle((x, y + height - header_height), width, header_height, 
                                 facecolor=color, alpha=0.85, transform=ax.transAxes)
         ax.add_patch(title_rect)
 
         # TITRE dans l'en-tête - blanc sur fond coloré, taille adaptative
-        title_fontsize = 14 if len(title) > 20 else 15  # Réduction auto si titre long
+        title_fontsize = 13 if len(title) > 20 else 14  # Légèrement réduit
         ax.text(x + width/2, y + height - header_height/2, title, fontsize=title_fontsize, 
             color='white', fontweight='bold', ha='center', va='center', transform=ax.transAxes)
 
         # STATISTIQUE PRINCIPALE au centre - très visible
-        # Calcul de la position optimale selon la hauteur
-        stat_y_position = y + height - header_height - 0.15
-        stat_fontsize = 24 if len(main_stat) < 15 else 20  # Réduction auto si stat longue
+        # Position optimisée pour boîtes plus grandes
+        stat_y_position = y + height - header_height - 0.12
+        stat_fontsize = 22 if len(main_stat) < 15 else 18  # Légèrement réduit
 
         ax.text(x + width/2, stat_y_position, main_stat, fontsize=stat_fontsize, 
             color='white', fontweight='bold', ha='center', va='center', transform=ax.transAxes)
 
-        # TEXTE D'INTERPRÉTATION - Ultra-flexible avec gestion intelligente
-        processed_text = self._process_explanation_text(explanation, width)
+        # TEXTE D'INTERPRÉTATION - Plus d'espace, pas de troncature
+        processed_text = self._process_explanation_text_full(explanation, width)
 
-        # Position du texte d'interprétation (bas de la boîte)
-        text_y_position = y + height * 0.35  # 35% de la hauteur depuis le bas
+        # Position du texte d'interprétation (plus d'espace disponible)
+        text_y_position = y + height * 0.35  # Plus d'espace depuis le bas
 
+        # Texte en gras et adapté à la nouvelle taille
         ax.text(x + width/2, text_y_position, processed_text, fontsize=11, color='white', 
-            fontweight='normal', ha='center', va='center', transform=ax.transAxes,
-            linespacing=1.1)
+            fontweight='bold', ha='center', va='center', transform=ax.transAxes,
+            linespacing=1.2)
 
-    def _process_explanation_text(self, explanation, box_width):
+    def _process_explanation_text_full(self, explanation, box_width):
         """
-        Traite le texte d'explication pour optimiser l'affichage selon la largeur de la boîte
+        Version améliorée qui évite la troncature en "..." et optimise pour des boîtes plus grandes
 
         Paramètres:
         - explanation: texte brut à traiter
         - box_width: largeur de la boîte pour calculer la limite de caractères
 
-        Retourne: texte formaté optimisé
+        Retourne: texte formaté optimisé SANS troncature
         """
 
-        # Calcul dynamique de la limite de caractères selon la largeur
+        # Calcul dynamique SANS limite stricte de lignes
         if box_width <= 0.25:  # Boîte étroite
-            char_limit = 32
-            max_lines = 4
-        elif box_width <= 0.32:  # Boîte normale
-            char_limit = 45
-            max_lines = 6
+            char_limit = 35
+        elif box_width <= 0.35:  # Boîte normale (plus large maintenant)
+            char_limit = 50
         else:  # Boîte large
-            char_limit = 55
-            max_lines = 7
+            char_limit = 65
 
         # Séparer les lignes pré-formatées
         lines = explanation.split('\n')
@@ -1637,11 +2194,9 @@ class MatchVisualizer(PlayerVisualizer):
             else:
                 processed_lines.append(line)
 
-        # Limiter le nombre total de lignes pour éviter le débordement
-        if len(processed_lines) > max_lines:
-            processed_lines = processed_lines[:max_lines-1] + ["..."]
-
+        # SUPPRESSION de la limitation du nombre de lignes - tout le texte s'affiche
         return '\n'.join(processed_lines)
+
 
     # ===== FONCTIONS D'AIDE POUR GÉNÉRER DU CONTENU INTELLIGENT =====
 
@@ -1972,30 +2527,92 @@ class MatchVisualizer(PlayerVisualizer):
 
         return players_metrics
 
-    def plot_positional_intelligence(self, save_path):
-        """Analyse du positionnement tactique et de l'intelligence spatiale - Version optimisée avec interprétations intelligentes"""
-        events = self.player_data.get('events', [])
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def plot_positional_intelligence(self, save_path):
+        """Analyse du positionnement tactique et de l'intelligence spatiale - Version avec évaluations scientifiques par poste"""
+        events = self.player_data.get('events', [])
+    
         if not events:
             print(f"Aucun événement trouvé pour {self.player_data['player_name']}.")
             return
-
+    
         # Séparer les phases de jeu
         possession_events = []
         defensive_events = []
-
+    
         for event in events:
             event_type = event['type']['displayName']
             if event_type in ['Pass', 'TakeOn', 'Goal', 'MissedShots', 'SavedShot']:
                 possession_events.append(event)
             elif event_type in ['Tackle', 'Interception', 'BallRecovery', 'Clearance']:
                 defensive_events.append(event)
-
+    
         # Analyse des zones de prédilection
         all_positions = [(e['x'], e['y']) for e in events if 'x' in e and 'y' in e]
         possession_positions = [(e['x'], e['y']) for e in possession_events if 'x' in e and 'y' in e]
         defensive_positions = [(e['x'], e['y']) for e in defensive_events if 'x' in e and 'y' in e]
-
+    
         # Calcul des centres de gravité
         def calculate_center_of_gravity(positions):
             if not positions:
@@ -2003,32 +2620,32 @@ class MatchVisualizer(PlayerVisualizer):
             avg_x = sum(pos[0] for pos in positions) / len(positions)
             avg_y = sum(pos[1] for pos in positions) / len(positions)
             return avg_x, avg_y
-
+    
         cog_all = calculate_center_of_gravity(all_positions)
         cog_possession = calculate_center_of_gravity(possession_positions)
         cog_defensive = calculate_center_of_gravity(defensive_positions)
-
+    
         # Analyse de la mobilité
         def calculate_mobility_metrics(positions):
             if len(positions) < 2:
                 return 0, 0, 0
-
+    
             x_coords = [pos[0] for pos in positions]
             y_coords = [pos[1] for pos in positions]
-
+    
             x_range = max(x_coords) - min(x_coords)
             y_range = max(y_coords) - min(y_coords)
             area_covered = x_range * y_range
-
+    
             # Calcul de la variance pour mesurer la dispersion
             x_var = np.var(x_coords)
             y_var = np.var(y_coords)
             mobility_score = np.sqrt(x_var + y_var)
-
+    
             return x_range, y_range, mobility_score
-
+    
         x_range, y_range, mobility_score = calculate_mobility_metrics(all_positions)
-
+    
         # Analyse de créativité/efficacité pour le 3ème terrain
         def analyze_creativity_efficiency():
             """Analyse la créativité vs efficacité du joueur"""
@@ -2036,11 +2653,11 @@ class MatchVisualizer(PlayerVisualizer):
             safe_actions = 0
             successful_creative = 0
             successful_safe = 0
-
+    
             for event in events:
                 event_type = event['type']['displayName']
                 is_successful = event.get('outcomeType', {}).get('displayName') == 'Successful'
-
+    
                 # Actions créatives/risquées
                 if event_type in ['TakeOn', 'Through Ball', 'Cross', 'Long Pass']:
                     creative_actions += 1
@@ -2063,11 +2680,11 @@ class MatchVisualizer(PlayerVisualizer):
                         safe_actions += 1
                         if is_successful:
                             successful_safe += 1
-
+    
             creative_success_rate = (successful_creative / creative_actions * 100) if creative_actions > 0 else 0
             safe_success_rate = (successful_safe / safe_actions * 100) if safe_actions > 0 else 0
             creativity_ratio = (creative_actions / len(events) * 100) if events else 0
-
+    
             return {
                 'creative_actions': creative_actions,
                 'safe_actions': safe_actions,
@@ -2075,47 +2692,44 @@ class MatchVisualizer(PlayerVisualizer):
                 'safe_success_rate': safe_success_rate,
                 'creativity_ratio': creativity_ratio
             }
-
+    
         creativity_data = analyze_creativity_efficiency()
-
+    
         # Création de la visualisation
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
         gradient = np.hstack((gradient, gradient))
         cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
-
-        fig = plt.figure(figsize=(18, 12))
+    
+        fig = plt.figure(figsize=(18, 16))  # Encore plus de hauteur pour les boîtes agrandies
         ax = fig.add_axes([0, 0, 1, 1])
         ax.axis('off')
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
-
-        gs = GridSpec(2, 3, height_ratios=[3, 1], width_ratios=[1, 1, 1])
-
-        # Titre principal avec style amélioré
-        #ax.text(0.5, 0.96, f"INTELLIGENCE POSITIONNELLE - {self.player_data['player_name']}", 
-        #        fontsize=30, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
-
+    
+        # GridSpec avec plus d'espace pour les boîtes
+        gs = GridSpec(3, 3, height_ratios=[2.5, 1.2, 1.2], width_ratios=[1, 1, 1])
+    
         # ===== TERRAIN 1: HEATMAP GLOBALE =====
         pitch1 = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=3)
         ax_pitch1 = fig.add_subplot(gs[0, 0])
         pitch1.draw(ax=ax_pitch1)
-
+    
         if all_positions:
             x_coords = [pos[0] for pos in all_positions]
             y_coords = [pos[1] for pos in all_positions]
-
+    
             bin_statistic = pitch1.bin_statistic(x_coords, y_coords, statistic='count', bins=(15, 20))
             bin_statistic['statistic'] = gaussian_filter(bin_statistic['statistic'], 1.5)
-
+    
             # Heatmap avec dégradé stylisé amélioré
             heatmap_cmap = mcolors.LinearSegmentedColormap.from_list(
                 "custom_heat", [(0, 0, 0, 0), (0.1, 0.2, 1, 0.4), (0.8, 0.9, 0.1, 0.7), (1, 0.1, 0.1, 1)], N=100)
             pitch1.heatmap(bin_statistic, ax=ax_pitch1, cmap=heatmap_cmap)
-
+    
             # Centre de gravité global avec style VERT et plus grand
             if cog_all[0] is not None:
                 pitch1.scatter(cog_all[0], cog_all[1], s=1000, marker='*', 
                             color='#00FF00', edgecolor='white', linewidth=6, ax=ax_pitch1)
-
+    
         # Légende terrain 1
         legend_elements1 = [
             plt.Line2D([0], [0], marker='*', color='w', label='Position Moyenne', 
@@ -2128,36 +2742,36 @@ class MatchVisualizer(PlayerVisualizer):
                         fontsize=12, frameon=True, facecolor='black', edgecolor='white')
         for text in legend1.get_texts():
             text.set_color('white')
-
-        ax_pitch1.set_title("Carte de Présence", fontsize=22, color='white', fontweight='bold', pad=20)
-
+    
+        ax_pitch1.set_title("Zones d'activité", fontsize=22, color='white', fontweight='bold', pad=20)
+    
         # ===== TERRAIN 2: PHASES DE JEU =====
         pitch2 = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=3)
         ax_pitch2 = fig.add_subplot(gs[0, 1])
         pitch2.draw(ax=ax_pitch2)
-
+    
         # Positions en possession
         if possession_positions:
             x_poss = [pos[0] for pos in possession_positions]
             y_poss = [pos[1] for pos in possession_positions]
             pitch2.scatter(x_poss, y_poss, s=150, alpha=0.8, color='#00BFFF', 
                         edgecolor='white', linewidth=2.5, ax=ax_pitch2)
-
+    
             if cog_possession[0] is not None:
                 pitch2.scatter(cog_possession[0], cog_possession[1], s=800, marker='o', 
                             color='#00BFFF', edgecolor='white', linewidth=5, ax=ax_pitch2)
-
+    
         # Positions défensives
         if defensive_positions:
             x_def = [pos[0] for pos in defensive_positions]
             y_def = [pos[1] for pos in defensive_positions]
             pitch2.scatter(x_def, y_def, s=150, alpha=0.8, color='#FF1493', 
                         edgecolor='white', linewidth=2.5, ax=ax_pitch2)
-
+    
             if cog_defensive[0] is not None:
                 pitch2.scatter(cog_defensive[0], cog_defensive[1], s=800, marker='s', 
                             color='#FF1493', edgecolor='white', linewidth=5, ax=ax_pitch2)
-
+    
         # Légende terrain 2
         legend_elements2 = [
             plt.Line2D([0], [0], marker='o', color='w', label='Actions Ballon', 
@@ -2173,18 +2787,18 @@ class MatchVisualizer(PlayerVisualizer):
                         fontsize=12, frameon=True, facecolor='black', edgecolor='white')
         for text in legend2.get_texts():
             text.set_color('white')
-
+    
         ax_pitch2.set_title("Phases Offensives vs Défensives", fontsize=22, color='white', fontweight='bold', pad=20)
-
+    
         # ===== TERRAIN 3: CRÉATIVITÉ VS EFFICACITÉ =====
         ax_creativity = fig.add_subplot(gs[0, 2])
         ax_creativity.set_facecolor('none')
-
+    
         # Diagramme en barres pour créativité vs sécurité
         categories = ['Actions\nCréatives', 'Actions\nSûres']
         counts = [creativity_data['creative_actions'], creativity_data['safe_actions']]
         success_rates = [creativity_data['creative_success_rate'], creativity_data['safe_success_rate']]
-
+    
         # Barres avec couleurs selon l'efficacité
         colors = []
         for rate in success_rates:
@@ -2196,104 +2810,180 @@ class MatchVisualizer(PlayerVisualizer):
                 colors.append('#FF8C00')  # Orange - Moyen
             else:
                 colors.append('#FF4500')  # Rouge - Inefficace
-
+    
         bars = ax_creativity.bar(categories, counts, color=colors, alpha=0.9, 
                                  edgecolor='white', linewidth=3)
-
+    
         # Étendre la hauteur de l'axe Y pour éviter que le texte touche le haut
         ax_creativity.set_ylim(top=max(counts) * 1.25)
-
+        ax_creativity.set_title("Créativité du joueur", fontsize=22, color='white', fontweight='bold', pad=20)
+    
         # Ajouter les pourcentages de réussite
         for i, (bar, rate) in enumerate(zip(bars, success_rates)):
             ax_creativity.text(bar.get_x() + bar.get_width()/2, bar.get_height() + max(counts)*0.05,
                         f'{counts[i]} actions\n{rate:.0f}% réussis', ha='center', va='bottom', 
                         color='white', fontweight='bold', fontsize=12,
                         bbox=dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.8))
-
+    
         ax_creativity.set_ylabel('Nombre d\'Actions', fontsize=14, color='white', fontweight='bold')
         ax_creativity.tick_params(colors='white', labelsize=12)
         ax_creativity.grid(True, alpha=0.3, color='white')
-
-        # ===== MÉTRIQUES TEXTUELLES AVEC INTERPRÉTATIONS INTELLIGENTES =====
-        ax_metrics = fig.add_subplot(gs[1, :])
-        ax_metrics.axis('off')
-
-        # Calculs des métriques avec évaluations intelligentes
+    
+        # ===== MÉTRIQUES TEXTUELLES AVEC ANALYSES SCIENTIFIQUES =====
+        # Première ligne de boîtes
+        ax_metrics1 = fig.add_subplot(gs[1, :])
+        ax_metrics1.axis('off')
+        
+        # Deuxième ligne de boîtes
+        ax_metrics2 = fig.add_subplot(gs[2, :])
+        ax_metrics2.axis('off')
+    
+        # Calculs des métriques de base
         total_events = len(events)
         total_successful = len([e for e in events if e.get('outcomeType', {}).get('displayName') == 'Successful'])
         general_efficiency = (total_successful / total_events * 100) if total_events > 0 else 0
-
-        # Utiliser les fonctions intelligentes
-        mobility_level, mobility_color, mobility_interpretation = self._evaluate_mobility_level(mobility_score)
-        efficiency_level, efficiency_color = self._evaluate_performance_level(general_efficiency)
         creativity_ratio = creativity_data['creativity_ratio']
-
-        # Interprétation créativité intelligente
-        if creativity_ratio > 60:
-            creativity_level = "TRÈS CRÉATIF"
-            creativity_color = "#FF0080"
-            creativity_interpretation = f"Prend beaucoup de risques créatifs ({creativity_ratio:.0f}%). Joueur spectaculaire qui tente des actions imprévisibles. Peut être décisif mais parfois imprécis. Actions créatives: {creativity_data['creative_actions']} ({creativity_data['creative_success_rate']:.0f}% réussies)."
-        elif creativity_ratio > 40:
-            creativity_level = "ÉQUILIBRÉ"
-            creativity_color = "#FFD700"
-            creativity_interpretation = f"Mélange intelligemment risque et sécurité ({creativity_ratio:.0f}% créatif). Joueur mature qui adapte son style. Actions créatives: {creativity_data['creative_actions']} ({creativity_data['creative_success_rate']:.0f}% réussies)."
+    
+        # NOUVELLES ANALYSES SCIENTIFIQUES
+        # 1. Évaluation scientifique du style selon le poste
+        style_profile, style_color, style_analysis = self._evaluate_player_style_by_position(self.player_data)
+    
+        # 2. Analyse de créativité adaptée au poste  
+        creativity_level, creativity_color, creativity_interpretation = self._get_position_adapted_creativity_analysis(
+            self.player_data, creativity_ratio)
+    
+        # 3. Analyse d'efficacité avec seuils adaptatifs
+        adapted_thresholds = self._get_position_adapted_efficiency_thresholds(
+            self.player_data.get('position', 'Unknown'), self.player_data.get('age', 25))
+        
+        if general_efficiency > adapted_thresholds[0]:
+            efficiency_level = "EXCEPTIONNELLE"
+            efficiency_color = "#00FF00"
+        elif general_efficiency > adapted_thresholds[1]:
+            efficiency_level = "TRÈS ÉLEVÉE"
+            efficiency_color = "#7FFF00"
+        elif general_efficiency > adapted_thresholds[2]:
+            efficiency_level = "SATISFAISANTE"
+            efficiency_color = "#FFD700"
+        elif general_efficiency > adapted_thresholds[3]:
+            efficiency_level = "INSUFFISANTE"
+            efficiency_color = "#FFA500"
         else:
-            creativity_level = "PRUDENT"
-            creativity_color = "#00FF80"
-            creativity_interpretation = f"Privilégie la sécurité technique ({creativity_ratio:.0f}% créatif). Joueur fiable qui évite les pertes de balle inutiles. Actions sûres: {creativity_data['safe_actions']} ({creativity_data['safe_success_rate']:.0f}% réussies)."
-
-        # Interprétation efficacité intelligente
-        efficiency_interpretation = f"Performance {efficiency_level.lower()} avec {general_efficiency:.0f}% de réussite. Total: {total_events} actions analysées ({total_successful} réussies). Répartition: {len(possession_events)} phases offensives, {len(defensive_events)} phases défensives."
-
-        # === BOÎTES AVEC INTERPRÉTATIONS INTELLIGENTES ===
-        box_width = 0.30   
-        positions = [0.02, 0.34, 0.66]  
-
-        # Boîte 1: Mobilité avec interprétation complète
-        self.create_explanation_box(ax_metrics, positions[0], 0.1, box_width, 0.8,
-                              f"MOBILITÉ: {mobility_level}",
-                              f"Score: {mobility_score:.1f}/50",
-                              mobility_interpretation,
-                              mobility_color)
-
-        # Boîte 2: Style créatif avec interprétation intelligente
-        self.create_explanation_box(ax_metrics, positions[1], 0.1, box_width, 0.8,
-                              f"STYLE: {creativity_level}",
-                              f"{creativity_ratio:.0f}% Créatif",
+            efficiency_level = "PRÉOCCUPANTE"
+            efficiency_color = "#FF0000"
+    
+        efficiency_interpretation = f"Analyse comparative: {general_efficiency:.0f}% d'efficacité technique globale. Pour un joueur {self.player_data.get('position', 'Unknown')} de {self.player_data.get('age', 25)} ans, ce taux {'dépasse les standards professionnels' if general_efficiency > adapted_thresholds[1] else 'correspond aux attentes du poste' if general_efficiency > adapted_thresholds[3] else 'nécessite amélioration technique urgente'}. Échantillon: {total_events} actions analysées sur la durée totale du match."
+    
+        # === PREMIÈRE LIGNE DE BOÎTES ===
+        box_width = 0.32   # Plus larges
+        box_height = 0.9   # Plus hautes
+        positions = [0.01, 0.34, 0.67]  # Ajustées pour les nouvelles largeurs
+    
+        # Boîte 1: Profil scientifique selon le poste
+        self.create_explanation_box(ax_metrics1, positions[0], 0.05, box_width, box_height,
+                              style_profile,
+                              f"Âge: {self.player_data.get('age', 'N/A')} ans",
+                              style_analysis,
+                              style_color)
+    
+        # Boîte 2: Créativité adaptée au poste
+        self.create_explanation_box(ax_metrics1, positions[1], 0.05, box_width, box_height,
+                              creativity_level,
+                              f"{creativity_ratio:.0f}% Actions Créatives",
                               creativity_interpretation,
                               creativity_color)
-
-        # Boîte 3: Efficacité avec contexte détaillé
-        self.create_explanation_box(ax_metrics, positions[2], 0.1, box_width, 0.8,
+    
+        # Boîte 3: Efficacité avec seuils adaptatifs
+        self.create_explanation_box(ax_metrics1, positions[2], 0.05, box_width, box_height,
                               f"EFFICACITÉ: {efficiency_level}",
-                              f"{general_efficiency:.0f}% Réussite",
+                              f"{general_efficiency:.0f}% Global",
                               efficiency_interpretation,
                               efficiency_color)
-
-        # Tag et source stylisé
-        ax.text(0.4, 0.25, f"@TarbouchData", fontsize=30, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
-
+        
+        # === DEUXIÈME LIGNE DE BOÎTES ===
+        # Vous pouvez ajouter ici 3 nouvelles boîtes avec d'autres métriques
+        # Exemple de boîtes supplémentaires :
+        
+        # Boîte 4: Mobilité
+        mobility_level = "ÉLEVÉE" if mobility_score > 15 else "MODÉRÉE" if mobility_score > 10 else "FAIBLE"
+        mobility_color = "#00FF00" if mobility_score > 15 else "#FFD700" if mobility_score > 10 else "#FFA500"
+        mobility_analysis = f"Le joueur couvre {x_range:.0f}m en largeur et {y_range:.0f}m en longueur. Score de mobilité: {mobility_score:.1f}. Cette métrique reflète sa capacité à occuper différentes zones du terrain."
+        
+        self.create_explanation_box(ax_metrics2, positions[0], 0.05, box_width, box_height,
+                              f"MOBILITÉ: {mobility_level}",
+                              f"Score: {mobility_score:.1f}",
+                              mobility_analysis,
+                              mobility_color)
+        
+        # Boîte 5: Ratio Attaque/Défense
+        att_def_ratio = len(possession_events) / len(defensive_events) if defensive_events else float('inf')
+        if att_def_ratio > 3:
+            ratio_level = "TRÈS OFFENSIF"
+            ratio_color = "#FF1493"
+        elif att_def_ratio > 1.5:
+            ratio_level = "OFFENSIF"
+            ratio_color = "#FF69B4"
+        elif att_def_ratio > 0.7:
+            ratio_level = "ÉQUILIBRÉ"
+            ratio_color = "#FFD700"
+        else:
+            ratio_level = "DÉFENSIF"
+            ratio_color = "#00BFFF"
+            
+        ratio_analysis = f"Répartition: {len(possession_events)} actions offensives vs {len(defensive_events)} actions défensives. Ce ratio de {att_def_ratio:.1f} indique un profil de joueur {ratio_level.lower()}."
+        
+        self.create_explanation_box(ax_metrics2, positions[1], 0.05, box_width, box_height,
+                              f"PROFIL: {ratio_level}",
+                              f"Ratio: {att_def_ratio:.1f}",
+                              ratio_analysis,
+                              ratio_color)
+        
+        # Boîte 6: Performance globale
+        if general_efficiency > 75 and creativity_ratio > 20:
+            performance_level = "EXCELLENT"
+            performance_color = "#00FF00"
+        elif general_efficiency > 60 and creativity_ratio > 15:
+            performance_level = "TRÈS BON"
+            performance_color = "#7FFF00"
+        elif general_efficiency > 50:
+            performance_level = "CORRECT"
+            performance_color = "#FFD700"
+        else:
+            performance_level = "À AMÉLIORER"
+            performance_color = "#FFA500"
+            
+        performance_analysis = f"Synthèse globale basée sur {total_events} actions: efficacité de {general_efficiency:.0f}% avec {creativity_ratio:.0f}% d'actions créatives. Performance générale jugée {performance_level.lower()} pour ce niveau de jeu."
+        
+        self.create_explanation_box(ax_metrics2, positions[2], 0.05, box_width, box_height,
+                              f"PERFORMANCE: {performance_level}",
+                              f"Note globale",
+                              performance_analysis,
+                              performance_color)
+    
+        # Tag et source stylisé (ajusté pour la nouvelle position)
+        ax.text(0.4, 0.08, f"@TarbouchData", fontsize=30, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+    
         plt.tight_layout()
         plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none', dpi=300)
         plt.show()
 
     def plot_pressure_analysis(self, save_path):
-        """Analyse de la gestion de la pression adverse et intensité - Version avec interprétations intelligentes"""
+        """Analyse de la gestion de la pression adverse et intensité - Version avec analyses scientifiques"""
         events = self.player_data.get('events', [])
-
+    
         if not events:
             print(f"Aucun événement trouvé pour {self.player_data['player_name']}.")
             return
-
+    
         # Analyser la pression temporelle (actions rapprochées dans le temps)
         pressure_events = []
         normal_events = []
-
+    
         for i, event in enumerate(events):
             # Vérifier s'il y a une action dans les 3 secondes précédentes
             under_pressure = False
             current_time = event['minute'] * 60 + event.get('second', 0)
-
+    
             # Chercher dans les événements précédents
             for j in range(max(0, i-5), i):
                 prev_time = events[j]['minute'] * 60 + events[j].get('second', 0)
@@ -2305,67 +2995,64 @@ class MatchVisualizer(PlayerVisualizer):
                 pressure_events.append(event)
             else:
                 normal_events.append(event)
-
+    
         # Analyser l'efficacité sous pression
         def analyze_efficiency(event_list):
             if not event_list:
                 return 0, 0, 0
-
+    
             total = len(event_list)
             successful = len([e for e in event_list if e.get('outcomeType', {}).get('displayName') == 'Successful'])
             failed = total - successful
             efficiency = (successful / total * 100) if total > 0 else 0
-
+    
             return total, successful, efficiency
-
+    
         pressure_total, pressure_success, pressure_efficiency = analyze_efficiency(pressure_events)
         normal_total, normal_success, normal_efficiency = analyze_efficiency(normal_events)
-
+    
         # Analyser les types d'actions sous pression
         pressure_types = {}
         for event in pressure_events:
             event_type = event['type']['displayName']
             pressure_types[event_type] = pressure_types.get(event_type, 0) + 1
-
+    
         # Analyse spatiale de la pression
         pressure_positions = [(e['x'], e['y']) for e in pressure_events if 'x' in e and 'y' in e]
         normal_positions = [(e['x'], e['y']) for e in normal_events if 'x' in e and 'y' in e]
-
+    
         # Création de la visualisation améliorée
         gradient = np.linspace(0, 1, 256).reshape(-1, 1)
         gradient = np.hstack((gradient, gradient))
         cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
-
-        fig = plt.figure(figsize=(18, 12))
+    
+        fig = plt.figure(figsize=(18, 16))  # Taille agrandie
         ax = fig.add_axes([0, 0, 1, 1])
         ax.axis('off')
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
-
-        gs = GridSpec(2, 3, height_ratios=[3, 1], width_ratios=[1, 1, 1])
-
-        # Titre principal stylisé
-        #########ax.text(0.5, 0.96, f"GESTION DE LA PRESSION - {self.player_data['player_name']}", 
-        #########        fontsize=30, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
-
+    
+        # GridSpec modifié pour 3 lignes
+        gs = GridSpec(3, 3, height_ratios=[2.5, 1.2, 1.2], width_ratios=[1, 1, 1])
+    
         # ===== TERRAIN 1: ACTIONS SOUS PRESSION =====
         pitch1 = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=3)
         ax_pitch1 = fig.add_subplot(gs[0, 0])
         pitch1.draw(ax=ax_pitch1)
-
+    
         # Actions sous pression avec couleurs très distinctes
         for event in pressure_events:
             if 'x' not in event or 'y' not in event:
                 continue
             x, y = event['x'], event['y']
             is_successful = event.get('outcomeType', {}).get('displayName') == 'Successful'
-
+    
             color = '#00FF00' if is_successful else '#FF0000'  # Vert vif vs Rouge vif
             size = 180 if is_successful else 120
             alpha = 0.9 if is_successful else 0.7
-
+    
             pitch1.scatter(x, y, s=size, alpha=alpha, color=color, 
                         edgecolor='white', linewidth=3, ax=ax_pitch1)
-
+    
         # Légende terrain 1
         legend_elements1 = [
             plt.Line2D([0], [0], marker='o', color='w', label='Réussi sous Pression', 
@@ -2377,29 +3064,29 @@ class MatchVisualizer(PlayerVisualizer):
                         fontsize=12, frameon=True, facecolor='black', edgecolor='white')
         for text in legend1.get_texts():
             text.set_color('white')
-
+    
         ax_pitch1.set_title(f"Sous Pression ({len(pressure_events)} actions)", 
-                        fontsize=22, color='#FF6B35', fontweight='bold', pad=20)
-
+                        fontsize=22, color="#FFFFFF", fontweight='bold', pad=20)
+    
         # ===== TERRAIN 2: ACTIONS NORMALES =====
         pitch2 = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=3)
         ax_pitch2 = fig.add_subplot(gs[0, 1])
         pitch2.draw(ax=ax_pitch2)
-
+    
         # Actions normales avec couleurs très distinctes
         for event in normal_events:
             if 'x' not in event or 'y' not in event:
                 continue
             x, y = event['x'], event['y']
             is_successful = event.get('outcomeType', {}).get('displayName') == 'Successful'
-
+    
             color = '#00BFFF' if is_successful else '#FF8C00'  # Bleu ciel vs Orange
             size = 130 if is_successful else 90
             alpha = 0.8 if is_successful else 0.6
-
+    
             pitch2.scatter(x, y, s=size, alpha=alpha, color=color, 
                         edgecolor='white', linewidth=2.2, ax=ax_pitch2)
-
+    
         # Légende terrain 2
         legend_elements2 = [
             plt.Line2D([0], [0], marker='o', color='w', label='Réussi Normal', 
@@ -2411,29 +3098,29 @@ class MatchVisualizer(PlayerVisualizer):
                         fontsize=12, frameon=True, facecolor='black', edgecolor='white')
         for text in legend2.get_texts():
             text.set_color('white')
-
+    
         ax_pitch2.set_title(f"Conditions Normales ({len(normal_events)} actions)", 
-                        fontsize=22, color='#32CD32', fontweight='bold', pad=20)
-
+                        fontsize=22, color="#FFFFFF", fontweight='bold', pad=20)
+    
         # ===== TERRAIN 3: HEATMAP COMPARATIVE =====
         pitch3 = VerticalPitch(pitch_type='opta', pitch_color='none', line_color='white', linewidth=3)
         ax_pitch3 = fig.add_subplot(gs[0, 2])
         pitch3.draw(ax=ax_pitch3)
-
+    
         # Heatmap des zones de haute pression
         if pressure_positions:
             x_pressure = [pos[0] for pos in pressure_positions]
             y_pressure = [pos[1] for pos in pressure_positions]
-
+    
             bin_stat_pressure = pitch3.bin_statistic(x_pressure, y_pressure, 
                                                     statistic='count', bins=(12, 16))
             bin_stat_pressure['statistic'] = gaussian_filter(bin_stat_pressure['statistic'], 1.2)
-
+    
             # Heatmap stylisée pour la pression
             pressure_cmap = mcolors.LinearSegmentedColormap.from_list(
                 "pressure_heat", [(0, 0, 0, 0), (1, 1, 0, 0.6), (1, 0.3, 0, 0.8), (1, 0, 0, 1)], N=100)
             pitch3.heatmap(bin_stat_pressure, ax=ax_pitch3, cmap=pressure_cmap)
-
+    
         # Légende terrain 3
         legend_elements3 = [
             plt.Rectangle((0, 0), 1, 1, facecolor='#FF0000', alpha=0.9, label='Pression Maximale'),
@@ -2444,62 +3131,261 @@ class MatchVisualizer(PlayerVisualizer):
                         fontsize=12, frameon=True, facecolor='black', edgecolor='white')
         for text in legend3.get_texts():
             text.set_color('white')
-
-        ax_pitch3.set_title("Zones de Pression", fontsize=22, color='#FFD700', fontweight='bold', pad=20)
-
-        # ===== MÉTRIQUES AVEC INTERPRÉTATIONS INTELLIGENTES =====
-        ax_metrics = fig.add_subplot(gs[1, :])
-        ax_metrics.axis('off')
-
+    
+        ax_pitch3.set_title("Zones de Pression", fontsize=22, color="#FFFFFF", fontweight='bold', pad=20)
+    
+        # ===== ANALYSES SCIENTIFIQUES DE LA PRESSION =====
+        # Première ligne de boîtes
+        ax_metrics1 = fig.add_subplot(gs[1, :])
+        ax_metrics1.axis('off')
+        
+        # Deuxième ligne de boîtes
+        ax_metrics2 = fig.add_subplot(gs[2, :])
+        ax_metrics2.axis('off')
+    
         # Calculs des métriques avec explications claires
         pressure_ratio = (len(pressure_events) / len(events) * 100) if events else 0
+    
+        # NOUVELLES ANALYSES SCIENTIFIQUES
+        # 1. Analyse du niveau de pression selon le profil du joueur
+        position = self.player_data.get('position', 'Unknown')
+        age = self.player_data.get('age', 25)
+        
+        # 1. Analyse adaptée du niveau de pression selon le poste
+        position_pressure_context = {
+            'GK': 'interventions défensives urgentes',
+            'CB': 'duels défensifs sous pressing', 'LCB': 'duels défensifs sous pressing', 'RCB': 'duels défensifs sous pressing',
+            'LB': 'phases de construction pressées', 'RB': 'phases de construction pressées', 'LWB': 'transitions rapides', 'RWB': 'transitions rapides',
+            'DMC': 'récupérations en zone critique', 'DM': 'récupérations en zone critique',
+            'MC': 'distribution sous harcèlement', 'CM': 'distribution sous harcèlement',
+            'AMC': 'création sous marquage serré', 'CAM': 'création sous marquage serré',
+            'LM': 'dribbles et centres pressés', 'RM': 'dribbles et centres pressés', 'LW': 'éliminations sous pression', 'RW': 'éliminations sous pression',
+            'CF': 'finitions dans la cohue', 'ST': 'finitions dans la cohue', 'LF': 'finitions dos au but', 'RF': 'finitions dos au but'
+        }
 
-        # Utiliser les fonctions d'évaluation intelligentes
-        pressure_level, pressure_pct, pressure_color = self._evaluate_frequency_level(len(pressure_events), len(events))
-        resistance_level, resistance_color, resistance_interpretation = self._analyze_pressure_resistance(pressure_efficiency, normal_efficiency)
+        pressure_context = position_pressure_context.get(position, 'actions techniques sous contrainte')
 
-        # Interprétation niveau de pression
-        pressure_interpretation = f"Évolue sous pression dans {pressure_ratio:.0f}% des actions. Rythme {pressure_level.lower()} qui caractérise son environnement de jeu. Total: {len(events)} actions ({pressure_total} sous pression, {normal_total} normales)."
+        if pressure_ratio > 15:
+            pressure_level = "ENVIRONNEMENT HAUTE PRESSION"
+            pressure_color = "#FF0000"
+            pressure_interpretation = (
+                f"Analyse environnementale: {pressure_ratio:.0f}% des actions sous contrainte temporelle de 3s. "
+                f"Pour un {position}, cela concerne surtout les {pressure_context}. "
+                f"À {age} ans, {'cette exposition élevée exige une condition physique optimale' if age < 28 else 'l\'expérience compense la baisse des réflexes' if age > 30 else 'phase critique mêlant expérience et physique'}."
+            )
 
-        # Performance globale intelligente
-        global_success_rate = ((pressure_success + normal_success) / len(events) * 100) if events else 0
-        global_level, global_color = self._evaluate_performance_level(global_success_rate)
-        global_interpretation = f"Bilan {global_level.lower()} avec {global_success_rate:.0f}% de réussite globale. Sous pression: {pressure_success}/{pressure_total} réussies. Conditions normales: {normal_success}/{normal_total} réussies."
+        elif pressure_ratio > 8:
+            pressure_level = "PRESSION MODÉRÉE SELON POSTE"
+            pressure_color = "#FFD700"
+            pressure_interpretation = (
+                f"Analyse positionnelle: {pressure_ratio:.0f}% d'actions sous pression, conforme aux standards du poste {position}. "
+                f"Exposition normale aux {pressure_context}. "
+                "Pattern cohérent avec les exigences tactiques modernes."
+            )
 
-        # === BOÎTES AVEC INTERPRÉTATIONS INTELLIGENTES ===
-        box_width = 0.30   
-        positions = [0.02, 0.34, 0.66]  
+        else:
+            pressure_level = "ENVIRONNEMENT PRÉSERVÉ"
+            pressure_color = "#00FF80"
+            pressure_interpretation = (
+                f"Analyse tactique: {pressure_ratio:.0f}% d'actions sous pression révèle un environnement protégé. "
+                f"Pour un {position}, cela suggère {'une domination collective' if pressure_ratio < 5 else 'un système tactique efficace'}. "
+                "Conditions favorables à l'expression technique sans contrainte majeure."
+            )
 
-        # Boîte 1: Niveau de pression avec contexte
-        self.create_explanation_box(ax_metrics, positions[0], 0.1, box_width, 0.8,
-                              f"PRESSION: {pressure_level}",
-                              f"{pressure_ratio:.0f}% des actions",
+        # 2. Analyse de la résistance à la pression selon âge et poste
+        pressure_differential = pressure_efficiency - normal_efficiency
+
+        if pressure_differential > 5:
+            resistance_level = "RÉSISTANCE EXCEPTIONNELLE AU STRESS"
+            resistance_color = "#00FF00"
+            resistance_analysis = (
+                f"Analyse neuropsychologique: {pressure_efficiency:.1f}% vs {normal_efficiency:.1f}%, amélioration sous contrainte (+{pressure_differential:.1f}%). "
+                "Sur-performance rare, activation optimale du système nerveux sympathique. "
+                f"À {age} ans, {'profil mental exceptionnel et différenciant' if age > 26 else 'potentiel psychologique majeur précoce'}."
+            )
+
+        elif pressure_differential > -5:
+            resistance_level = "RÉSISTANCE STABLE AU STRESS"
+            resistance_color = "#FFD700"
+            resistance_analysis = (
+                f"Analyse comportementale: {pressure_efficiency:.1f}% vs {normal_efficiency:.1f}%, maintien des performances sous pression. "
+                "Stabilité émotionnelle et technique. Profil adaptatif normal avec capacités de régulation développées."
+            )
+
+        elif pressure_differential > -15:
+            resistance_level = "FRAGILITÉ MODÉRÉE SOUS CONTRAINTE"
+            resistance_color = "#FF6B35"
+            resistance_analysis = (
+                f"Analyse développementale: baisse sous pression ({pressure_differential:.1f}%). "
+                f"À {age} ans, {'sensibilité améliorée avec l\'expérience' if age < 26 else 'fragilité préoccupante nécessitant travail mental' if age > 28 else 'période critique pour renforcer la résistance'}."
+            )
+
+        else:
+            resistance_level = "EFFONDREMENT SOUS PRESSION"
+            resistance_color = "#FF0000"
+            resistance_analysis = (
+                f"Analyse critique: effondrement technique sous contrainte ({pressure_differential:.1f}%). "
+                f"À {age} ans, {'travail psychologique intensif nécessaire' if age < 28 else 'orientation tactique vers rôles moins exposés recommandée'}."
+            )
+
+        # 3. Analyse globale de performance avec contexte match
+        global_success_rate = ((pressure_success + normal_success) / max(pressure_total + normal_total, 1)) * 100 if (pressure_total + normal_total) > 0 else 0
+        match_context = self.player_data.get('match_info', {})
+        is_motm = self.player_data.get('player_basic_info', {}).get('isManOfTheMatch', False)
+
+        if is_motm:
+            performance_context = "Performance exceptionnelle, homme du match"
+        elif global_success_rate > 85:
+            performance_context = "Performance technique de très haut niveau"
+        elif global_success_rate > 70:
+            performance_context = "Performance technique satisfaisante"
+        else:
+            performance_context = "Performance technique perfectible"
+
+        global_interpretation = (
+            f"Analyse globale: {performance_context} avec {global_success_rate:.0f}% de réussite technique. "
+            f"Répartition: {pressure_success}/{pressure_total} sous pression, {normal_success}/{normal_total} en conditions normales. "
+            f"Profil statistique {'cohérent avec les attentes du poste' if global_success_rate > 70 else 'en dessous des standards professionnels'}."
+        )
+
+
+
+        # === PREMIÈRE LIGNE DE BOÎTES ===
+        box_width = 0.32   # Plus larges
+        box_height = 0.9   # Plus hautes
+        positions = [0.01, 0.34, 0.67]  # Ajustées pour les nouvelles largeurs
+    
+        # Boîte 1: Analyse de l'environnement de pression
+        self.create_explanation_box(ax_metrics1, positions[0], 0.05, box_width, box_height,
+                              pressure_level,
+                              f"{pressure_ratio:.0f}% Actions Pressées",
                               pressure_interpretation,
                               pressure_color)
-
-        # Boîte 2: Résistance mentale avec analyse détaillée
-        self.create_explanation_box(ax_metrics, positions[1], 0.1, box_width, 0.8,
-                              f"MENTAL: {resistance_level}",
-                              f"{pressure_efficiency:.0f}% sous pression",
-                              resistance_interpretation,
+    
+        # Boîte 2: Résistance mentale analysée scientifiquement
+        self.create_explanation_box(ax_metrics1, positions[1], 0.05, box_width, box_height,
+                              resistance_level,
+                              f"Δ Performance: {pressure_differential:+.1f}%",
+                              resistance_analysis,
                               resistance_color)
+    
+        # === PREMIÈRE LIGNE DE BOÎTES ===
+        # Boîte 3: Performance globale contextualisée
+        performance_level = (
+            "EXCELLENTE" if global_success_rate > 85 
+            else "TRÈS BONNE" if global_success_rate > 75 
+            else "CORRECTE" if global_success_rate > 65 
+            else "INSUFFISANTE"
+        )
 
-        # Boîte 3: Performance globale intelligente
-        self.create_explanation_box(ax_metrics, positions[2], 0.1, box_width, 0.8,
-                              f"BILAN: {global_level}",
-                              f"{global_success_rate:.0f}% Global",
-                              global_interpretation,
-                              global_color)
+        performance_color = (
+            "#00FF00" if global_success_rate > 85 
+            else "#7FFF00" if global_success_rate > 75 
+            else "#FFD700" if global_success_rate > 65 
+            else "#FF6B35"
+        )
 
-        # Tag et source stylisé
-        ax.text(0.4, 0.25, f"@TarbouchData", fontsize=30, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+        self.create_explanation_box(
+            ax_metrics1, positions[2], 0.05, box_width, box_height,
+            f"PERFORMANCE: {performance_level}",
+            f"{global_success_rate:.0f}% Réussite Globale",
+            global_interpretation,
+            performance_color
+        )
 
+        # === DEUXIÈME LIGNE DE BOÎTES ===
+
+        # Boîte 4: Analyse des types d'actions sous pression
+        dominant_pressure_action = max(pressure_types.items(), key=lambda x: x[1]) if pressure_types else ("Aucune", 0)
+        pressure_action_analysis = (
+            f"Action dominante sous pression : {dominant_pressure_action[0]} ({dominant_pressure_action[1]} fois), "
+            "illustrant les automatismes du joueur en situation d'urgence."
+        )
+        
+
+        self.create_explanation_box(
+            ax_metrics2, positions[0], 0.05, box_width, box_height,
+            "RÉFLEXES SOUS CONTRAINTE",
+            f"{dominant_pressure_action[0]}",
+            pressure_action_analysis,
+            "#FF1493"
+        )
+
+        # Boîte 5: Analyse temporelle des pics de pression
+        pressure_minutes = [e['minute'] for e in pressure_events if 'minute' in e]
+        if pressure_minutes:
+            avg_pressure_minute = sum(pressure_minutes) / len(pressure_minutes)
+            if avg_pressure_minute > 60:
+                temporal_analysis = f"Pression tardive (fin de match, minute {avg_pressure_minute:.0f}), fatigue accrue et gestion mentale clé."
+                temporal_color = "#FF0000"
+                temporal_level = "PRESSION TARDIVE"
+            elif avg_pressure_minute > 30:
+                temporal_analysis = f"Pression médiane (milieu de match, minute {avg_pressure_minute:.0f}), intensification du rythme demandant réactivité."
+                temporal_color = "#FFD700"
+                temporal_level = "PRESSION MÉDIANE"
+            else:
+                temporal_analysis = f"Pression précoce (minute {avg_pressure_minute:.0f}), adaptation rapide nécessaire dès l'entame."
+                temporal_color = "#00BFFF"
+                temporal_level = "PRESSION PRÉCOCE"
+        else:
+            temporal_analysis = "Données temporelles insuffisantes pour analyse."
+            temporal_color = "#808080"
+            temporal_level = "DONNÉES INSUFFISANTES"
+
+
+        
+        self.create_explanation_box(ax_metrics2, positions[1], 0.05, box_width, box_height,
+                              temporal_level,
+                              f"Minute moy: {avg_pressure_minute:.0f}" if pressure_minutes else "N/A",
+                              temporal_analysis,
+                              temporal_color)
+        
+        # Boîte 6: Comparaison avec les standards du poste
+        position_pressure_standards = {
+            'GK': 12, 'CB': 18, 'LCB': 18, 'RCB': 18, 'LB': 22, 'RB': 22,
+            'DMC': 25, 'DM': 25, 'MC': 20, 'CM': 20, 'AMC': 15, 'CAM': 15,
+            'LW': 18, 'RW': 18, 'CF': 20, 'ST': 20
+        }
+        
+        expected_pressure = position_pressure_standards.get(position, 20)
+        pressure_vs_standard = pressure_ratio - expected_pressure
+        
+        if pressure_vs_standard > 5:
+            standard_level = "AU-DESSUS DES STANDARDS"
+            standard_color = "#FF6B35"
+            standard_analysis = (
+                f"Pression {pressure_vs_standard:+.1f}% au-dessus du standard {position} ({expected_pressure}%), exposé à forte contrainte."
+            )
+        elif pressure_vs_standard > -3:
+            standard_level = "CONFORME AUX STANDARDS"
+            standard_color = "#FFD700"
+            standard_analysis = (
+                f"Pression conforme aux standards {position} ({expected_pressure}%), exposition normale."
+            )
+        else:
+            standard_level = "SOUS LES STANDARDS"
+            standard_color = "#00FF80"
+            standard_analysis = (
+                f"Pression {pressure_vs_standard:.1f}% inférieure aux standards {position} ({expected_pressure}%), environnement protégé."
+            )
+
+        
+
+        self.create_explanation_box(ax_metrics2, positions[2], 0.05, box_width, box_height,
+                              standard_level,
+                              f"Standard: {expected_pressure}%",
+                              standard_analysis,
+                              standard_color)
+    
+        # Tag et source stylisé (repositionné)
+        ax.text(0.4, 0.08, f"@TarbouchData", fontsize=30, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+    
         plt.tight_layout()
         plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none', dpi=300)
         plt.show()
-
+    
     def plot_next_action_prediction(self, save_path):
-        """Analyse des patterns et prévisibilité du joueur - Version avec légende stylisée pour le diagramme circulaire"""
+        """Analyse des patterns et prévisibilité du joueur - Version avec analyses scientifiques comportementales"""
         events = self.player_data.get('events', [])
     
         if len(events) < 10:
@@ -2600,22 +3486,18 @@ class MatchVisualizer(PlayerVisualizer):
         gradient = np.hstack((gradient, gradient))
         cmap = mcolors.LinearSegmentedColormap.from_list("", [self.color1, self.color2])
     
-        fig = plt.figure(figsize=(16, 12))
+        fig = plt.figure(figsize=(16, 14))  # Taille agrandie
         ax = fig.add_axes([0, 0, 1, 1])
         ax.axis('off')
         ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, 0, 1])
-    
-        # Layout : diagramme circulaire à gauche, patterns de mouvement à droite
-        gs = GridSpec(2, 2, height_ratios=[3, 1], width_ratios=[1.2, 1])
-    
-        # Titre principal ultra-stylisé
-        ######ax.text(0.5, 0.96, f"PATTERNS ET STYLE - {self.player_data['player_name']}", 
-        ######        fontsize=28, color='white', fontweight='bold', ha='center', transform=ax.transAxes)
-    
+
+        # Layout modifié : diagramme circulaire à gauche, patterns de mouvement à droite, 2 lignes de boîtes
+        gs = GridSpec(3, 2, height_ratios=[2.5, 1.2, 1.2], width_ratios=[1.2, 1])
+
         # ===== GRAND DIAGRAMME CIRCULAIRE AVEC LÉGENDE STYLISÉE =====
         ax_directions = fig.add_subplot(gs[0, 0])
         ax_directions.set_facecolor('none')
-    
+
         # Graphique en secteurs ultra-stylisé pour les préférences directionnelles
         total_passes = sum(directional_preferences.values())
         if total_passes > 0:
@@ -2624,22 +3506,21 @@ class MatchVisualizer(PlayerVisualizer):
                     directional_preferences['backward']]
             colors = ['#00FF80', '#FFD700', '#FF6B35']  # Couleurs très distinctes
             explode = (0.1, 0.05, 0.05)  # Mettre en avant la progression
-    
+
             # Créer le graphique en secteurs avec style ultra-amélioré
-            # SUPPRESSION DES LABELS du pie chart pour utiliser une légende externe
             wedges, texts, autotexts = ax_directions.pie(sizes, colors=colors, 
                                                         autopct='%1.1f%%', startangle=90, explode=explode,
                                                         textprops={'color': 'white', 'fontsize': 18, 'fontweight': 'bold'},
                                                         wedgeprops=dict(edgecolor='white', linewidth=5))
-    
+
             # Style ultra-amélioré des pourcentages
             for autotext in autotexts:
                 autotext.set_color('white')
                 autotext.set_fontweight('bold')
                 autotext.set_fontsize(18)
                 autotext.set_bbox(dict(boxstyle='round,pad=0.4', facecolor='black', alpha=0.8, edgecolor='white'))
-    
-            # LÉGENDE STYLISÉE avec valeurs (comme celle des terrains)
+
+            # LÉGENDE STYLISÉE avec valeurs
             legend_elements_pie = [
                 plt.Rectangle((0, 0), 1, 1, facecolor='#00FF80', alpha=0.9, 
                             label=f'Progression ({directional_preferences["forward"]} passes)'),
@@ -2656,10 +3537,10 @@ class MatchVisualizer(PlayerVisualizer):
             for text in legend_pie.get_texts():
                 text.set_color('white')
                 text.set_fontweight('bold')
-    
-            ax_directions.set_title('Style de Jeu', 
+
+            ax_directions.set_title('Distribution Directionnelle', 
                                 fontsize=20, color="#FFFFFF", fontweight='bold', pad=20)
-    
+
         # ===== GRAPHIQUE PATTERNS DE MOUVEMENT (DROITE) =====
         ax_patterns = fig.add_subplot(gs[0, 1])
         ax_patterns.set_position([ax_patterns.get_position().x0, 
@@ -2667,17 +3548,17 @@ class MatchVisualizer(PlayerVisualizer):
                                 ax_patterns.get_position().width, 
                                 ax_patterns.get_position().height - 0.02])
         ax_patterns.set_facecolor('none')
-    
+
         # Graphique des patterns avec couleurs distinctes
         pattern_labels = ['Centre→Aile', 'Aile→Centre', 'Chang. Aile', 'Percée Axiale']
         pattern_values = list(movement_patterns.values())
         pattern_colors = ['#FF6B35', '#00FF80', '#FFD700', '#FF0080']  # Couleurs très distinctes
-    
+
         bars = ax_patterns.bar(pattern_labels, pattern_values, color=pattern_colors, 
                             alpha=0.9, edgecolor='white', linewidth=3)
-    
+
         ax_patterns.set_ylim(top=max(pattern_values) * 1.25 if max(pattern_values) > 0 else 1)
-    
+
         # Ajouter les valeurs et pourcentages avec style amélioré
         total_patterns = sum(pattern_values) if sum(pattern_values) > 0 else 1
         for bar, value in zip(bars, pattern_values):
@@ -2686,94 +3567,424 @@ class MatchVisualizer(PlayerVisualizer):
                         f'{value}\n({percentage:.1f}%)', ha='center', va='bottom', 
                         color='white', fontweight='bold', fontsize=12,
                         bbox=dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.8))
-    
+
         ax_patterns.set_ylabel('Occurrences', fontsize=14, color='white', fontweight='bold')
         ax_patterns.set_title('Patterns Tactiques', fontsize=17, color="#FFFFFF", fontweight='bold')
         ax_patterns.tick_params(colors='white', labelsize=11)
         ax_patterns.set_xticklabels(pattern_labels, rotation=15, fontweight='bold')
         ax_patterns.grid(True, alpha=0.3, color='white')
-    
-        # ===== MÉTRIQUES TEXTUELLES AVEC INTERPRÉTATIONS INTELLIGENTES =====
-        ax_text = fig.add_subplot(gs[1, :])
-        ax_text.axis('off')
-    
-        # Calculs avancés avec explications claires
+
+        # ===== ANALYSES SCIENTIFIQUES COMPORTEMENTALES =====
+        # Première ligne de boîtes
+        ax_text1 = fig.add_subplot(gs[1, :])
+        ax_text1.axis('off')
+        
+        # Deuxième ligne de boîtes
+        ax_text2 = fig.add_subplot(gs[2, :])
+        ax_text2.axis('off')
+
+        # Calculs avancés avec explications scientifiques
         action_diversity = len(set([e['type']['displayName'] for e in events]))
         comfort_zone = max(zone_efficiency.items(), key=lambda x: x[1]) if zone_efficiency else ("Aucune", 0)
         forward_pct = (directional_preferences['forward'] / total_passes * 100) if total_passes > 0 else 0
         lateral_pct = (directional_preferences['lateral'] / total_passes * 100) if total_passes > 0 else 0
         backward_pct = (directional_preferences['backward'] / total_passes * 100) if total_passes > 0 else 0
-    
-        # Utiliser les fonctions d'évaluation intelligentes
-        style_jeu, style_color, style_interpretation = self._generate_tactical_interpretation(forward_pct, lateral_pct, backward_pct)
-    
-        # Évaluation du profil de joueur avec explications intelligentes
-        if predictability_score > 70:
-            player_profile = "TRÈS PRÉVISIBLE"
-            profile_color = "#FF4500"
-            profile_interpretation = f"Répète souvent les mêmes actions ({predictability_score:.0f}% prévisibilité). L'adversaire peut anticiper ses choix. Diversité limitée: {action_diversity} types d'actions différentes. Doit varier son jeu."
-        elif predictability_score > 50:
-            player_profile = "ÉQUILIBRÉ" 
-            profile_color = "#FFD700"
-            profile_interpretation = f"Mélange routine et surprise ({predictability_score:.0f}% prévisibilité). Style adaptatif qui désoriente parfois l'adversaire. Bonne diversité: {action_diversity} types d'actions. Profil moderne."
-        else:
-            player_profile = "IMPRÉVISIBLE"
-            profile_color = "#00FF80"
-            profile_interpretation = f"Varie énormément ses actions ({predictability_score:.0f}% prévisibilité). Très difficile à lire pour l'adversaire. Excellente diversité: {action_diversity} types d'actions. Joueur créatif."
-    
-        # Analyse des patterns tactiques intelligente
-        total_patterns = sum(movement_patterns.values()) if sum(movement_patterns.values()) > 0 else 1
-        max_pattern = max(movement_patterns.items(), key=lambda x: x[1]) if movement_patterns else ("Aucun", 0)
-        centre_aile_pct = (movement_patterns['centre_vers_aile'] / total_patterns) * 100
-        aile_centre_pct = (movement_patterns['aile_vers_centre'] / total_patterns) * 100
-        changement_aile_pct = (movement_patterns['changement_aile'] / total_patterns) * 100
-        percee_pct = (movement_patterns['percee_axiale'] / total_patterns) * 100
-    
-        if max_pattern[0] == 'centre_vers_aile':
-            pattern_dominant = "OUVREUR"
-            pattern_color = "#FF6B35"
-            pattern_interpretation = f"Spécialiste de l'ouverture du jeu vers les côtés ({centre_aile_pct:.0f}% des patterns). Vision large qui étire les défenses. Créateur d'espaces. Total patterns: Centre→Aile {centre_aile_pct:.0f}%, Aile→Centre {aile_centre_pct:.0f}%."
-        elif max_pattern[0] == 'aile_vers_centre':
-            pattern_dominant = "RECENTREUR"  
-            pattern_color = "#00FF80"
-            pattern_interpretation = f"Expert pour ramener le ballon au centre ({aile_centre_pct:.0f}% des patterns). Concentre le jeu pour créer le surnombre. Organisateur du jeu. Total patterns: Centre→Aile {centre_aile_pct:.0f}%, Aile→Centre {aile_centre_pct:.0f}%."
-        elif max_pattern[0] == 'changement_aile':
-            pattern_dominant = "RETOURNEUR"
-            pattern_color = "#FFD700"
-            pattern_interpretation = f"Maître des changements de côté ({changement_aile_pct:.0f}% des patterns). Déstabilise les défenses par les retournements. Vision panoramique. Total patterns: Changements {changement_aile_pct:.0f}%, Percées {percee_pct:.0f}%."
-        else:
-            pattern_dominant = "PERCUTANT"
-            pattern_color = "#FF0080"
-            pattern_interpretation = f"Privilégie les passes vers l'avant ({percee_pct:.0f}% des patterns). Joueur direct qui cherche la profondeur. Dangereux dans les transitions. Total patterns: Percées {percee_pct:.0f}%, Ouvertures {centre_aile_pct:.0f}%."
-    
-        # === BOÎTES AVEC INTERPRÉTATIONS INTELLIGENTES ===
-        box_width = 0.30   
-        positions = [0.02, 0.34, 0.66]  
-    
-        # Boîte 1: Style de jeu avec interprétation intelligente
-        self.create_explanation_box(ax_text, positions[0], 0.1, box_width, 0.8,
-                            f"STYLE: {style_jeu}",
-                            f"{forward_pct:.0f}% vers l'avant",
-                            style_interpretation,
-                            style_color)
-    
-        # Boîte 2: Prévisibilité avec analyse détaillée
-        self.create_explanation_box(ax_text, positions[1], 0.1, box_width, 0.8,
-                            f"PRÉVISIBILITÉ: {player_profile}",
+
+        # NOUVELLES ANALYSES SCIENTIFIQUES
+        position = self.player_data.get('position', 'Unknown')
+        age = self.player_data.get('age', 25)
+
+        # 1. Analyse comportementale du style de jeu
+        risk_tolerance_analysis = self._analyze_risk_tolerance_by_position(position, age, forward_pct, backward_pct, lateral_pct)
+        
+        # 2. Analyse de la prévisibilité comportementale
+        predictability_analysis = self._analyze_predictability_by_age_position(position, age, predictability_score, action_diversity)
+        
+        # 3. Analyse des patterns tactiques spécifiques au poste
+        tactical_pattern_analysis = self._analyze_tactical_patterns_by_position(position, movement_patterns, comfort_zone)
+
+        # === PREMIÈRE LIGNE DE BOÎTES ===
+        box_width = 0.32   # Plus larges
+        box_height = 0.9   # Plus hautes
+        positions_box = [0.01, 0.34, 0.67]  # Ajustées pour les nouvelles largeurs
+
+        # Boîte 1: Tolérance au risque selon le profil
+        self.create_explanation_box(ax_text1, positions_box[0], 0.05, box_width, box_height,
+                            risk_tolerance_analysis['title'],
+                            f"{forward_pct:.0f}% Progression",
+                            risk_tolerance_analysis['analysis'],
+                            risk_tolerance_analysis['color'])
+
+        # Boîte 2: Prévisibilité comportementale
+        self.create_explanation_box(ax_text1, positions_box[1], 0.05, box_width, box_height,
+                            predictability_analysis['title'],
                             f"Score: {predictability_score:.0f}%",
-                            profile_interpretation,
-                            profile_color)
-    
-        # Boîte 3: Patterns de mouvement avec interprétation tactique
-        self.create_explanation_box(ax_text, positions[2], 0.1, box_width, 0.8,
-                            f"PATTERN: {pattern_dominant}",
-                            f"{max_pattern[1]} actions",
-                            pattern_interpretation,
-                            pattern_color)
-    
-        # Tag et source ultra-stylisé avec message éducatif
-        ax.text(0.4, 0.25, f"@TarbouchData", fontsize=30, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
-    
+                            predictability_analysis['analysis'],
+                            predictability_analysis['color'])
+
+        # Boîte 3: Patterns tactiques spécialisés
+        self.create_explanation_box(ax_text1, positions_box[2], 0.05, box_width, box_height,
+                            tactical_pattern_analysis['title'],
+                            f"Zone optimale: {comfort_zone[0]}",
+                            tactical_pattern_analysis['analysis'],
+                            tactical_pattern_analysis['color'])
+        
+        # === DEUXIÈME LIGNE DE BOÎTES ===
+        # Boîte 4: Analyse de la diversité d'actions
+        if action_diversity > 8:
+            diversity_level = "RÉPERTOIRE TRÈS RICHE"
+            diversity_color = "#00FF00"
+            diversity_analysis = (
+                f"{action_diversity} types d'actions, polyvalence technique remarquable à {age} ans."
+            )
+        elif action_diversity > 6:
+            diversity_level = "RÉPERTOIRE ÉQUILIBRÉ"
+            diversity_color = "#FFD700"
+            diversity_analysis = (
+                f"{action_diversity} types d'actions, répertoire adapté aux standards du poste {position}."
+            )
+        else:
+            diversity_level = "RÉPERTOIRE LIMITÉ"
+            diversity_color = "#FF6B35"
+            diversity_analysis = (
+                f"{action_diversity} types d'actions, spécialisation ou limite technique à {age} ans."
+            )
+
+
+        self.create_explanation_box(ax_text2, positions_box[0], 0.05, box_width, box_height,
+                              diversity_level,
+                              f"{action_diversity} Types d'Actions",
+                              diversity_analysis,
+                              diversity_color)
+        
+        # Boîte 5: Analyse de l'adaptabilité zonale
+        zone_adaptability = len([z for z, eff in zone_efficiency.items() if eff > 70]) if zone_efficiency else 0
+        total_zones = len(zone_efficiency) if zone_efficiency else 0
+        
+        if zone_adaptability == total_zones and total_zones > 2:
+            adaptability_level = "POLYVALENCE ZONALE TOTALE"
+            adaptability_color = "#00FF00"
+            adaptability_analysis = (
+                f"Efficace sur toutes les zones ({zone_adaptability}/{total_zones}), polyvalence spatiale précieuse."
+            )
+        elif zone_adaptability > 1:
+            adaptability_level = "ADAPTABILITÉ ZONALE CORRECTE"
+            adaptability_color = "#FFD700"
+            adaptability_analysis = (
+                f"Efficace sur {zone_adaptability}/{total_zones} zones, zones de confort identifiées ({comfort_zone[0]} à {comfort_zone[1]:.1f}%)."
+            )
+        else:
+            adaptability_level = "SPÉCIALISATION ZONALE MARQUÉE"
+            adaptability_color = "#FF6B35"
+            adaptability_analysis = (
+                f"Efficace principalement en zone {comfort_zone[0]}, spécialisation spatiale nette."
+            )
+
+
+        self.create_explanation_box(ax_text2, positions_box[1], 0.05, box_width, box_height,
+                              adaptability_level,
+                              f"{zone_adaptability}/{total_zones} Zones",
+                              adaptability_analysis,
+                              adaptability_color)
+        
+        # Boîte 6: Analyse comparative des séquences d'actions
+        max_pattern = max(movement_patterns.items(), key=lambda x: x[1]) if movement_patterns else ("Aucun", 0)
+        pattern_dominance = (max_pattern[1] / sum(movement_patterns.values()) * 100) if sum(movement_patterns.values()) > 0 else 0
+        
+        if pattern_dominance > 50:
+            sequence_level = "SÉQUENCES TRÈS PRÉVISIBLES"
+            sequence_color = "#FF0000"
+            sequence_analysis = (
+                f"{max_pattern[0]} domine à {pattern_dominance:.0f}%, séquences très prévisibles, "
+                "nécessite diversification pour surprendre l'adversaire."
+            )
+        elif pattern_dominance > 35:
+            sequence_level = "SÉQUENCES PARTIELLEMENT LISIBLES"
+            sequence_color = "#FFD700"
+            sequence_analysis = (
+                f"{max_pattern[0]} à {pattern_dominance:.0f}%, séquences partiellement lisibles, "
+                "diversité présente, marge d'amélioration possible."
+            )
+        else:
+            sequence_level = "SÉQUENCES IMPRÉVISIBLES"
+            sequence_color = "#00FF80"
+            sequence_analysis = (
+                f"{max_pattern[0]} à {pattern_dominance:.0f}%, séquences imprévisibles, "
+                "profil tactique difficile à anticiper."
+            )
+
+
+
+        self.create_explanation_box(ax_text2, positions_box[2], 0.05, box_width, box_height,
+                              sequence_level,
+                              f"Dominance: {pattern_dominance:.0f}%",
+                              sequence_analysis,
+                              sequence_color)
+
+        # Tag et source ultra-stylisé (repositionné)
+        ax.text(0.25, 0.08, f"@TarbouchData", fontsize=30, color='white', fontweight='bold', ha='left', transform=ax.transAxes, alpha=0.8)
+
         plt.tight_layout()
         plt.savefig(save_path, facecolor=fig.get_facecolor(), edgecolor='none', dpi=300)
         plt.show()
+
+    # ===== FONCTIONS D'ANALYSE COMPORTEMENTALE SPÉCIALISÉES =====
+
+    def _analyze_risk_tolerance_by_position(self, position, age, forward_pct, backward_pct, lateral_pct):
+        """Analyse la tolérance au risque selon le poste et l'âge"""
+        
+        # Seuils de risque attendus par poste
+        position_risk_expectations = {
+            'GK': {'safe_threshold': 80, 'risky_threshold': 15},
+            'CB': {'safe_threshold': 70, 'risky_threshold': 25}, 'LCB': {'safe_threshold': 70, 'risky_threshold': 25}, 'RCB': {'safe_threshold': 70, 'risky_threshold': 25},
+            'LB': {'safe_threshold': 45, 'risky_threshold': 40}, 'RB': {'safe_threshold': 45, 'risky_threshold': 40},
+            'DMC': {'safe_threshold': 60, 'risky_threshold': 30}, 'DM': {'safe_threshold': 60, 'risky_threshold': 30},
+            'MC': {'safe_threshold': 40, 'risky_threshold': 45}, 'CM': {'safe_threshold': 40, 'risky_threshold': 45},
+            'AMC': {'safe_threshold': 25, 'risky_threshold': 60}, 'CAM': {'safe_threshold': 25, 'risky_threshold': 60},
+            'LW': {'safe_threshold': 20, 'risky_threshold': 65}, 'RW': {'safe_threshold': 20, 'risky_threshold': 65},
+            'CF': {'safe_threshold': 30, 'risky_threshold': 55}, 'ST': {'safe_threshold': 30, 'risky_threshold': 55}
+        }
+        
+        expectations = position_risk_expectations.get(position, {'safe_threshold': 50, 'risky_threshold': 40})
+        
+        if forward_pct > expectations['risky_threshold']:
+            title = "PROFIL PROGRESSISTE SELON POSTE"
+            color = "#00FF80"
+            analysis = (
+                f"{forward_pct:.0f}% passes progressives, risque offensif "
+                f"{'maturité tactique' if age > 28 else 'potentiel à canaliser' if age < 26 else 'phase d\'expression maximale'}."
+            )
+
+        elif backward_pct > expectations['safe_threshold']:
+            title = "PROFIL SÉCURITAIRE ADAPTÉ"
+            color = "#FFD700"
+            analysis = (
+                f"{backward_pct:.0f}% passes sécuritaires, discipline tactique "
+                f"{'compréhension mature' if age > 26 else 'limitation offensive' if age < 25 else 'équilibre expérience-sécurité'}."
+            )
+
+        else:
+            title = "PROFIL ÉQUILIBRÉ RISQUE-SÉCURITÉ"
+            color = "#FF0080"
+            analysis = (
+                f"Equilibre progression ({forward_pct:.0f}%) et sécurité ({backward_pct:.0f}%), "
+                f"{'intelligence de jeu' if age > 27 else 'potentiel à optimiser'}."
+            )
+
+
+
+        return {'title': title, 'color': color, 'analysis': analysis}
+
+    def _analyze_predictability_by_age_position(self, position, age, predictability_score, action_diversity):
+        """Analyse la prévisibilité selon l'âge et le poste"""
+        
+        if predictability_score > 75:
+            title = "COMPORTEMENT TRÈS PRÉVISIBLE"
+            color = "#FF6B35"
+            analysis = (
+                f"{predictability_score:.0f}% prévisibilité, faible diversité ({action_diversity}), "
+                f"{'rigidité problématique' if age < 30 else 'efficacité compensée mais exploitable'}."
+            )
+
+        elif predictability_score > 60:
+            title = "COMPORTEMENT PARTIELLEMENT LISIBLE"
+            color = "#FFD700"
+            analysis = (
+                f"{predictability_score:.0f}% prévisibilité modérée, {action_diversity} types d'actions, "
+                f"{'potentiel d\'amélioration' if age < 28 else 'niveau gérable avec efficacité'}."
+            )
+
+        else:
+            title = "COMPORTEMENT IMPRÉVISIBLE"
+            color = "#00FF80"
+            analysis = (
+                f"{predictability_score:.0f}% prévisibilité basse, haute diversité ({action_diversity}), "
+                f"{'créativité précieuse' if age < 30 else 'intelligence de jeu exceptionnelle'}."
+            )
+
+
+        return {'title': title, 'color': color, 'analysis': analysis}
+
+    def _analyze_tactical_patterns_by_position(self, position, movement_patterns, comfort_zone):
+        """Analyse les patterns tactiques spécifiques au poste"""
+        
+        max_pattern = max(movement_patterns.items(), key=lambda x: x[1]) if movement_patterns else ("Aucun", 0)
+        total_patterns = sum(movement_patterns.values()) if sum(movement_patterns.values()) > 0 else 1
+        dominant_pattern_pct = (max_pattern[1] / total_patterns) * 100
+        
+        zone_name, zone_efficiency = comfort_zone
+        
+        # Analyse spécifique selon le pattern dominant et le poste
+        position_tactical_context = {
+            'AMC': 'création centrale et distribution',
+            'MC': 'liaison et transition', 'CM': 'liaison et transition',
+            'LW': 'percussion et centres', 'RW': 'percussion et centres',
+            'CB': 'construction défensive', 'LCB': 'construction défensive', 'RCB': 'construction défensive'
+        }
+        
+        tactical_role = position_tactical_context.get(position, 'animation générale du jeu')
+        
+        if max_pattern[0] == 'centre_vers_aile' and dominant_pattern_pct > 40:
+            title = "SPÉCIALISTE OUVERTURE DU JEU"
+            color = "#FF6B35"
+            analysis = (
+                f"{dominant_pattern_pct:.0f}% d'actions vers l'aile, rôle clé de {tactical_role} en {position}, "
+                f"créateur d'espaces en zone {zone_name} ({zone_efficiency:.1f}%)."
+            )
+
+        elif max_pattern[0] == 'changement_aile' and dominant_pattern_pct > 30:
+            title = "MAÎTRE DES RETOURNEMENTS"
+            color = "#FFD700"
+            analysis = (
+                f"{dominant_pattern_pct:.0f}% de changements d'aile, vision panoramique et mobilité stratégique "
+                f"en zone {zone_name} ({zone_efficiency:.1f}%)."
+            )
+
+        elif zone_efficiency > 85:
+            title = "SPÉCIALISTE ZONAL HAUTE EFFICACITÉ"
+            color = "#00FF80"
+            analysis = (
+                f"Efficacité élevée ({zone_efficiency:.1f}%) en zone {zone_name}, spécialisation cohérente au poste {position}."
+            )
+
+        else:
+            title = "PROFIL TACTIQUE GÉNÉRALISTE"
+            color = "#00BFFF"
+            analysis = (
+                f"Distribution équilibrée des patterns, zone principale {zone_name} avec {zone_efficiency:.1f}% d'efficacité."
+            )
+
+        return {'title': title, 'color': color, 'analysis': analysis}
+    
+    # ===== FONCTIONS D'ANALYSE COMPORTEMENTALE SPÉCIALISÉES =====
+    
+    def _analyze_risk_tolerance_by_position(self, position, age, forward_pct, backward_pct, lateral_pct):
+        """Analyse la tolérance au risque selon le poste et l'âge"""
+        
+        # Seuils de risque attendus par poste
+        position_risk_expectations = {
+            'GK': {'safe_threshold': 80, 'risky_threshold': 15},
+            'CB': {'safe_threshold': 70, 'risky_threshold': 25}, 'LCB': {'safe_threshold': 70, 'risky_threshold': 25}, 'RCB': {'safe_threshold': 70, 'risky_threshold': 25},
+            'LB': {'safe_threshold': 45, 'risky_threshold': 40}, 'RB': {'safe_threshold': 45, 'risky_threshold': 40},
+            'DMC': {'safe_threshold': 60, 'risky_threshold': 30}, 'DM': {'safe_threshold': 60, 'risky_threshold': 30},
+            'MC': {'safe_threshold': 40, 'risky_threshold': 45}, 'CM': {'safe_threshold': 40, 'risky_threshold': 45},
+            'AMC': {'safe_threshold': 25, 'risky_threshold': 60}, 'CAM': {'safe_threshold': 25, 'risky_threshold': 60},
+            'LW': {'safe_threshold': 20, 'risky_threshold': 65}, 'RW': {'safe_threshold': 20, 'risky_threshold': 65},
+            'CF': {'safe_threshold': 30, 'risky_threshold': 55}, 'ST': {'safe_threshold': 30, 'risky_threshold': 55}
+        }
+        
+        expectations = position_risk_expectations.get(position, {'safe_threshold': 50, 'risky_threshold': 40})
+        
+        if forward_pct > expectations['risky_threshold']:
+            title = "PROFIL PROGRESSISTE SELON POSTE"
+            color = "#00FF80"
+            analysis = (
+                f"{forward_pct:.0f}% de passes progressives, au-dessus des standards du poste {position}. "
+                f"À {age} ans, {'maturité tactique' if age > 28 else 'expérience en cours' if age < 26 else 'phase d\'expression maximale'}. "
+                "Décision offensive adaptative."
+            )
+
+        elif backward_pct > expectations['safe_threshold']:
+            title = "PROFIL SÉCURITAIRE ADAPTÉ"
+            color = "#FFD700"
+            analysis = (
+                f"{backward_pct:.0f}% de passes sécuritaires, conforme aux exigences défensives du poste {position}. "
+                f"À {age} ans, {'compréhension mature' if age > 26 else 'expression offensive limitée' if age < 25 else 'équilibre expérience-sécurité'}. "
+                "Profil discipliné."
+            )
+
+        else:
+            title = "PROFIL ÉQUILIBRÉ RISQUE-SÉCURITÉ"
+            color = "#FF0080"
+            analysis = (
+                f"Équilibre entre passes progressives ({forward_pct:.0f}%) et sécuritaires ({backward_pct:.0f}%). "
+                f"À {age} ans, {'intelligence de jeu développée' if age > 27 else 'polyvalence à optimiser'}. "
+                "Profil adaptatif."
+            )
+
+
+        return {'title': title, 'color': color, 'analysis': analysis}
+    
+    def _analyze_predictability_by_age_position(self, position, age, predictability_score, action_diversity):
+        """Analyse la prévisibilité selon l'âge et le poste"""
+        
+        if predictability_score > 75:
+            title = "COMPORTEMENT TRÈS PRÉVISIBLE"
+            color = "#FF6B35"
+            analysis = (
+                f"{predictability_score:.0f}% prévisibilité, faible diversité ({action_diversity}). "
+                f"À {age} ans, {'rigidité problématique' if age < 30 else 'compensée par efficacité technique'}. "
+                "Nécessite plus de variation."
+            )
+        elif predictability_score > 60:
+            title = "COMPORTEMENT PARTIELLEMENT LISIBLE"
+            color = "#FFD700"
+            analysis = (
+                f"{predictability_score:.0f}% prévisibilité modérée, diversité de {action_diversity}. "
+                f"À {age} ans, {'améliorable par enrichissement' if age < 28 else 'niveau gérable avec efficacité'}. "
+                "Profil intermédiaire."
+            )
+        else:
+            title = "COMPORTEMENT IMPRÉVISIBLE"
+            color = "#00FF80"
+            analysis = (
+                f"{predictability_score:.0f}% prévisibilité basse, diversité élevée ({action_diversity}). "
+                f"À {age} ans, {'créativité et efficacité' if age < 30 else 'intelligence de jeu remarquable'}. "
+                "Profil difficile à anticiper."
+            )
+
+        return {'title': title, 'color': color, 'analysis': analysis}
+    
+    def _analyze_tactical_patterns_by_position(self, position, movement_patterns, comfort_zone):
+        """Analyse les patterns tactiques spécifiques au poste"""
+        
+        max_pattern = max(movement_patterns.items(), key=lambda x: x[1]) if movement_patterns else ("Aucun", 0)
+        total_patterns = sum(movement_patterns.values()) if sum(movement_patterns.values()) > 0 else 1
+        dominant_pattern_pct = (max_pattern[1] / total_patterns) * 100
+        
+        zone_name, zone_efficiency = comfort_zone
+        
+        # Analyse spécifique selon le pattern dominant et le poste
+        position_tactical_context = {
+            'AMC': 'création centrale et distribution',
+            'MC': 'liaison et transition', 'CM': 'liaison et transition',
+            'LW': 'percussion et centres', 'RW': 'percussion et centres',
+            'CB': 'construction défensive', 'LCB': 'construction défensive', 'RCB': 'construction défensive'
+        }
+        
+        tactical_role = position_tactical_context.get(position, 'animation générale du jeu')
+        
+        if max_pattern[0] == 'centre_vers_aile' and dominant_pattern_pct > 40:
+            title = "SPÉCIALISTE OUVERTURE DU JEU"
+            color = "#FF6B35"
+            analysis = (
+                f"{dominant_pattern_pct:.0f}% des patterns vers l'ouverture latérale. "
+                f"Rôle clé de {tactical_role} au poste {position}. "
+                f"Efficacité max en {zone_name} ({zone_efficiency:.1f}%)."
+            )
+        elif max_pattern[0] == 'changement_aile' and dominant_pattern_pct > 30:
+            title = "MAÎTRE DES RETOURNEMENTS"
+            color = "#FFD700"
+            analysis = (
+                f"{dominant_pattern_pct:.0f}% de changements d'aile, vision panoramique développée. "
+                f"Zone optimale: {zone_name} ({zone_efficiency:.1f}%). "
+                "Atout tactique pour mobilité et inversion."
+            )
+        elif zone_efficiency > 85:
+            title = "SPÉCIALISTE ZONAL HAUTE EFFICACITÉ"
+            color = "#00FF80"
+            analysis = (
+                f"Efficacité exceptionnelle en {zone_name} ({zone_efficiency:.1f}%). "
+                f"Spécialisation territoriale au poste {position}. "
+                "Maximise son impact dans cette zone."
+            )
+        else:
+            title = "PROFIL TACTIQUE GÉNÉRALISTE"
+            color = "#00BFFF"
+            analysis = (
+                f"Distribution équilibrée des patterns tactiques. "
+                f"Efficacité en {zone_name} ({zone_efficiency:.1f}%). "
+                "Profil polyvalent et adaptatif."
+            )
+        
+        return {'title': title, 'color': color, 'analysis': analysis}
