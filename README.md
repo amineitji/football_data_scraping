@@ -91,3 +91,6 @@ Cela supprimera toutes les visualisations, données de joueurs extraites et les 
 ## Documentation
 
 Consultez le répertoire `/doc` pour une documentation plus détaillée du projet.
+
+
+make run-advanced URL="https://fr.whoscored.com/players/363181/fixtures/edon-zhegrova" PLAYER_NAME="Edon Zhegrova" POSTE="ATT" NB_PASSE_D=2 PNG_METHOD=pillow
